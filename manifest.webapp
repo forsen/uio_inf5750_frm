@@ -1,0 +1,21 @@
+{
+  "version":"0.1",
+  "name": "FRM",
+  "description": "Sample app",
+  "launch_path": "src/index.html",
+  "icons":{
+    "16":null,
+    "48":null,
+    "128":null
+  },
+  "developer": {
+    "name": "Group FRM",
+    "url": "https://wiki.uio.no/mn/ifi/inf5750/index.php/FRM"
+  },
+  "default_locale": "en",
+  "activities": {
+    "dhis": {
+      "href": "*"
+    }
+  }
+}

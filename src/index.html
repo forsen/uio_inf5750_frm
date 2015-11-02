@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample App</title>
+    <script>
+        var xhReq = new XMLHttpRequest();
+        xhReq.open("GET", "../manifest.webapp", false);
+        xhReq.send(null);
+        var serverResponse = JSON.parse(xhReq.responseText);
+        var dhisAPI = serverResponse.activities.dhis.href;
+    </script>
+    <script src="../node_modules/systemjs/dist/system.src.js"></script>
+    <script src="../node_modules/angular2/bundles/angular2.dev.js"></script>
+    <script src="../node_modules/angular2/bundles/http.dev.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+        System.config({
+            packages: {'app': {defaultExtension: 'js'}}
+        });
+        System.import('app/app');
+    </script>
+    <!--
+
+    -->
+</head>
+<body>
+    <hello-world>loading...</hello-world>
+</body>
+</html>
