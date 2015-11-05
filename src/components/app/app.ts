@@ -1,4 +1,4 @@
-import {bootstrap, Component, CORE_DIRECTIVES} from 'angular2/angular2';
+import {bootstrap, Component, CORE_DIRECTIVES} from '../../../node_modules/angular2/angular2.d.ts';
 
 @Component({
     selector: 'hello-world',
