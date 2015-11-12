@@ -1,5 +1,5 @@
-import {bootstrap, Component, CORE_DIRECTIVES} from '../../../node_modules/angular2/angular2.d.ts';
-
+import {bootstrap, Component, CORE_DIRECTIVES} from 'angular2/angular2';
+import {map} from '../map/map';
 @Component({
     selector: 'hello-world',
     directives: [CORE_DIRECTIVES],
