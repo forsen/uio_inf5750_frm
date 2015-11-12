@@ -13,15 +13,19 @@
     <script src="../node_modules/systemjs/dist/system.src.js"></script>
     <script src="../node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="../node_modules/angular2/bundles/http.dev.js"></script>
+    <script src="../node_modules/angular2/bundles/router.dev.js"></script>
+
+
+
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script>
         System.config({
             packages: {'components': {defaultExtension: 'js'}}
         });
-        System.import('components/app/app');
+        System.import('components/app');
     </script>
 </head>
 <body>
-    <hello-world>loading...</hello-world>
+    <mou-app>loading...</mou-app>
 </body>
 </html>
