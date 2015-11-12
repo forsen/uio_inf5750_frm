@@ -2,6 +2,7 @@ import {HTTP_PROVIDERS} from 'angular2/http';
 import {Component, View, bootstrap, provide} from 'angular2/angular2';
 import {Map} from './map/map';
 import {Search} from "./search/search";
+import {Filter} from "./filter/filter";
 
 declare var System:any;
 
@@ -9,7 +10,7 @@ declare var System:any;
     {
         selector: 'mou-app',
         templateUrl: './components/app.html',
-        directives:[Map, Search]
+        directives:[Filter, Map, Search]
     })
 
 
