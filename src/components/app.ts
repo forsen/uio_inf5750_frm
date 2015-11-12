@@ -18,4 +18,4 @@ class App {
 
 }
 
-bootstrap(App);
+bootstrap(App,[HTTP_PROVIDERS]);
