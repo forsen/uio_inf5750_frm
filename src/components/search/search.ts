@@ -1,23 +1,16 @@
 import {Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
-import {Observable} from 'angular2/angular2';
-import {Pipe} from 'angular2/angular2';
-import {Http} from 'angular2/http';
-import {Livesearch} from './livesearch';
+import {LiveSearch} from "./livesearch";
 
 @Component({
     selector: 'mou-search',
-    directives: [CORE_DIRECTIVES],
-//    templateUrl: './components/search/search.html'
-    template: '{{ 10 | livesearch }}',
-    pipes: [Livesearch]
+    directives: [CORE_DIRECTIVES, LiveSearch],
+    templateUrl: './components/search/search.html'
 })
-
-
-
 export class Search {
-    data: Object;
-    constructor(http: Http){
-        this.data = http.get('items.json');
+    orgunits: Array<any> = [];
+    loading: boolean = false;
+
+    constructor(){
     }
 }
 

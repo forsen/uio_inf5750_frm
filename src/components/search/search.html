@@ -1,6 +1,19 @@
-<form class="form-inline">
-    <div class="form-group">
+
+    <section class="form-group">
         <label class="sr-only" for="livesearch">Search</label>
-        <input type="text" class="form-control" id="livesearch" placeholder="Search...">
-    </div>
-</form>
+        <input
+                mou-live-search
+                (results)="orgunits = $event"
+                (loading)="loading = $event"
+                type="text"
+                autofocus
+                id="livesearch">
+        <img style="width: 20px; position: absolute;"
+             [hidden]="!loading"
+             src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
+    </section>
+    <section>
+        <div *ng-for="#orgunit of orgunits" style="padding: 0.5em 0.5em 0.5em 0;">
+            <p>{{orgunit.name}}</p>
+        </div>
+    </section>
