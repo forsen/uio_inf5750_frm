@@ -9,7 +9,7 @@ export class SearchService {
 
     }
     search(query: string): Rx.Observable<any[]>{
-        return this.http.get(dhisAPI + "/organisationUnits?paging=false&query=" + query)
+        return this.http.get(dhisAPI + "/api/organisationUnits?paging=false&filter=name:like:" + query)
             .map(res=>res.json())
             .map(res => res.organisationUnits)
             .filter(orgunits => orgunits);
