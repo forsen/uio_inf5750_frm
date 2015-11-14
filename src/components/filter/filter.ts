@@ -1,15 +1,18 @@
 import {Component, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
+import {DhisapiService} from "../dhisapi/dhisapiService";
 
 @Component({
     selector: 'mou-filter',
     directives: [CORE_DIRECTIVES],
-    templateUrl: './components/filter/filter.html'
+    templateUrl: './components/filter/filter.html',
+    providers: [DhisapiService]
 })
 
 export class Filter {
     result: Object;
 
+    dhis: DhisapiService;
     // Example HTTP request
 
     /*
@@ -31,4 +34,15 @@ export class Filter {
     }
 
     */
+
+    constructor(dhis: DhisapiService){
+        this.dhis = dhis;
+    }
+
+    onInit(){
+        this.dhis.getApiURL(function(uri){
+            console.log("Dette er uri: " + uri);
+        })
+    }
+
 }

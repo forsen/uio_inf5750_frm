@@ -3,6 +3,7 @@ import {Component, View, bootstrap, provide, ELEMENT_PROBE_PROVIDERS} from 'angu
 import {Map} from './map/map';
 import {Search} from "./search/search";
 import {Filter} from "./filter/filter";
+import {DhisapiService} from "./dhisapi/dhisapiService";
 
 declare var System:any;
 
@@ -10,12 +11,18 @@ declare var System:any;
     {
         selector: 'mou-app',
         templateUrl: './components/app.html',
-        directives:[Filter, Map, Search]
+        directives:[Filter, Map, Search],
+        providers: [DhisapiService]
     })
 
 
 class App {
+    constructor(dhis: DhisapiService){
+        dhis.getApiURL(function(uri){
+            console.log(uri);
+        })
+    }
 
 }
 
-bootstrap(App,[HTTP_PROVIDERS, ELEMENT_PROBE_PROVIDERS]);
+bootstrap(App,[HTTP_PROVIDERS, ELEMENT_PROBE_PROVIDERS, DhisapiService]);
