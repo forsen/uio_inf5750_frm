@@ -13,7 +13,6 @@ export class SearchService {
             .map(res=>res.json())
             .map(res => res.organisationUnits)
             .filter(orgunits => orgunits);
-
     }
 }
 

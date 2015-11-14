@@ -32,9 +32,6 @@ export class LiveSearch {
             .do(zone.bind(() => this.loading.next(false)))
             .subscribe(
                 zone.bind( orgunits => {
-                    console.log("orgunits: ");
-                    console.log(orgunits);
-                    //this.results.next(orgunits);
                     this.results.next(orgunits);
                 }),
                 zone.bind(err => {
