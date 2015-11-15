@@ -1,5 +1,4 @@
-<div class="search">
-    <section class="form-group">
+<div class="search clearfix">
         <label class="sr-only" for="livesearch">Search</label>
         <input
                 mou-live-search
@@ -7,15 +6,16 @@
                 (loading)="loading = $event"
                 type="text"
                 autofocus
+                class="form-control"
                 id="livesearch">
         <img [hidden]="!loading"
              src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
-    </section>
-    <section>
-        <ul>
-            <li *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
-                {{orgunit.name}}
-            </li>
-        </ul>
-    </section>
+
+        <div [hidden]="!orgunits.length">
+            <ul class="results" >
+                <li *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
+                    <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
+                </li>
+            </ul>
+        </div>
 </div>
