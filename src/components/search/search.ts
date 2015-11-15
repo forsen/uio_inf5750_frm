@@ -4,7 +4,8 @@ import {LiveSearch} from "./livesearch";
 @Component({
     selector: 'mou-search',
     directives: [CORE_DIRECTIVES, LiveSearch],
-    templateUrl: './components/search/search.html'
+    templateUrl: './components/search/search.html',
+    styleUrls: ['./components/search/search.css']
 })
 export class Search {
     orgunits: Array<any> = [];

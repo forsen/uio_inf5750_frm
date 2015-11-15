@@ -1,0 +1,9 @@
+.search img{
+    width: 20px;
+    position: absolute;
+}
+
+.search li{
+    padding: 0.5em 0.5em 0.5em 0;
+}
+
