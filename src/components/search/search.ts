@@ -10,8 +10,11 @@ export class Search {
     orgunits: Array<any> = [];
     loading: boolean = false;
 
-    constructor(){
+    getMoreInfo(orgunit){
+        console.log(orgunit.id);
     }
+
+
 }
 
 
