@@ -46,7 +46,7 @@ export class Map {
         });
 
         //Other map functions
-        
+
     }
 
     logError(error) {
