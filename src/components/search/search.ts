@@ -16,6 +16,15 @@ export class Search {
 
     }
 
+    //tester pil oppned
+
+    constructor() {
+        this.visible = true;
+    }
+
+    toggle() {
+        this.visible = !this.visible;
+    }
 
 }
 
