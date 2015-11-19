@@ -1,11 +1,11 @@
 <div class="container">
     <div class="nav">
         Navbar
-        <mou-search></mou-search>
+        <mou-search (newsearch)="map.update($event)"></mou-search>
         <mou-filter></mou-filter>
     </div>
 
-    <mou-map></mou-map>
+    <mou-map #map></mou-map>
 
 </div>
 
