@@ -21,7 +21,7 @@ export class Map {
         this.init();
         this.http = http;
 
-        this.getData('?paging=false&level=2');
+        this.getData('?paging=false&level=2',this);
     }
 
 
@@ -86,13 +86,13 @@ export class Map {
 
     }
 
-    getData(query){
-        console.log(this.http);
-        this.http.get(dhisAPI+'/api/organisationUnits'+query)
+    getData(query,instance){
+        console.log(instance.http);
+        instance.http.get(dhisAPI+'/api/organisationUnits'+query)
             .map(res => res.json())
             .subscribe(
-                res => this.parseResult(res),
-                error => this.logError(error)
+                res => instance.parseResult(res),
+                error => instance.logError(error)
             );
 
     }
@@ -101,13 +101,14 @@ export class Map {
 
         if(res.organisationUnits) {
             for (let item in res.organisationUnits) {
-                this.getData('/' + res.organisationUnits[item].id);
+                this.getData('/' + res.organisationUnits[item].id,this);
             }
         } else {
 
             this.drawPolygon(res);};
     }
     drawPolygon(item){
+        let instance = this;
         let feature;
         let incoming: string;
         incoming = item.featureType.toLowerCase();
@@ -137,16 +138,14 @@ export class Map {
                 }
             };
             this.map.data.addGeoJson(unit);
-            let getData = this.getData;
+
             this.map.data.addListener('click', function(event) {
                //TODO: spør om man vil ned/opp eller se info
 
                 let id = event.feature.O.id;
                 console.log(id);
 
-               // getData('/' + id);
-
-
+                instance.getData('/' + id,instance);
 
             });
             
