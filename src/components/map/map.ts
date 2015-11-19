@@ -107,40 +107,63 @@ export class Map {
             this.drawPolygon(res);};
     }
     drawPolygon(item){
-        console.log(item);
-        console.log(item.featureType);
-        console.log(item.coordinates);
-        console.log(item.name);
-        let unit = {
-            "type": "Feature",
-            "geometry": {
-                "type": "MultiPolygon",
-                "coordinates": JSON.parse(item.coordinates)},
-            "properties": {
-                "name": item.name
+        let feature;
+        let incoming: string;
+        incoming = item.featureType.toLowerCase();
+        switch(incoming){
+            case "point":
+                feature = 'Point';
+                break;
+            case "multi_polygon":
+                feature = 'MultiPolygon';
+                break;
+             case "polygon":
+                 feature = 'MultiPolygon';
+                break;
+            default:
+        }
+          // TODO: test på feature og behandle type: NONE
+        if(feature !== undefined) {
+            let unit = {
+                "type": "Feature",
+                "geometry": {
+                    "type": feature,
+                    "coordinates": JSON.parse(item.coordinates)
+                },
+                "properties": {
+                    "name": item.name,
+                    "id": item.id
+                }
+            };
+            this.map.data.addGeoJson(unit);
+            let map = this.map;
+            this.map.data.addListener('click', function(event) {
+
+                console.log(event);
+                map.data.revertStyle();
+                map.data.overrideStyle(event.feature, {strokeWeight: 8});
+            });
+            //.addListener('click', function(){
+               // console.log("Nå klikket du på:" + unit.properties.name + unit.properties.id);
+            //});
+         /*   var featureStyle = {
+                strokeColor: '#66ffff',
+                strokeOpacity: 0.5,
+                strokeWeight: 3,
             }
-        };
-        this.map.data.addGeoJson(unit);
-        this.center(unit.geometry.coordinates);
+            map.data.setStyle(featureStyle);
+            map.data.addListener('click', function(event) {
+                console.log(layer);
+                // This is where I want to check if point(s) fall within it.
+            }*/
 
 
 
-    }
+        }else {
+            // ToDO:
+            console.log("fiks meg! gi warning på topp av kart");
+        }
 
-    center(coordinates){
-        // let bounds = new google.maps.LatLngBounds(coordinates);
-        /* console.log(coordinates.Array);
-         for (let i = 0; i < coordinates.length; i++) {
-         for(let j = 0; j < coordinates[i]; j++) {
-         console.log(coordinates.Array[j]);
-         bounds.extend(coordinates.Array[j]);
-         }
-
-         }*/
-        // for (let i = 0; i < coordinates.length; i++) {
-        //     bounds.extend(new google.maps.LatLng(coordinates.[i][1], coordinates[i][2]));
-        // }
-        // console.log("center: " + bounds.getCenter());
 
     }
 
@@ -152,7 +175,6 @@ export class Map {
     deleteMarker(){
         console.log('you just deleted the marker');
     }
-    //Other map functions
 
 
 }
