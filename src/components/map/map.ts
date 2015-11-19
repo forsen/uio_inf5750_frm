@@ -13,7 +13,6 @@ import {Headers, Http} from 'angular2/http';
 export class Map {
 
     map:Object;
-    marker:Object;
     http: Http;
 
     constructor(http:Http) {
@@ -29,12 +28,11 @@ export class Map {
     init() {
 
         let initMap = this.initMap;
-        let addMarker = this.addMarker;
         let map = this.map;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                     let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    initMap(pos,map,addMarker);
+                    initMap(pos,map);
                 }, function () {
                 //handleNoGeoLocation()
                 }
@@ -47,35 +45,16 @@ export class Map {
     }
 
 
-    initMap(location,map,addMarker){
+    initMap(location,map){
 
         map.setCenter(location,12);
-        addMarker(location,map,'This is YOU');
 
 
 
         map.addListener('click', function (event) {
-                addMarker(event.latLng,map, 'Want to add a new marker here ? <br> <button onclick=\"createOrgUnit()\">Yes</button> <button onclick=\"deleteMarker()">No</button> ');
+                console.log("jule husker");
             }
         );
-
-    }
-
-    addMarker(location, map, title) {
-
-        let marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
-
-        let infowindow = new google.maps.InfoWindow({
-            content: title
-        });
-
-        marker.addListener('click', function () {
-            console.log(marker);
-            infowindow.open(map,marker);
-        });
 
     }
 
@@ -169,10 +148,6 @@ export class Map {
 
     createOrgUnit(){
         console.log('you just added a new organisation unit');
-    }
-
-    deleteMarker(){
-        console.log('you just deleted the marker');
     }
 
     update(event){
