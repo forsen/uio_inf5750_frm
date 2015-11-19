@@ -35,7 +35,7 @@ export class Map {
                     let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                     initMap(pos,map,addMarker);
                 }, function () {
-                    //handleNoGeolocation(true);
+                //handleNoGeoLocation()
                 }
             );
         } else {
@@ -87,6 +87,7 @@ export class Map {
     }
 
     getData(query){
+        console.log(this.http);
         this.http.get(dhisAPI+'/api/organisationUnits'+query)
             .map(res => res.json())
             .subscribe(
@@ -136,28 +137,19 @@ export class Map {
                 }
             };
             this.map.data.addGeoJson(unit);
-            let map = this.map;
+            let getData = this.getData;
             this.map.data.addListener('click', function(event) {
+               //TODO: spør om man vil ned/opp eller se info
 
-                console.log(event);
-                map.data.revertStyle();
-                map.data.overrideStyle(event.feature, {strokeWeight: 8});
+                let id = event.feature.O.id;
+                console.log(id);
+
+               // getData('/' + id);
+
+
+
             });
-            //.addListener('click', function(){
-               // console.log("Nå klikket du på:" + unit.properties.name + unit.properties.id);
-            //});
-         /*   var featureStyle = {
-                strokeColor: '#66ffff',
-                strokeOpacity: 0.5,
-                strokeWeight: 3,
-            }
-            map.data.setStyle(featureStyle);
-            map.data.addListener('click', function(event) {
-                console.log(layer);
-                // This is where I want to check if point(s) fall within it.
-            }*/
-
-
+            
 
         }else {
             // ToDO:
