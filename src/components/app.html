@@ -5,7 +5,8 @@
         <mou-filter></mou-filter>
     </div>
 
-    <mou-map #map></mou-map>
+    <mou-map (newactive)="sidebar.update($event)" #map></mou-map>
+    <mou-sidebar #sidebar></mou-sidebar>
 
 </div>
 

@@ -3,6 +3,7 @@ import {Component, View, bootstrap, provide, ELEMENT_PROBE_PROVIDERS} from 'angu
 import {Map} from './map/map';
 import {Search} from "./search/search";
 import {Filter} from "./filter/filter";
+import {Sidebar} from "./sidebar/sidebar";
 
 declare var System:any;
 
@@ -10,7 +11,7 @@ declare var System:any;
     {
         selector: 'mou-app',
         templateUrl: './components/app.html',
-        directives:[Filter, Map, Search]
+        directives:[Filter, Map, Search, Sidebar]
     })
 
 
