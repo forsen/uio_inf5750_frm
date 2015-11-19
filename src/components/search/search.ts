@@ -9,15 +9,23 @@ import {LiveSearch} from "./livesearch";
     styleUrls: ['./components/search/search.css']
 })
 export class Search {
-    orgunits:Array<any> = [];
-    loading:boolean = false;
+    orgunits: Array<any> = [];
+    loading: boolean = false;
 
     constructor() {
         this.newsearch = new EventEmitter();
+        this.visible = true;
+
     }
 
     getMoreInfo(orgunit) {
         this.newsearch.next(orgunit.id);
+    }
+
+    //tester pil oppned
+
+    toggle() {
+        this.visible = !this.visible;
     }
 
 }

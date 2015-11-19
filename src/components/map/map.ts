@@ -1,5 +1,5 @@
 import {Component, CORE_DIRECTIVES,} from 'angular2/angular2';
-import {Http} from 'angular2/http';
+import {Headers, Http} from 'angular2/http';
 
 
 @Component({
@@ -17,7 +17,18 @@ export class Map {
 
     constructor(http:Http) {
         this.initMap();
+
+        var authHeader = new Headers();
+        authHeader.append('Authorization', 'Basic YWRtaW46ZGlzdHJpY3Q=');
+        this.result = {organisationUnits: []};
+        // http.get(dhisAPI+'/api/organisationUnits?paging=false', {headers: authHeader})
+        http.get('http://mydhis.com:8082/api/organisationUnits?paging=false', {headers: authHeader})
+            .map(res => res.json()).subscribe(
+            res => this.result = res,
+            error => this.logError(error)
+        );
     }
+
 
     initMap() {
 
@@ -51,10 +62,6 @@ export class Map {
 
     }
 
-    update(orgUnitId){
-        console.log("Her kan jeg lage et http kall og hente inn informasjon om " + orgUnitId);
-    }
-
 
     //Other map functions
    // addMarker(lat, lng) {
@@ -68,6 +75,7 @@ export class Map {
 
     logError(error) {
         console.error(error);
+
     }
 
 }
