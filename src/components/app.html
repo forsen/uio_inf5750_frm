@@ -1,6 +1,14 @@
 <div class="container">
-    <mou-navbar></mou-navbar>
-    <mou-map #map></mou-map>
+    <mou-navbar (outevent)="map.update($event)"></mou-navbar>
+
+    <div class="row">
+        <div class="col-md-8">
+            <mou-map (newactive)="sidebar.update($event)" #map></mou-map>
+        </div>
+        <div class="col-md-4">
+            <mou-sidebar #sidebar></mou-sidebar>
+        </div>
+    </div>
 </div>
 
 

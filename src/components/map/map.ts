@@ -1,10 +1,11 @@
-import {Component, CORE_DIRECTIVES,} from 'angular2/angular2';
+import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
 
 
 @Component({
     selector: 'mou-map',
     directives: [CORE_DIRECTIVES],
+    events: ['newactive'],
     templateUrl: './components/map/map.html'
 })
 
@@ -16,7 +17,7 @@ export class Map {
     http: Http;
 
     constructor(http:Http) {
-
+        this.newactive = new EventEmitter();
         this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
@@ -174,7 +175,9 @@ export class Map {
         console.log('you just deleted the marker');
     }
 
-
+    update(event){
+        this.newactive.next(event);
+    }
 }
 
 

@@ -19,6 +19,7 @@ export class Search {
     }
 
     getMoreInfo(orgunit) {
+        console.log("yolo");
         this.newsearch.next(orgunit.id);
     }
 
