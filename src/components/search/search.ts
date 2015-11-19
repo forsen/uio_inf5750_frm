@@ -13,6 +13,7 @@ export class Search {
 
     getMoreInfo(orgunit){
         console.log(orgunit.id);
+
     }
 
 
