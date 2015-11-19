@@ -1,13 +1,18 @@
 <div class="container">
     <div class="nav">
         Navbar
-        <mou-search (newsearch)="map.update($event)"></mou-search>
+        <mou-search (newsearch)="sidebar.update($event)"></mou-search>
         <mou-filter></mou-filter>
     </div>
 
-    <mou-map (newactive)="sidebar.update($event)" #map></mou-map>
-    <mou-sidebar #sidebar></mou-sidebar>
-
+    <div class="row">
+        <div class="col-md-8">
+            <mou-map (newactive)="sidebar.update($event)" #map></mou-map>
+        </div>
+        <div class="col-md-4">
+            <mou-sidebar #sidebar></mou-sidebar>
+        </div>
+    </div>
 </div>
 
 
