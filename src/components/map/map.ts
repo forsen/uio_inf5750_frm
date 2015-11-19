@@ -48,9 +48,7 @@ export class Map {
 
     initMap(location,map,addMarker){
 
-
         map.setCenter(location,12);
-
         addMarker(location,map,'This is YOU');
 
 
@@ -78,7 +76,6 @@ export class Map {
             infowindow.open(map,marker);
         });
 
-
     }
 
     logError(error) {
@@ -103,7 +100,13 @@ export class Map {
             for (let item in res.organisationUnits) {
                 this.getData('/' + res.organisationUnits[item].id,this);
             }
-        } else {
+            //liten hack
+        }//else if(res.name != false){
+           // for (let item in res.children) {
+             //   this.getData('/' + res.children[item].id,this);
+            //}
+        //}
+        else {
 
             this.drawPolygon(res);};
     }
@@ -145,10 +148,14 @@ export class Map {
                 let id = event.feature.O.id;
                 console.log(id);
 
+                instance.map.data.forEach(function(feature) {
+                    instance.map.data.remove(feature);
+                });
+               // instance.getData('/' + id+'/children',instance);
                 instance.getData('/' + id,instance);
 
             });
-            
+
 
         }else {
             // ToDO:
