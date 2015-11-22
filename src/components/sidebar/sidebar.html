@@ -1,0 +1,19 @@
+<div>
+    <div *ng-if="activeOrgUnit">
+        <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.name" [disabled]="!editmode">
+        </div>
+        <div class="form-group">
+            <label>Shortname</label>
+            <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.shortName" [disabled]="!editmode">
+        </div>
+        <fieldset class="form-group">
+            <legend>Group(s)</legend>
+            <div *ng-for="#group of activeOrgUnit.organisationUnitGroups">
+                <input class="form-control" type="text" [(ng-model)]="group.name" [disabled]="!editmode">
+            </div>
+        </fieldset>
+        <button class="btn btn-default" (click)="editmode = !editmode">Edit</button>
+    </div>
+</div>

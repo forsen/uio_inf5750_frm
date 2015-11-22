@@ -1,21 +1,51 @@
-<div class="search clearfix">
-        <label class="sr-only" for="livesearch">Search</label>
-        <input
-                mou-live-search
-                (results)="orgunits = $event"
-                (loading)="loading = $event"
-                type="text"
-                autofocus
-                class="form-control"
-                id="livesearch">
-        <img [hidden]="!loading"
-             src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
+<div id="search" >
 
-        <div [hidden]="!orgunits.length">
-            <ul class="results" >
-                <li *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
-                    <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
-                </li>
-            </ul>
-        </div>
+    <label class="sr-only" for="livesearch">Search</label>
+
+        <input  mou-live-search
+               (results)="orgunits = $event"
+               (loading)="loading = $event"
+               type="text"
+               autofocus
+               class="livesearch"
+               name="livesearch"
+               id="livesearch"
+
+               placeholder="Search"/>
+    <img [hidden]="!loading"
+         src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
+
+
+    <div  class="divresult" [hidden]="!orgunits.length">
+        <ul class="dropdown-menu result"  >
+            <li *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
+                <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<button type="button" class="knapp" data-toggle="collapse" data-target="#dropdown-menu"><span class="glyphicon glyphicon-menu-down"></span></button>
+
+<div>
+<ul id="dropdown-menu" class="dropdown-menu">
+
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+</ul>
+
+</div>
+
+
+<!--tester pil oppned-->
+<div class="zippy">
+    <div (click)="toggle()" class="zippy__title">
+        {{ visible ? '&blacktriangledown;' : '&blacktriangleright;' }} {{title}}
+    </div>
+    <div [hidden]="!visible" class="zippy__content">
+        <content></content>
+    </div>
 </div>

@@ -1,58 +1,40 @@
-import {Component, CORE_DIRECTIVES,} from 'angular2/angular2';
+import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
 
 
 @Component({
     selector: 'mou-map',
     directives: [CORE_DIRECTIVES],
+    events: ['newactive'],
     templateUrl: './components/map/map.html'
 })
 
 
 export class Map {
-    result:Object;
+
     map:Object;
-    pos:Object;
-    marker:Object;
+    http: Http;
 
     constructor(http:Http) {
-        this.initMap();
+        this.newactive = new EventEmitter();
+        this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
+        this.init();
+        this.http = http;
 
-        var authHeader = new Headers();
-        authHeader.append('Authorization', 'Basic YWRtaW46ZGlzdHJpY3Q=');
-        this.result = {organisationUnits: []};
-        // http.get(dhisAPI+'/api/organisationUnits?paging=false', {headers: authHeader})
-        http.get('http://mydhis.com:8082/api/organisationUnits?paging=false', {headers: authHeader})
-            .map(res => res.json()).subscribe(
-            res => this.result = res,
-            error => this.logError(error)
-        );
+        this.getData('?paging=false&level=2',this);
     }
 
 
-    initMap() {
+    init() {
 
+        let initMap = this.initMap;
+        let map = this.map;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                    this.pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    this.map = new google.maps.Map(document.getElementById("map"),
-                        {center: this.pos, zoom: 12});
-                    this.marker = new google.maps.Marker({
-                        position: this.pos,
-                        map: this.map,
-                        title: 'Me'
-                    });
-
-                    let infowindow = new google.maps.InfoWindow({
-                        content: "This is You"
-                    });
-                    this.marker.addListener('click', function () {
-                        infowindow.open(this.map, this.marker);
-                    });
-                   // this.map.addListener('click', this.addMarker(position.coords.latitude, position.coords.longitude));
-
+                    let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    initMap(pos,map);
                 }, function () {
-                    //handleNoGeolocation(true);
+                //handleNoGeoLocation()
                 }
             );
         } else {
@@ -63,36 +45,116 @@ export class Map {
     }
 
 
-    //Other map functions
-   // addMarker(lat, lng) {
+    initMap(location,map){
 
-     //   let marker = new google.maps.Marker({
-       //     position: {lat, lng},
-         //   map: this.map,
-        //    title: 'Me'
-        //});
-    //}
+        map.setCenter(location,12);
+
+
+
+        map.addListener('click', function (event) {
+                console.log("jule husker");
+            }
+        );
+
+    }
 
     logError(error) {
         console.error(error);
 
     }
 
+    getData(query,instance){
+        console.log(instance.http);
+        instance.http.get(dhisAPI+'/api/organisationUnits'+query)
+            .map(res => res.json())
+            .subscribe(
+                res => instance.parseResult(res),
+                error => instance.logError(error)
+            );
+
+    }
+
+    parseResult(res){
+
+        if(res.organisationUnits) {
+            for (let item in res.organisationUnits) {
+                this.getData('/' + res.organisationUnits[item].id,this);
+            }
+            //liten hack
+        }//else if(res.name != false){
+           // for (let item in res.children) {
+             //   this.getData('/' + res.children[item].id,this);
+            //}
+        //}
+        else {
+
+            this.drawPolygon(res);};
+    }
+    drawPolygon(item){
+        let instance = this;
+        let feature;
+        let incoming: string;
+        incoming = item.featureType.toLowerCase();
+        switch(incoming){
+            case "point":
+                feature = 'Point';
+                break;
+            case "multi_polygon":
+                feature = 'MultiPolygon';
+                break;
+             case "polygon":
+                 feature = 'MultiPolygon';
+                break;
+            default:
+        }
+          // TODO: test på feature og behandle type: NONE
+        if(feature !== undefined) {
+            let unit = {
+                "type": "Feature",
+                "geometry": {
+                    "type": feature,
+                    "coordinates": JSON.parse(item.coordinates)
+                },
+                "properties": {
+                    "name": item.name,
+                    "id": item.id
+                }
+            };
+            this.map.data.addGeoJson(unit);
+
+            this.map.data.addListener('click', function(event) {
+               //TODO: spør om man vil ned/opp eller se info
+
+                let id = event.feature.O.id;
+                console.log(id);
+
+                instance.map.data.forEach(function(feature) {
+                    instance.map.data.remove(feature);
+                });
+               // instance.getData('/' + id+'/children',instance);
+                instance.getData('/' + id,instance);
+
+            });
+
+
+        }else {
+            // ToDO:
+            console.log("fiks meg! gi warning på topp av kart");
+        }
+
+
+    }
+
+
+    createOrgUnit(){
+        console.log('you just added a new organisation unit');
+    }
+
+    update(event){
+        this.newactive.next(event);
+    }
 }
 
-
-/* showOnMap(){
- var bermudaTriangle = new google.maps.Polygon({
- paths: triangleCoords,
- strokeColor: '#FF0000',
- strokeOpacity: 0.8,
- strokeWeight: 2,
- fillColor: '#FF0000',
- fillOpacity: 0.35
- });
- bermudaTriangle.setMap(this.map);
-
- }*/
 
 
 
