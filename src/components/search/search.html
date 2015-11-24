@@ -10,19 +10,21 @@
                class="livesearch"
                name="livesearch"
                id="livesearch"
-
-               placeholder="Search"/>
+                value="lol"
+               placeholder="Search"
+                />
     <img class="loadingpic" [hidden]="!loading"
          src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
 
 
-    <div  class="divresult" [hidden]="!orgunits.length">
+    <div  class="divresult" id="divresult" [hidden]="!orgunits.length">
         <ul class="dropdown-menu result"  >
             <li *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
                 <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
             </li>
         </ul>
     </div>
+
 
 
 </div>
@@ -49,6 +51,24 @@
     <li><a href="#">Something else here</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="#">Separated link</a></li>
+    <li><div class="checkbox">
+        <label><input type="checkbox" value="">Option 1</label>
+    </div>
+        <div class="checkbox">
+            <label><input type="checkbox" value="">Option 2</label>
+        </div>
+        <div class="checkbox disabled">
+            <label><input type="checkbox" value="" disabled>Option 3</label>
+        </div></li>
+    <select>
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="opel">Opel</option>
+        <option value="audi">Audi</option>
+    </select>
+
+
 </ul>
 
 </div>
+
