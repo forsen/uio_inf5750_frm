@@ -12,7 +12,7 @@
                id="livesearch"
 
                placeholder="Search"/>
-    <img [hidden]="!loading"
+    <img class="loadingpic" [hidden]="!loading"
          src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
 
 
@@ -24,9 +24,23 @@
         </ul>
     </div>
 
+
 </div>
 
-<button type="button" class="knapp" data-toggle="collapse" data-target="#dropdown-menu"><span class="glyphicon glyphicon-menu-down"></span></button>
+<button type="button" class="knapp" data-toggle="collapse" data-target="#dropdown-menu">
+
+    <!--pil opp og ned-->
+
+    <div class="zippy">
+        <div (click)="toggle()" class="zippy__title">
+            {{ visible ? '&xdtri;' : '&xutri;' }} {{title}}
+        </div>
+        <div [hidden]="!visible" class="zippy__content">
+            <content></content>
+        </div>
+    </div>
+
+</button>
 
 <div>
 <ul id="dropdown-menu" class="dropdown-menu">
@@ -37,15 +51,4 @@
     <li><a href="#">Separated link</a></li>
 </ul>
 
-</div>
-
-
-<!--tester pil oppned-->
-<div class="zippy">
-    <div (click)="toggle()" class="zippy__title">
-        {{ visible ? '&blacktriangledown;' : '&blacktriangleright;' }} {{title}}
-    </div>
-    <div [hidden]="!visible" class="zippy__content">
-        <content></content>
-    </div>
 </div>

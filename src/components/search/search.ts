@@ -22,7 +22,7 @@ export class Search {
         this.newsearch.next(orgunit.id);
     }
 
-    //tester pil oppned
+    //pil opp og ned
 
     toggle() {
         this.visible = !this.visible;
