@@ -86,28 +86,23 @@ export class Map {
     }
 
     parseResult(res,instance){
-        console.log(res);
 
         if(res.organisationUnits) {
-            console.log("inne i res.organisationUnits");
-            console.log(res instanceof JSONArray);
             for (let item in res.organisationUnits) {
                 this.getData('/' + res.organisationUnits[item].id,this);
             }
             //liten hack
-        }else if(res instanceof Array && res.children){
-            console.log("inne i res.children"+ res.organisationUnits+ " og " + res.children);
+        }else if(!res.displayName && res.children){
             for (let item in res.children) {
-                console.log(res.children[item].level + " = " + instance.LEVEL + "skal jeg inn?");
                 if(res.children[item].level == instance.LEVEL){
-                    console.log(res.children[item].level + " = " + instance.LEVEL + " så nå skal jeg inn");
                     this.getData('/' + res.children[item].id,this);
                 }
             }
+            instance.setRunned(false);
         }
         else {
-            console.log("tegner" + res[2]);
-            this.drawPolygon(res);};
+            this.drawPolygon(res);
+        };
     }
     drawPolygon(item){
         let instance = this;
@@ -139,10 +134,12 @@ export class Map {
                     "id": item.id
                 }
             };
+            if(unit.geometry.type == 'Point'){
+                unit.geometry.type.);
+            }
             this.map.data.addGeoJson(unit);
 
             this.map.data.addListener('click', function(event) {
-
                //TODO: spør om man vil ned/opp eller se info
                 if(instance.runned == false){
                     instance.setRunned(true);
@@ -156,8 +153,6 @@ export class Map {
                     });
                     instance.addLevel();
                     instance.getData('/' + id+'/children',instance);
-                   // instance.getData('/' + id,instance);
-
                 }
 
             });
