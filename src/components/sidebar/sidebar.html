@@ -1,14 +1,22 @@
 <div>
     <div *ng-if="activeOrgUnit">
-        <form *ng-if="editmode">
+        <form *ng-if="editmode" (ng-submit)="onSubmit()" #of="form">
             <div class="form-group">
                 <label>Name</label>
-                <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.name">
+                <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.name" required ng-control="name" #name="form">
+                <p [hidden]="name.valid" class="alert alert-danger">
+                    Name is required
+                </p>
+
             </div>
             <div class="form-group">
                 <label>Short Name</label>
-                <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.shortName">
+                <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.shortName" required ng-control="shortname" #shortname="form">
+                <p [hidden]="shortname.valid" class="alert alert-danger">
+                    Short name is required
+                </p>
             </div>
+
             <div class="form-group">
                 <label>Description</label>
                 <textarea class="form-control" [(ng-model)]="activeOrgUnit.description" rows="3"></textarea>
@@ -19,7 +27,8 @@
             </div>
             <div class="form-group">
                 <label>Opening Date</label>
-                <input class="form-control" type="date" [(ng-model)]="activeOrgUnit.openingDate">
+                <input class="form-control" type="date" [(ng-model)]="activeOrgUnit.openingDate" required ng-control="openingdate" #openingDate="form">
+                <p [hidden]="openingdate.valid" class="alert alert-danger">Opening date is required</p>
             </div>
             <div class="form-group">
                 <label>Closed Date</label>
@@ -27,7 +36,8 @@
             </div>
             <div class="form-group">
                 <label>URL</label>
-                <input class="form-control" type="url" [(ng-model)]="activeOrgUnit.closedDate">
+                <input class="form-control" type="url" [(ng-model)]="activeOrgUnit.url" ng-control="url" #url="form">
+                <p [hidden]="url.valid" class="alert alert-danger">The specified URL is not valid</p>
             </div>
             <fieldset class="form-group">
                 <legend>Group(s)</legend>
@@ -35,7 +45,10 @@
                     <input class="form-control" type="text" [(ng-model)]="group.name">
                 </div>
             </fieldset>
+            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default">Save</button>
+
         </form>
+
         <section *ng-if="!editmode">
             <label for="actOrgUnitName">Name</label>
 
@@ -71,7 +84,6 @@
             </ul>
         </section>
         <button class="btn btn-default" (click)="editmode = !editmode">{{editmode ? "Cancel" : "Edit"}}</button>
-        <button *ng-if="editmode" class="btn btn-default" (click)="save()">Save</button>
 
     </div>
 </div>
