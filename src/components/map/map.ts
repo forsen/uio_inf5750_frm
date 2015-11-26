@@ -49,6 +49,7 @@ export class Map {
      }
 
     setParent(id){
+        console.log("satte parents");
         this.parent=id;
     }
     getParent(){
@@ -64,6 +65,9 @@ export class Map {
         this.uprunned = value;
     }
 
+    setLevel(value){
+        this.LEVEL = value;
+    }
     addLevel(){
         this.LEVEL++;
     }
@@ -73,24 +77,12 @@ export class Map {
 
     init() {
 
-        let initMap = this.initMap;
-        let instance = this;
         let map = this.map;
-
         let pos = {lat: 9.1, lng: -10.6};
-        initMap(pos,map,instance);
 
+        map.setCenter(pos,12);
     }
 
-
-    initMap(location,map,instance){
-        let add = instance.myFunction;
-
-        map.setCenter(location,12);
-
-
-
-    }
 
     logError(error) {
         console.error(error);
@@ -147,6 +139,7 @@ export class Map {
     }
 
     drawPolygon(item, instance){
+        console.log("tegne polygon");
         let bounds = new google.maps.LatLngBounds();
         let feature;
         let incoming: string;
@@ -302,7 +295,7 @@ export class Map {
 
     update(event){
         this.newactive.next(event);
-
+        let getResult = Object;
         let test = this.getMap();
         let http = this.getHttp();
 
@@ -312,13 +305,23 @@ export class Map {
         http.get(dhisAPI+'/api/organisationUnits/'+event)
             .map(res => res.json())
             .subscribe(
-                res => this.drawPolygon(res,test)
+                res=> this.mapUpdate(res, this)
 
             );
 
 
 
+
     }
+
+    mapUpdate(res, instance){
+        console.log(res.level);
+        this.setLevel(res.level);
+        this.setParent(res.parent.id);
+        this.drawPolygon(res,instance);
+
+    }
+
 }
 
 
