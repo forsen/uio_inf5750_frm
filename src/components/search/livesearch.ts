@@ -54,39 +54,44 @@ export class LiveSearch {
                 .map(res => res.json())
                 .subscribe(
                     zone.bind(orgunits => {
-                        var os = false;
-                        var ls = false;
-                        var ts = false;
-                        for (var group in orgunits.organisationUnitGroups){
-                            if(ownershipSelector.value != ""){
-                                if(orgunits.organisationUnitGroups[group].name == ownershipSelector.value){
+                        if (ownershipSelector.value == "" && typeSelector.value == "" && locationSelector.value == "") {
+                            filteredOrgunits.push(orgunits);
+                        }
+                        else {
+                            var os = false;
+                            var ls = false;
+                            var ts = false;
+                            for (var group in orgunits.organisationUnitGroups) {
+                                if (ownershipSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == ownershipSelector.value) {
+                                        os = true;
+                                    }
+                                }
+                                if (ownershipSelector.value == "") {
                                     os = true;
                                 }
-                            }
-                            if(ownershipSelector.value == ""){
-                                os = true;
-                            }
-                            if(typeSelector.value != ""){
-                                if(orgunits.organisationUnitGroups[group].name == typeSelector.value){
+                                if (typeSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == typeSelector.value) {
+                                        ts = true;
+                                    }
+                                }
+                                if (typeSelector.value == "") {
                                     ts = true;
                                 }
-                            }
-                            if(typeSelector.value == ""){
-                                ts = true;
-                            }
-                            if(locationSelector.value != ""){
-                                if(orgunits.organisationUnitGroups[group].name == locationSelector.value){
+                                if (locationSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == locationSelector.value) {
+                                        ls = true;
+                                    }
+                                }
+                                if (locationSelector.value == "") {
                                     ls = true;
                                 }
-                            }
-                            if(locationSelector.value == "") {
-                                ls = true;
-                            }
-                            if(os == true && ts == true && ls == true){
-                                filteredOrgunits.push(orgunits);
-                                os = false;
-                                ts = false;
-                                ls = false;
+                                if (os == true && ts == true && ls == true) {
+                                    filteredOrgunits.push(orgunits);
+                                    os = false;
+                                    ts = false;
+                                    ls = false;
+                                }
                             }
                         }
                     })
