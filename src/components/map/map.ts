@@ -31,6 +31,10 @@ export class Map {
         this.runned = value;
     }
 
+    addLevel(){
+        this.LEVEL++;
+    }
+
     init() {
 
         let initMap = this.initMap;
@@ -54,7 +58,7 @@ export class Map {
 
     initMap(location,map){
 
-        map.setCenter(location,8);
+        map.setCenter(location,3);
 
 
 
@@ -75,26 +79,34 @@ export class Map {
         instance.http.get(dhisAPI+'/api/organisationUnits'+query)
             .map(res => res.json())
             .subscribe(
-                res => instance.parseResult(res),
+                res => instance.parseResult(res,instance),
                 error => instance.logError(error)
             );
 
     }
 
-    parseResult(res){
+    parseResult(res,instance){
         console.log(res);
+
         if(res.organisationUnits) {
+            console.log("inne i res.organisationUnits");
+            console.log(res instanceof JSONArray);
             for (let item in res.organisationUnits) {
                 this.getData('/' + res.organisationUnits[item].id,this);
             }
             //liten hack
-        }//else if(res.name != false){
-           // for (let item in res.children) {
-             //   this.getData('/' + res.children[item].id,this);
-            //}
-        //}
+        }else if(res instanceof Array && res.children){
+            console.log("inne i res.children"+ res.organisationUnits+ " og " + res.children);
+            for (let item in res.children) {
+                console.log(res.children[item].level + " = " + instance.LEVEL + "skal jeg inn?");
+                if(res.children[item].level == instance.LEVEL){
+                    console.log(res.children[item].level + " = " + instance.LEVEL + " så nå skal jeg inn");
+                    this.getData('/' + res.children[item].id,this);
+                }
+            }
+        }
         else {
-
+            console.log("tegner" + res[2]);
             this.drawPolygon(res);};
     }
     drawPolygon(item){
@@ -142,6 +154,7 @@ export class Map {
                     instance.map.data.forEach(function(feature) {
                         instance.map.data.remove(feature);
                     });
+                    instance.addLevel();
                     instance.getData('/' + id+'/children',instance);
                    // instance.getData('/' + id,instance);
 
