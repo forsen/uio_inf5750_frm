@@ -131,11 +131,15 @@ export class Map {
                 },
                 "properties": {
                     "name": item.name,
-                    "id": item.id
-                }
+                    "id": item.id,
+
+                },
+                "style": null
             };
             if(unit.geometry.type == 'Point'){
-                unit.geometry.type.);
+               //ToDO: add en style på markeren ! 
+
+
             }
             this.map.data.addGeoJson(unit);
 
