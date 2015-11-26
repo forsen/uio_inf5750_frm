@@ -14,13 +14,16 @@ export class Map {
 
     map:Object;
     http: Http;
+    LEVEL: number;
+    runned: boolean;
 
     constructor(http:Http) {
         this.newactive = new EventEmitter();
         this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
-
+        this.LEVEL = 2;
+        this.runned = false;
         this.getData('?paging=false&level=2',this);
     }
 
@@ -31,7 +34,8 @@ export class Map {
         let map = this.map;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                    let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    //let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                let pos = {lat:10,lng:59}
                     initMap(pos,map);
                 }, function () {
                 //handleNoGeoLocation()
@@ -47,12 +51,12 @@ export class Map {
 
     initMap(location,map){
 
-        map.setCenter(location,12);
+        map.setCenter(location,8);
 
 
 
         map.addListener('click', function (event) {
-                console.log("jule husker");
+                console.log(event.latlng);
             }
         );
 
@@ -75,7 +79,7 @@ export class Map {
     }
 
     parseResult(res){
-
+        console.log(res);
         if(res.organisationUnits) {
             for (let item in res.organisationUnits) {
                 this.getData('/' + res.organisationUnits[item].id,this);
@@ -123,19 +127,25 @@ export class Map {
             this.map.data.addGeoJson(unit);
 
             this.map.data.addListener('click', function(event) {
+
                //TODO: spør om man vil ned/opp eller se info
+                if(instance.runned == false){
+                    console.log(instance.runned);
+                    instance.runned = true;
+                    console.log(instance.runned);
 
-                let id = event.feature.O.id;
-                console.log(id);
+                    let id = event.feature.O.id;
+                    console.log("Hvorfor bli denna kjørt så mange ganger ??????"+id);
 
-                instance.map.data.forEach(function(feature) {
-                    instance.map.data.remove(feature);
-                });
-               // instance.getData('/' + id+'/children',instance);
-                instance.getData('/' + id,instance);
+                    instance.map.data.forEach(function(feature) {
+                        instance.map.data.remove(feature);
+                    });
+                   // instance.getData('/' + id+'/children',instance);
+                    instance.getData('/' + id,instance);
+
+                }
 
             });
-
 
         }else {
             // ToDO:
