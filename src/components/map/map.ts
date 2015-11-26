@@ -81,36 +81,7 @@ export class Map {
 
         map.setCenter(location,12);
 
-        let infowindow = new google.maps.InfoWindow({
-            //TODO: Style this
-            content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
-        });
-        map.addListener('click', function (e) {
-            instance.setcurrentPos(e.latLng);
 
-
-            var marker = new google.maps.Marker({
-                position: e.latLng,
-                map: map,
-                title: 'newOrg',
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 5
-                }
-
-            });
-            marker.setMap(map);
-
-            infowindow.open(map, marker);
-
-                 infowindow.addListener('closeclick', function (e) {
-                     marker.setMap(null);
-             });
-
-            instance.addUnit();
-
-            }
-        );
 
     }
 
@@ -130,20 +101,26 @@ export class Map {
 
     }
 
-    parseResult(res,instance){
+    parseResult(res,instance,isParent){
+        console.log("parent: "+isParent);
 
-      /*  if(isParent) {
-            instance.ge
-        }*/
-       // else{
+        if(isParent) {
+            console.log(instance.LEVEL);
+            console.log('/'+res.parent.id+'/children');
+            console.log(res);
+            instance.setParent(res.parent.id);
+            instance.getData('/'+res.parent.id+'/children',instance,false);
+        }
+        else{
 
-
+            console.log(res);
             if (res.organisationUnits) {
                 for (let item in res.organisationUnits) {
                     this.getData('/' + res.organisationUnits[item].id, this);
 
                 }
                 instance.setupRunned(false);
+                instance.setRunned(false);
                 //liten hack
             } else if (!res.displayName && res.children) {
                 for (let item in res.children) {
@@ -158,7 +135,7 @@ export class Map {
                 this.drawPolygon(res, instance);
             }
 
-      //  }
+        }
 
     }
 
@@ -194,6 +171,7 @@ export class Map {
                 "style": null
             };
             if(unit.geometry.type == 'Point'){
+
                //ToDO: add en style på markeren !
 
             }
@@ -201,10 +179,12 @@ export class Map {
 
             this.map.data.addListener('click', function(event) {
                //TODO: spør om man vil ned/opp eller se info
+                //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
 
-                if(instance.runned == false && instance.LEVEL > 1){
+                console.log(instance.LEVEL);
+
+                if(instance.runned == false && instance.LEVEL < 4 ){
                     instance.setRunned(true);
-
 
                     let infowindow = new google.maps.InfoWindow({
                         //TODO: Style this
@@ -213,21 +193,49 @@ export class Map {
                         '<button ">SEEINFO</button></div>'
                     });
 
-
                     infowindow.setPosition(event.latlng);
                    // infowindow.open(instance.map);
-
 
                     let id = event.feature.O.id;
                     instance.setParent(id);
                     console.log(id);
 
-
                     instance.map.data.forEach(function(feature) {
                         instance.map.data.remove(feature);
                     });
+
                     instance.addLevel();
                     instance.getData('/' + id+'/children',instance);
+                }else if(instance.runned == false && instance.LEVEL >= 4){
+                        instance.setRunned(true);
+                    let infowindowNew = new google.maps.InfoWindow({
+                        //TODO: Style this
+                        content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
+                    });
+                    instance.setcurrentPos(event.latLng);
+
+                    var marker = new google.maps.Marker({
+                        position: event.latLng,
+                        map: instance.map,
+                        title: 'newOrg',
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 5
+                        }
+
+                    });
+
+                    marker.setMap(instance.map);
+
+                    infowindowNew.open(instance.map, marker);
+
+                    infowindowNew.addListener('closeclick', function (e) {
+                        marker.setMap(null);
+                    });
+
+                    instance.addUnit();
+
+
                 }
 
             });
@@ -238,22 +246,17 @@ export class Map {
 
                     instance.upLevel();
 
-                    if (instance.LEVEL >= 2) {
+                    if (instance.LEVEL > 1) {
                         instance.map.data.forEach(function (feature) {
                             instance.map.data.remove(feature);
                         });
+
                         let parent = instance.getParent();
                         instance.getData('/'+parent, instance,true);
-                    }/*else if(instance.LEVEL > 2){
-                        instance.map.data.forEach(function (feature) {
-                            instance.map.data.remove(feature);
-                        });
-                        let parent = instance.getParent();
-                        console.log('/' + parent + '/children', instance);
-                        instance.getData('/' + parent + '/children', instance);
-
-                    }*/
+                    }
                     else {
+                        instance.addLevel();
+                        instance.setupRunned(true);
                         //TODO skriv en warning om at man ikke kan gå opp
 
                 }
