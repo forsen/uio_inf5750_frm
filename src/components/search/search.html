@@ -46,14 +46,14 @@
 
 <div>
 <ul id="dropdown-menu" class="dropdown-menu">
-    <li><select id="ownershipSelector" (click)="setFilter()">
+    <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
         <option value="">-- All Facility Ownerships --</option>
         <option value="Mission">Mission</option>
         <option value="NGO">NGO</option>
         <option value="Private Clinic">Private Clinic</option>
         <option value="Public facilities">Public facilities</option>
     </select></li>
-    <li><select id="typeSelector" (click)="setFilter()">
+    <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
         <option value="">-- All Facility Types --</option>
         <option value="CHC">CHC</option>
         <option value="CHP">CHP</option>
@@ -61,34 +61,11 @@
         <option value="Hospital">Hospital</option>
         <option value="MCHP">MCHP</option>
     </select></li>
-    <li><select id="locationSelector" (click)="setFilter()">
+    <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
         <option value="">-- All locations --</option>
         <option value="Rural">Rural</option>
         <option value="Urban">Urban</option>
     </select></li>
-
-    <li role="separator" class="divider"></li>
-    <li><a href="#">Separated link</a></li>
-    <li>
-        <select class="form-control filtervalg">
-            <option selected="selected"> Alle </option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
-        </select>
-    </li>
-    <li>
-    <select class="form-control filtervalg">
-        <option selected="selected"> Alle </option>
-        <option value="volvo">Volvo</option>
-        <option value="saab">Saab</option>
-        <option value="opel">Opel</option>
-        <option value="audi">Audi</option>
-    </select>
-    </li>
-
-
 </ul>
 
 </div>
