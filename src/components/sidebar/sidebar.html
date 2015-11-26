@@ -1,6 +1,7 @@
 <div>
     <div *ng-if="activeOrgUnit">
         <form *ng-if="editmode" (ng-submit)="onSubmit()" #of="form">
+            <h3>{{activeOrgUnit.id?"Update Organizational Unit":"Add new Organizational Unit"}}</h3>
             <div class="form-group">
                 <label>Name</label>
                 <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.name" required ng-control="name" #name="form">
@@ -45,7 +46,8 @@
                     <input class="form-control" type="text" [(ng-model)]="group.name">
                 </div>
             </fieldset>
-            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default">Save</button>
+            <button type="button" (click)="cancel()" class="btn btn-default">Cancel</button>
+            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default">{{activeOrgUnit.id? "Update" :"Add"}}</button>
 
         </form>
 
@@ -82,8 +84,9 @@
             <ul *ng-for="#group of activeOrgUnit.organisationUnitGroups">
                 <li>{{group.name}}</li>
             </ul>
+            <button class="btn btn-default" (click)="editmode = !editmode">Edit</button>
         </section>
-        <button class="btn btn-default" (click)="editmode = !editmode">{{editmode ? "Cancel" : "Edit"}}</button>
+
 
     </div>
 </div>

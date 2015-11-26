@@ -27,7 +27,6 @@ export class Sidebar {
     }
 
     update(orgunitId) {
-        console.log(orgunitId);
         this.http.get(dhisAPI + "/api/organisationUnits/" + orgunitId)
             .map(res => res.json())
             .subscribe(res => this.activeOrgUnit = res)
@@ -48,6 +47,15 @@ export class Sidebar {
                 .subscribe(res => console.log(res));
         }
 
+    }
+
+    cancel(){
+        this.editmode = false;
+        if(this.activeOrgUnit.id){
+            this.update(this.activeOrgUnit.id);
+        }else{
+            this.activeOrgUnit = null;
+        }
     }
 }
 
