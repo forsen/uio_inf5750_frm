@@ -14,14 +14,32 @@ export class Map {
 
     map:Object;
     http: Http;
+    parent: Object;
+    currentPos = Object;
 
     constructor(http:Http) {
         this.newactive = new EventEmitter();
+        this.newOrg = new EventEmitter();
         this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
+        this.parent = null;
+        this.currentPos = null;
+       // this.getData('?paging=false&level=2',this);
+        this.getData('?paging=false&level=3',this);
+    }
+    setParent(id){
+        this.parent=id;
+    }
+    getParent(){
+        return this.parent;
+    }
 
-        this.getData('?paging=false&level=2',this);
+    setcurrentPos(latlng){
+        this.currentPos = latlng;
+    }
+    getcurrentPos(){
+        return this.currentPos;
     }
 
 
@@ -31,7 +49,8 @@ export class Map {
         let map = this.map;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                    let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                   // let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                let pos = {lat: 9.1, lng: -10.6};
                     initMap(pos,map);
                 }, function () {
                 //handleNoGeoLocation()
@@ -47,12 +66,35 @@ export class Map {
 
     initMap(location,map){
 
-        map.setCenter(location,12);
+        map.setCenter(location,3);
 
 
+        let infowindow = new google.maps.InfoWindow({
+            content: '<div>Add an OrganisationUnit here ? <button (click)="addUnit(location)">Yes</button> <button (click)="clear()">NO</button>'
+        });
+        map.addListener('click', function (e) {
+            this.setcurrentPos(e.latLng);
+            var marker = new google.maps.Marker({
+                position: e.latLng,
+                map: map,
+                title: 'newOrg',
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 5
+                }
 
-        map.addListener('click', function (event) {
+            });
+            marker.setMap(map);
+
+            infowindow.open(map, marker);
+
+
                 console.log("jule husker");
+            console.log("Nå er parent og location sånn:" + this.getParent()+ " og "+ this.getcurrentPos());
+
+
+
+
             }
         );
 
@@ -126,6 +168,7 @@ export class Map {
                //TODO: spør om man vil ned/opp eller se info
 
                 let id = event.feature.O.id;
+                instance.setParent(id);
                 console.log(id);
 
                 instance.map.data.forEach(function(feature) {
@@ -145,9 +188,21 @@ export class Map {
 
     }
 
+    addUnit(){
+        console.log("Inne i Add funksjonen");
+        let parent = this.getParent();
+        let pos = this.getcurrentPos;
+        let event =  {pos,parent};
+        this.newOrg.next(event);
 
-    createOrgUnit(){
-        console.log('you just added a new organisation unit');
+    }
+
+    drawCircle(){
+        return new ol.style.Circle({
+            radius: 5,
+            fill: null,
+            stroke: new ol.style.Stroke({color: 'red', width: 1})
+        });
     }
 
     update(event){
