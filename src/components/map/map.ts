@@ -27,6 +27,9 @@ export class Map {
         this.getData('?paging=false&level=2',this);
     }
 
+    setRunned(value){
+        this.runned = value;
+    }
 
     init() {
 
@@ -35,7 +38,7 @@ export class Map {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                     //let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                let pos = {lat:10,lng:59}
+                let pos = {lat:10,lng:39}
                     initMap(pos,map);
                 }, function () {
                 //handleNoGeoLocation()
@@ -130,18 +133,17 @@ export class Map {
 
                //TODO: spør om man vil ned/opp eller se info
                 if(instance.runned == false){
-                    console.log(instance.runned);
-                    instance.runned = true;
-                    console.log(instance.runned);
+                    instance.setRunned(true);
+
 
                     let id = event.feature.O.id;
-                    console.log("Hvorfor bli denna kjørt så mange ganger ??????"+id);
+                    console.log(id);
 
                     instance.map.data.forEach(function(feature) {
                         instance.map.data.remove(feature);
                     });
-                   // instance.getData('/' + id+'/children',instance);
-                    instance.getData('/' + id,instance);
+                    instance.getData('/' + id+'/children',instance);
+                   // instance.getData('/' + id,instance);
 
                 }
 
