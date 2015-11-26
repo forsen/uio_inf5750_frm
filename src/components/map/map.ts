@@ -23,11 +23,19 @@ export class Map {
         this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
-        this.parent = null;
+        this.parent =null ;
         this.currentPos = null;
        // this.getData('?paging=false&level=2',this);
         this.getData('?paging=false&level=3',this);
     }
+
+    setcurrentPos(latlng){
+        this.currentPos = latlng;
+    }
+     getcurrentPos(){
+         return this.currentPos;
+     }
+
     setParent(id){
         this.parent=id;
     }
@@ -35,45 +43,28 @@ export class Map {
         return this.parent;
     }
 
-    setcurrentPos(latlng){
-        this.currentPos = latlng;
-    }
-    getcurrentPos(){
-        return this.currentPos;
-    }
-
 
     init() {
 
         let initMap = this.initMap;
         let map = this.map;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                   // let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                let pos = {lat: 9.1, lng: -10.6};
-                    initMap(pos,map);
-                }, function () {
-                //handleNoGeoLocation()
-                }
-            );
-        } else {
-            alert("You do not support geolocation");
-        }
-
+        let pos = {lat: 9.1, lng: -10.6};
+        initMap(pos,map,this);
 
     }
 
 
-    initMap(location,map){
+    initMap(location,map,instance){
+        let myfunction = instance.myFunction;
 
-        map.setCenter(location,3);
-
-
+        map.setCenter(location,2);
         let infowindow = new google.maps.InfoWindow({
-            content: '<div>Add an OrganisationUnit here ? <button (click)="addUnit(location)">Yes</button> <button (click)="clear()">NO</button>'
+            //TODO: Style this
+            content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="myfunction">Yes</button></div>'
         });
         map.addListener('click', function (e) {
-            this.setcurrentPos(e.latLng);
+            //instance.setcurrentPos(e.latLng);
+           // instance.setcurrentPos(e.latLng);
             var marker = new google.maps.Marker({
                 position: e.latLng,
                 map: map,
@@ -88,12 +79,9 @@ export class Map {
 
             infowindow.open(map, marker);
 
-
-                console.log("jule husker");
-            console.log("Nå er parent og location sånn:" + this.getParent()+ " og "+ this.getcurrentPos());
-
-
-
+                 infowindow.addListener('closeclick', function (e) {
+                     marker.setMap(null);
+             });
 
             }
         );
@@ -191,18 +179,15 @@ export class Map {
     addUnit(){
         console.log("Inne i Add funksjonen");
         let parent = this.getParent();
-        let pos = this.getcurrentPos;
+        let pos = this.getcurrentPos();
         let event =  {pos,parent};
         this.newOrg.next(event);
 
     }
 
-    drawCircle(){
-        return new ol.style.Circle({
-            radius: 5,
-            fill: null,
-            stroke: new ol.style.Stroke({color: 'red', width: 1})
-        });
+    myFunction(){
+        console.log("Inne i myfunksjonen");
+
     }
 
     update(event){
