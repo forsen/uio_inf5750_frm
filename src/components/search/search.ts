@@ -1,6 +1,9 @@
 import {Component,EventEmitter, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import {Http} from 'angular2/http';
 import {LiveSearch} from "./livesearch";
+import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
+
+declare var zone: Zone;
 
 @Component({
     selector: 'mou-search',
@@ -15,11 +18,15 @@ export class Search {
     facilityType: Array<any> = [];
     facilityOwnership: Array<any> = [];
     facilityLocation: Array<any> = [];
-
+    groups: Array<any> = [];
+    groupSet: Array<any> = [];
+    counter: number = 0;
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
+        //this.getFilterGroups();
+        this.getUnitGroupSets();
 
     }
 
@@ -32,38 +39,46 @@ export class Search {
 
     toggle() {
         this.visible = !this.visible;
+        //this.getUnitGroupSets();
     }
 
-    /*getFilterTypes(){
-        this.http.get(dhis + "/api/organisationUnitGroups/")
-            .map(res => res.json())
-            .map(res => res.organisationUnitGroups)
-            .subscribe(
-                zone.bind(res => {
-                   for(var i = 0; i < res.length; i++){
-                       this.http.get(res[i].href)
-                        .map(result => result.json())
-                        .map(result => result.organisationUnitGroupSet)
-                        .subscribe(
-                            zone.bind(result => {
-                                if(result.name == "Location Rural/Urban"){
-                                    this.facilityLocation.push(res[i].name);
-                                }
-                                else if(result.name == "Facility Type"){
-                                    this.facilityType.push(res[i].name);
-                                }
-                                else if(result.name == "")
-                            })
-                        )
-                   }
+    getUnitGroupSets(){
+        this.http.get(dhisAPI + "/api/organisationUnitGroupSets")
+        .map(res => res.json())
+        .map(res => res.organisationUnitGroupSets)
+        .subscribe(
+            zone.bind( res =>{
+                this.facilityOwnership .push("-- " + res[0].name + " --");
+                this.facilityType.push("-- " + res[1].name + " --");
+                this.facilityLocation.push("-- " + res[2].name + " --");
 
-                })
-            )
+                for(var i = 0; i < res.length; i++) {
+                    this.http.get(res[i].href)
+                    .map(result => result.json())
+                    .map(result => result.organisationUnitGroups)
+                    .subscribe(
+                        zone.bind(result => {
+                            if(this.facilityOwnership.length == 1){
+                                for(var j = 0; j < result.length; j++) {
+                                    this.facilityOwnership.push(result[j].name);
+                                }
+                            }
+                            else if(this.facilityType.length == 1){
+                                for(var j = 0; j < result.length; j++) {
+                                    this.facilityType.push(result[j].name);
+                                }
+                            }
+                            else if(this.facilityLocation.length == 1){
+                                for(var j = 0; j < result.length; j++) {
+                                    this.facilityLocation.push(result[j].name);
+                                }
+                            }
+                    }));
+                }
+            })
+        )
     }
 
-    setFilterTypes(){
-
-    }*/
 
     setFilter(){
         var text = livesearch.value;

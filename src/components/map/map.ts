@@ -88,7 +88,8 @@ export class Map {
         //}
         else {
 
-            this.drawPolygon(res);};
+            this.drawPolygon(res);
+        }
     }
     drawPolygon(item){
         let instance = this;
