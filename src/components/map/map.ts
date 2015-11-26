@@ -17,8 +17,8 @@ export class Map {
     LEVEL: number;
     runned: boolean;
     parent: Object;
-    currentPos = Object;
-
+    currentPos : Object;
+    uprunned: boolean;
     constructor(http:Http) {
         this.newactive = new EventEmitter();
         this.newOrg = new EventEmitter();
@@ -30,6 +30,7 @@ export class Map {
         this.getData('?paging=false&level=2',this);
         this.parent =null ;
         this.currentPos = null;
+        this.uprunned = false;
 
     }
 
@@ -52,8 +53,15 @@ export class Map {
         this.runned = value;
     }
 
+    setupRunned(value){
+        this.uprunned = value;
+    }
+
     addLevel(){
         this.LEVEL++;
+    }
+    upLevel(){
+        this.LEVEL--;
     }
 
     init() {
@@ -69,18 +77,18 @@ export class Map {
 
 
     initMap(location,map,instance){
+        let add = instance.myFunction;
 
-
-        map.setCenter(location,2);
+        map.setCenter(location,12);
 
         let infowindow = new google.maps.InfoWindow({
             //TODO: Style this
-            content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="instance.myFunction()">Yes</button></div>'
+            content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
         });
         map.addListener('click', function (e) {
             instance.setcurrentPos(e.latLng);
 
-            instance.myFunction();
+
             var marker = new google.maps.Marker({
                 position: e.latLng,
                 map: map,
@@ -99,6 +107,7 @@ export class Map {
                      marker.setMap(null);
              });
 
+            instance.addUnit();
 
             }
         );
@@ -110,38 +119,50 @@ export class Map {
 
     }
 
-    getData(query,instance){
-        console.log(instance.http);
+    getData(query,instance, isParent){
         instance.http.get(dhisAPI+'/api/organisationUnits'+query)
             .map(res => res.json())
             .subscribe(
-                res => instance.parseResult(res,instance),
+                res => instance.parseResult(res,instance,isParent),
                 error => instance.logError(error)
+
             );
 
     }
 
     parseResult(res,instance){
 
-        if(res.organisationUnits) {
-            for (let item in res.organisationUnits) {
-                this.getData('/' + res.organisationUnits[item].id,this);
-            }
-            //liten hack
-        }else if(!res.displayName && res.children){
-            for (let item in res.children) {
-                if(res.children[item].level == instance.LEVEL){
-                    this.getData('/' + res.children[item].id,this);
+      /*  if(isParent) {
+            instance.ge
+        }*/
+       // else{
+
+
+            if (res.organisationUnits) {
+                for (let item in res.organisationUnits) {
+                    this.getData('/' + res.organisationUnits[item].id, this);
+
                 }
+                instance.setupRunned(false);
+                //liten hack
+            } else if (!res.displayName && res.children) {
+                for (let item in res.children) {
+                    if (res.children[item].level == instance.LEVEL) {
+                        this.getData('/' + res.children[item].id, this);
+                    }
+                }
+                instance.setRunned(false);
+                instance.setupRunned(false);
             }
-            instance.setRunned(false);
-        }
-        else {
-            this.drawPolygon(res);
-        };
+            else {
+                this.drawPolygon(res, instance);
+            }
+
+      //  }
+
     }
-    drawPolygon(item){
-        let instance = this;
+
+    drawPolygon(item, instance){
         let feature;
         let incoming: string;
         incoming = item.featureType.toLowerCase();
@@ -173,21 +194,33 @@ export class Map {
                 "style": null
             };
             if(unit.geometry.type == 'Point'){
-               //ToDO: add en style på markeren ! 
-
+               //ToDO: add en style på markeren !
 
             }
             this.map.data.addGeoJson(unit);
 
             this.map.data.addListener('click', function(event) {
                //TODO: spør om man vil ned/opp eller se info
-                if(instance.runned == false){
+
+                if(instance.runned == false && instance.LEVEL > 1){
                     instance.setRunned(true);
 
 
-                let id = event.feature.O.id;
-                instance.setParent(id);
-                console.log(id);
+                    let infowindow = new google.maps.InfoWindow({
+                        //TODO: Style this
+                        content:'<div> <button >DrillUP</button>' +
+                        ' <button ">DrillDOWN</button>' +
+                        '<button ">SEEINFO</button></div>'
+                    });
+
+
+                    infowindow.setPosition(event.latlng);
+                   // infowindow.open(instance.map);
+
+
+                    let id = event.feature.O.id;
+                    instance.setParent(id);
+                    console.log(id);
 
 
                     instance.map.data.forEach(function(feature) {
@@ -199,6 +232,36 @@ export class Map {
 
             });
 
+            this.map.data.addListener('rightclick', function(event) {
+                if(instance.uprunned == false) {
+                    instance.setupRunned(true);
+
+                    instance.upLevel();
+
+                    if (instance.LEVEL >= 2) {
+                        instance.map.data.forEach(function (feature) {
+                            instance.map.data.remove(feature);
+                        });
+                        let parent = instance.getParent();
+                        instance.getData('/'+parent, instance,true);
+                    }/*else if(instance.LEVEL > 2){
+                        instance.map.data.forEach(function (feature) {
+                            instance.map.data.remove(feature);
+                        });
+                        let parent = instance.getParent();
+                        console.log('/' + parent + '/children', instance);
+                        instance.getData('/' + parent + '/children', instance);
+
+                    }*/
+                    else {
+                        //TODO skriv en warning om at man ikke kan gå opp
+
+                }
+
+                }
+            });
+
+
         }else {
             // ToDO:
             console.log("fiks meg! gi warning på topp av kart");
@@ -208,18 +271,19 @@ export class Map {
     }
 
     addUnit(){
-        console.log("Inne i Add funksjonen");
+
         let parent = this.getParent();
         let pos = this.getcurrentPos();
-        let event =  {pos,parent};
+        let lat = pos.lat();
+        let lng = pos.lng()
+        let location= {lat: lat, lng: lng};
+        let event =  {location,parent};
         this.newOrg.next(event);
 
     }
 
     myFunction(){
         console.log("Inne i myfunksjonen");
-      
-
     }
 
     update(event){
