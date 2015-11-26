@@ -14,7 +14,7 @@ export class Sidebar {
 
     constructor(http:Http){
         this.http = http;
-        editmode = false;
+        this.editmode = false;
     }
 
     update(orgunitId){
@@ -22,6 +22,10 @@ export class Sidebar {
         this.http.get(dhisAPI + "/api/organisationUnits/" + orgunitId)
             .map(res => res.json())
             .subscribe(res => this.activeOrgUnit = res)
+    }
+
+    save(){
+        console.log("YOlo");
     }
 }
 
