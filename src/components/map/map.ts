@@ -16,15 +16,36 @@ export class Map {
     http: Http;
     LEVEL: number;
     runned: boolean;
+    parent: Object;
+    currentPos = Object;
 
     constructor(http:Http) {
         this.newactive = new EventEmitter();
+        this.newOrg = new EventEmitter();
         this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
         this.LEVEL = 2;
         this.runned = false;
         this.getData('?paging=false&level=2',this);
+        this.parent =null ;
+        this.currentPos = null;
+
+    }
+
+    setcurrentPos(latlng){
+        this.currentPos = latlng;
+    }
+     getcurrentPos(){
+         return this.currentPos;
+     }
+
+    setParent(id){
+        this.parent=id;
+    }
+    getParent(){
+        return this.parent;
+
     }
 
     setRunned(value){
@@ -38,32 +59,47 @@ export class Map {
     init() {
 
         let initMap = this.initMap;
+        let instance = this;
         let map = this.map;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                    //let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                let pos = {lat:10,lng:39}
-                    initMap(pos,map);
-                }, function () {
-                //handleNoGeoLocation()
-                }
-            );
-        } else {
-            alert("You do not support geolocation");
-        }
 
+        let pos = {lat: 9.1, lng: -10.6};
+        initMap(pos,map,instance);
 
     }
 
 
-    initMap(location,map){
-
-        map.setCenter(location,3);
+    initMap(location,map,instance){
 
 
+        map.setCenter(location,2);
 
-        map.addListener('click', function (event) {
-                console.log(event.latlng);
+        let infowindow = new google.maps.InfoWindow({
+            //TODO: Style this
+            content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="instance.myFunction()">Yes</button></div>'
+        });
+        map.addListener('click', function (e) {
+            instance.setcurrentPos(e.latLng);
+
+            instance.myFunction();
+            var marker = new google.maps.Marker({
+                position: e.latLng,
+                map: map,
+                title: 'newOrg',
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 5
+                }
+
+            });
+            marker.setMap(map);
+
+            infowindow.open(map, marker);
+
+                 infowindow.addListener('closeclick', function (e) {
+                     marker.setMap(null);
+             });
+
+
             }
         );
 
@@ -149,8 +185,10 @@ export class Map {
                     instance.setRunned(true);
 
 
-                    let id = event.feature.O.id;
-                    console.log(id);
+                let id = event.feature.O.id;
+                instance.setParent(id);
+                console.log(id);
+
 
                     instance.map.data.forEach(function(feature) {
                         instance.map.data.remove(feature);
@@ -169,9 +207,19 @@ export class Map {
 
     }
 
+    addUnit(){
+        console.log("Inne i Add funksjonen");
+        let parent = this.getParent();
+        let pos = this.getcurrentPos();
+        let event =  {pos,parent};
+        this.newOrg.next(event);
 
-    createOrgUnit(){
-        console.log('you just added a new organisation unit');
+    }
+
+    myFunction(){
+        console.log("Inne i myfunksjonen");
+      
+
     }
 
     update(event){

@@ -16,6 +16,7 @@ declare var zone: Zone;
 export class LiveSearch {
     results:EventEmitter = new EventEmitter();
     loading:EventEmitter = new EventEmitter();
+    
 
     constructor(private el:ElementRef, public http:Http, public search:SearchService) {
 
@@ -53,15 +54,45 @@ export class LiveSearch {
                 .map(res => res.json())
                 .subscribe(
                     zone.bind(orgunits => {
+                        var os = false;
+                        var ls = false;
+                        var ts = false;
                         for (var group in orgunits.organisationUnitGroups){
-                            if(orgunits.organisationUnitGroups[group].name == "Rural"){
+                            if(ownershipSelector.value != ""){
+                                if(orgunits.organisationUnitGroups[group].name == ownershipSelector.value){
+                                    os = true;
+                                }
+                            }
+                            if(ownershipSelector.value == ""){
+                                os = true;
+                            }
+                            if(typeSelector.value != ""){
+                                if(orgunits.organisationUnitGroups[group].name == typeSelector.value){
+                                    ts = true;
+                                }
+                            }
+                            if(typeSelector.value == ""){
+                                ts = true;
+                            }
+                            if(locationSelector.value != ""){
+                                if(orgunits.organisationUnitGroups[group].name == locationSelector.value){
+                                    ls = true;
+                                }
+                            }
+                            if(locationSelector.value == "") {
+                                ls = true;
+                            }
+                            if(os == true && ts == true && ls == true){
                                 filteredOrgunits.push(orgunits);
-                                console.log(filteredOrgunits);
+                                os = false;
+                                ts = false;
+                                ls = false;
                             }
                         }
                     })
                 )
         }
+        console.log(filteredOrgunits);
         return filteredOrgunits;
     }
 }
