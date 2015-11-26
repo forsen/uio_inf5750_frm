@@ -1,9 +1,5 @@
 <div class="container">
-    <div class="nav">
-        Navbar
-        <mou-search (newsearch)="sidebar.update($event)"></mou-search>
-        <mou-filter></mou-filter>
-    </div>
+    <mou-navbar (outevent)="map.update($event)"></mou-navbar>
 
     <div class="row">
         <div class="col-md-8">
