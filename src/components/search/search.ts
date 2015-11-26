@@ -28,11 +28,10 @@ export class Search {
         this.newsearch.next(orgunit.id);
     }
 
-    //pil opp og ned
-
     toggle() {
         this.visible = !this.visible;
     }
+
 
     /*getFilterTypes(){
         this.http.get(dhis + "/api/organisationUnitGroups/")

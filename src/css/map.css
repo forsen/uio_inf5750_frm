@@ -184,9 +184,12 @@ html, body {
     border: 1px solid darkgrey;
     color: black;
     outline: none;
-    background: white;
+    background: #BAB8B8;
     box-sizing: border-box;
     transition: all 0.15s;
 }
+
+
+
 
 
