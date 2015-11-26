@@ -10,7 +10,6 @@
                class="livesearch"
                name="livesearch"
                id="livesearch"
-                value="lol"
                placeholder="Search"
                 />
     <img class="loadingpic" [hidden]="!loading"
@@ -30,6 +29,7 @@
 </div>
 
 <button type="button" class="knapp" data-toggle="collapse" data-target="#dropdown-menu">
+
 
     <!--pil opp og ned-->
 
@@ -51,21 +51,24 @@
     <li><a href="#">Something else here</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="#">Separated link</a></li>
-    <li><div class="checkbox">
-        <label><input type="checkbox" value="">Option 1</label>
-    </div>
-        <div class="checkbox">
-            <label><input type="checkbox" value="">Option 2</label>
-        </div>
-        <div class="checkbox disabled">
-            <label><input type="checkbox" value="" disabled>Option 3</label>
-        </div></li>
-    <select>
+    <li>
+        <select class="form-control filtervalg">
+            <option selected="selected"> Alle </option>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+        </select>
+    </li>
+    <li>
+    <select class="form-control filtervalg">
+        <option selected="selected"> Alle </option>
         <option value="volvo">Volvo</option>
         <option value="saab">Saab</option>
         <option value="opel">Opel</option>
         <option value="audi">Audi</option>
     </select>
+    </li>
 
 
 </ul>
