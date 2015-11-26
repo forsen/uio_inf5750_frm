@@ -1,7 +1,7 @@
 html, body {
     height: 100%;
     padding-top: 70px;
-    background-color: #DBDBDB;
+    background-color: #e2e2e2;
     margin: 0;
 }
 
@@ -12,16 +12,17 @@ html, body {
     width: 100%;
 
 }
+
+
 /*
 .search div{
     position: relative;
 }*/
 
 .results > li > a{
-    margin-top: 20px;
-
+    margin-top: 10px;
     display: block;
-    padding: 3px 20px;
+    padding: 3px 5px;
     clear: both;
     font-weight: 400;
     line-height: 1.42857143;
@@ -39,7 +40,7 @@ html, body {
 
 .dropdown-menu{
     margin-top: -17px;
-    margin-left: 648px;
+    margin-left: 649px;
     background-color: white;
     border-radius: 0px;
 
@@ -48,6 +49,9 @@ html, body {
 
 .dropdown-menu li{
     background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+
 
 }
 
@@ -57,17 +61,22 @@ html, body {
     margin-left: 150px;
 }
 
+
 #livesearch{
+    box-shadow: 0 0 1px darkgrey;
     width: 500px;
-    padding: 15px 0 15px 20px;
+    padding: 5px 0 5px 20px;
     font-size: 16px;
     font-family: Montserrat, sans-serif;
-    border: 0 none;
+    border-left: 1px solid darkgrey;
+    border-top:1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
+    border-right: 0 none;
     height: 52px;
     margin-right: 0;
     color: white;
     outline: none;
-    background: #DBDBDB;
+    background: #e2e2e2;
     float: left;
     box-sizing: border-box;
     transition: all 0.15s;
@@ -85,7 +94,8 @@ html, body {
 :-ms-input-placeholder {
     color: white;
 }
-#search_text:focus {
+
+#livesearch:focus {
     background: darkgrey;
 }
 
@@ -104,7 +114,11 @@ html, body {
 
 .knapp
 {
-    border: 0 none;
+    box-shadow: 0 0 1px darkgrey;
+    border-right: 1px solid darkgrey;
+    border-top:1px solid darkgrey;
+    border-bottom: 1px solid darkgrey;
+    border-left: 0 none;
     background: #BAB8B8;
     width: 60px;
     float: left;
@@ -122,7 +136,7 @@ html, body {
 }
 
 .result{
-    width: 357px;
+    width: 500px;
     margin-left: 150px;
     display: block;
     position: absolute;
@@ -131,7 +145,7 @@ html, body {
     z-index: 1000;
     float: left;
     min-width: 160px;
-    padding: 5px 0;
+    padding: 1px 0;
     font-size: 14px;
     text-align: left;
     list-style: none;
@@ -153,3 +167,26 @@ html, body {
     padding: 0.5em 0.5em 0.5em 0;
     float: none;
 }
+
+.loadingpic{
+    width: 50px;
+    height: 50px;
+}
+
+.filtervalg{
+    box-shadow: 0 0 1px darkgrey;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 200px;
+    height: 20px;
+    font-size: 12px;
+    font-family: Montserrat, sans-serif;
+    border: 1px solid darkgrey;
+    color: black;
+    outline: none;
+    background: white;
+    box-sizing: border-box;
+    transition: all 0.15s;
+}
+
+
