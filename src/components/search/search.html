@@ -1,8 +1,9 @@
-<div id="search" >
+<div id="search">
 
     <label class="sr-only" for="livesearch">Search</label>
 
-        <input  mou-live-search
+        <input
+                mou-live-search
                (results)="orgunits = $event"
                (loading)="loading = $event"
                type="text"
@@ -12,16 +13,15 @@
                id="livesearch"
                placeholder="Search"
                 value = ""
+
                 />
 
-    <img class="loadingpic" [hidden]="!loading"
-         src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
 
 <span [hidden]="hideDiv()">
 
-    <div class="divresult" id="divresult" [hidden]="!orgunits.length" onclick="$(this).fadeOut(300);">
+    <div class="divresult" id="divresult" [hidden]="!orgunits.length">
         <ul id="d" class="dropdown-menu result"  >
-            <li *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
+            <li  id="c" *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
                 <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
             </li>
         </ul>
@@ -31,16 +31,13 @@
 
 
 
+
 </div>
 
 
 <button type="button" class="knapp" (click)="toggle()" onclick="$('#ownershipSelector, #typeSelector, #locationSelector').prop('selectedIndex',0);" data-toggle="collapse" data-target="#dropdown-menu">
             {{ visible ? '&xdtri;' : '&cross;' }}
 </button>
-
-<span class="someClass">
-<span [hidden]="hideDiv1()">should be hidden.</span>
-</span>
 
 
 <div>
@@ -74,3 +71,4 @@
 </ul>
 
 </div>
+

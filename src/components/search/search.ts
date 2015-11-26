@@ -21,9 +21,11 @@ export class Search {
         this.newsearch = new EventEmitter();
         this.visible = true;
 
+
     }
 
     getMoreInfo(orgunit) {
+        this.orgunits = [];
         console.log("yolo");
         this.newsearch.next(orgunit.id);
     }
@@ -38,9 +40,8 @@ export class Search {
 
     }
 
-    hideDiv1(){
-        return true;
-    }
+
+
     /*getFilterTypes(){
         this.http.get(dhis + "/api/organisationUnitGroups/")
             .map(res => res.json())

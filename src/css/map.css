@@ -121,13 +121,18 @@ html, body {
     border-left: 0 none;
     background: #BAB8B8;
     width: 60px;
-    float: left;
+    position: fixed;
     padding: 0;
     margin: 0;
     text-align: center;
     height: 52px;
     cursor: pointer;
-    border-radius: 0px;
+    position: relative;
+    float: left;
+    position: -webkit-sticky;
+
+    position: sticky;
+
 
 }
 
@@ -168,11 +173,6 @@ html, body {
     float: none;
 }
 
-.loadingpic{
-    width: 50px;
-    height: 50px;
-}
-
 .filtervalg{
     box-shadow: 0 0 1px darkgrey;
     margin-top: 10px;
@@ -189,10 +189,7 @@ html, body {
     transition: all 0.15s;
 }
 
-
-
-
-
 .hide {
     display:none;
 }
+
