@@ -34,6 +34,13 @@ export class Map {
 
     }
 
+    getMap(){
+        return this.map;
+    }
+
+    getHttp(){
+        return this.http;
+    }
     setcurrentPos(latlng){
         this.currentPos = latlng;
     }
@@ -140,6 +147,7 @@ export class Map {
     }
 
     drawPolygon(item, instance){
+        let bounds = new google.maps.LatLngBounds();
         let feature;
         let incoming: string;
         incoming = item.featureType.toLowerCase();
@@ -177,68 +185,70 @@ export class Map {
             }
             this.map.data.addGeoJson(unit);
 
-            this.map.data.addListener('click', function(event) {
-               //TODO: spør om man vil ned/opp eller se info
-                //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
+                this.map.data.addListener('click', function (event) {
+                    //TODO: spør om man vil ned/opp eller se info
+                    //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
 
-                console.log(instance.LEVEL);
+                    console.log(instance.LEVEL);
 
-                if(instance.runned == false && instance.LEVEL < 4 ){
-                    instance.setRunned(true);
-
-                    let infowindow = new google.maps.InfoWindow({
-                        //TODO: Style this
-                        content:'<div> <button >DrillUP</button>' +
-                        ' <button ">DrillDOWN</button>' +
-                        '<button ">SEEINFO</button></div>'
-                    });
-
-                    infowindow.setPosition(event.latlng);
-                   // infowindow.open(instance.map);
-
-                    let id = event.feature.O.id;
-                    instance.setParent(id);
-                    console.log(id);
-
-                    instance.map.data.forEach(function(feature) {
-                        instance.map.data.remove(feature);
-                    });
-
-                    instance.addLevel();
-                    instance.getData('/' + id+'/children',instance);
-                }else if(instance.runned == false && instance.LEVEL >= 4){
+                    if (instance.runned == false && instance.LEVEL < 4) {
                         instance.setRunned(true);
-                    let infowindowNew = new google.maps.InfoWindow({
-                        //TODO: Style this
-                        content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
-                    });
-                    instance.setcurrentPos(event.latLng);
 
-                    var marker = new google.maps.Marker({
-                        position: event.latLng,
-                        map: instance.map,
-                        title: 'newOrg',
-                        icon: {
-                            path: google.maps.SymbolPath.CIRCLE,
-                            scale: 5
-                        }
+                        let infowindow = new google.maps.InfoWindow({
+                            //TODO: Style this
+                            content: '<div> <button >DrillUP</button>' +
+                            ' <button ">DrillDOWN</button>' +
+                            '<button ">SEEINFO</button></div>'
+                        });
 
-                    });
+                        infowindow.setPosition(event.latlng);
+                        // infowindow.open(instance.map);
 
-                    marker.setMap(instance.map);
+                        let id = event.feature.O.id;
+                        instance.setParent(id);
+                        console.log(id);
 
-                    infowindowNew.open(instance.map, marker);
+                        instance.map.data.forEach(function (feature) {
+                            instance.map.data.remove(feature);
+                        });
 
-                    infowindowNew.addListener('closeclick', function (e) {
-                        marker.setMap(null);
-                    });
+                        instance.addLevel();
+                        instance.getData('/' + id + '/children', instance);
+                    } else if (instance.runned == false && instance.LEVEL >= 4) {
+                        instance.setRunned(true);
+                        let infowindowNew = new google.maps.InfoWindow({
+                            //TODO: Style this
+                            content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
+                        });
+                        instance.setcurrentPos(event.latLng);
 
-                    instance.addUnit();
+                        var marker = new google.maps.Marker({
+                            position: event.latLng,
+                            map: instance.map,
+                            title: 'newOrg',
+                            icon: {
+                                path: google.maps.SymbolPath.CIRCLE,
+                                scale: 5
+                            }
+
+                        });
+
+                        marker.setMap(instance.map);
+
+                        infowindowNew.open(instance.map, marker);
+
+                        infowindowNew.addListener('closeclick', function (e) {
+                            marker.setMap(null);
+                        });
+
+                        instance.addUnit();
 
 
-                }
+                    }
 
-            });
+
+                });
+
 
             this.map.data.addListener('rightclick', function(event) {
                 if(instance.uprunned == false) {
@@ -289,8 +299,25 @@ export class Map {
         console.log("Inne i myfunksjonen");
     }
 
+
     update(event){
         this.newactive.next(event);
+
+        let test = this.getMap();
+        let http = this.getHttp();
+
+        test.data.forEach(function (feature) {
+            test.data.remove(feature);
+        });
+        http.get(dhisAPI+'/api/organisationUnits/'+event)
+            .map(res => res.json())
+            .subscribe(
+                res => this.drawPolygon(res,test)
+
+            );
+
+
+
     }
 }
 
