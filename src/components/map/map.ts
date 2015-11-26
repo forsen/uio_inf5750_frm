@@ -47,24 +47,26 @@ export class Map {
     init() {
 
         let initMap = this.initMap;
+        let instance = this;
         let map = this.map;
         let pos = {lat: 9.1, lng: -10.6};
-        initMap(pos,map,this);
+        initMap(pos,map,instance);
 
     }
 
 
     initMap(location,map,instance){
-        let myfunction = instance.myFunction;
+
 
         map.setCenter(location,2);
         let infowindow = new google.maps.InfoWindow({
             //TODO: Style this
-            content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="myfunction">Yes</button></div>'
+            content:'<div>Du you want to add a new OrgUnit here ?    <button onclick="instance.myFunction()">Yes</button></div>'
         });
         map.addListener('click', function (e) {
-            //instance.setcurrentPos(e.latLng);
-           // instance.setcurrentPos(e.latLng);
+            instance.setcurrentPos(e.latLng);
+
+            instance.myFunction();
             var marker = new google.maps.Marker({
                 position: e.latLng,
                 map: map,
@@ -187,6 +189,7 @@ export class Map {
 
     myFunction(){
         console.log("Inne i myfunksjonen");
+      
 
     }
 
