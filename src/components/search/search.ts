@@ -32,7 +32,15 @@ export class Search {
         this.visible = !this.visible;
     }
 
+    hideDiv(){
+        if(livesearch.value == "")
+            return true;
 
+    }
+
+    hideDiv1(){
+        return true;
+    }
     /*getFilterTypes(){
         this.http.get(dhis + "/api/organisationUnitGroups/")
             .map(res => res.json())
