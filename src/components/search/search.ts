@@ -21,7 +21,6 @@ export class Search {
         this.newsearch = new EventEmitter();
         this.visible = true;
 
-
     }
 
     getMoreInfo(orgunit) {
@@ -33,6 +32,7 @@ export class Search {
     toggle() {
         this.visible = !this.visible;
     }
+
 
     hideDiv(){
         if(livesearch.value == "")

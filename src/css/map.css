@@ -127,13 +127,9 @@ html, body {
     text-align: center;
     height: 52px;
     cursor: pointer;
-    position: relative;
     float: left;
     position: -webkit-sticky;
-
     position: sticky;
-
-
 }
 
 .glyphicon-menu-down{
@@ -193,3 +189,25 @@ html, body {
     display:none;
 }
 
+.emptysearch {
+    border-radius: 60px;
+    background-color: lightgrey;
+    border: black;
+    margin-left: 520px;
+}
+
+.emptysearch:hover{
+    background-color: white;
+
+}
+
+.emptysearch:after {
+    display: block;
+    position: absolute;
+    margin: auto;
+    padding: 2px;
+    cursor: pointer;
+}
+.livesearch:not(:valid) ~ .close-icon {
+     display: none;
+ }

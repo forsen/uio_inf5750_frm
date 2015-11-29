@@ -1,5 +1,5 @@
 <div id="search">
-
+<form>
     <label class="sr-only" for="livesearch">Search</label>
 
         <input
@@ -12,10 +12,11 @@
                name="livesearch"
                id="livesearch"
                placeholder="Search"
-                value = ""
+                value = "" />
 
-                />
-
+    <button class="emptysearch"(click)="hideDiv()">
+        &cross; </button>
+</form>
 
 <span [hidden]="hideDiv()">
 
@@ -28,8 +29,6 @@
     </div>
 
 </span>
-
-
 
 
 </div>
@@ -71,4 +70,3 @@
 </ul>
 
 </div>
-
