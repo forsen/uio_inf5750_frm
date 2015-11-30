@@ -47,25 +47,13 @@
 <div>
 <ul id="dropdown-menu" class="dropdown-menu">
     <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
-        <!--<option value="">-- All Facility Ownerships --</option>-->
-        <option *ng-for="#owner of facilityOwnership" value={{owner}}>{{owner}}</option>
-        <!--<option value="Mission">Mission</option>
-        <option value="NGO">NGO</option>
-        <option value="Private Clinic">Private Clinic</option>
-        <option value="Public facilities">Public facilities</option>-->
+
     </select></li>
     <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
-        <option value="">-- All Facility Types --</option>
-        <option value="CHC">CHC</option>
-        <option value="CHP">CHP</option>
-        <option value="Clinic">Clinic</option>
-        <option value="Hospital">Hospital</option>
-        <option value="MCHP">MCHP</option>
+
     </select></li>
     <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
-        <option value="">-- All locations --</option>
-        <option value="Rural">Rural</option>
-        <option value="Urban">Urban</option>
+
     </select></li>
 </ul>
 
