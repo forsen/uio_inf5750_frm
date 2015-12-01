@@ -1,6 +1,7 @@
 import {Component, NgFor, NgIf, NgModel, CORE_DIRECTIVES,FORM_DIRECTIVES} from 'angular2/angular2';
 import {Http, Headers} from 'angular2/http';
 
+declare var zone: Zone;
 
 @Component({
     selector: 'mou-sidebar',
@@ -19,14 +20,16 @@ export class Sidebar {
     http:Http;
     activeOrgUnit:Object;
     editmode:boolean;
-    submitted = false;
-
+    active: boolean;
     constructor(http:Http) {
         this.http = http;
         this.editmode = false;
+        this.active = false;
+        this.activeOrgUnit = new Object();
     }
 
     update(orgunitId) {
+        this.active = true;
         this.http.get(dhisAPI + "/api/organisationUnits/" + orgunitId)
             .map(res => res.json())
             .subscribe(res => this.activeOrgUnit = res)
@@ -47,6 +50,8 @@ export class Sidebar {
                 .subscribe(res => console.log(res));
         }
 
+
+
     }
 
     cancel(){
@@ -54,8 +59,19 @@ export class Sidebar {
         if(this.activeOrgUnit.id){
             this.update(this.activeOrgUnit.id);
         }else{
-            this.activeOrgUnit = null;
+            this.activeOrgUnit = new Object();
         }
+    }
+
+    addData(data){
+
+        this.active = true;
+        this.editmode = true;
+        console.log(data);
+        this.activeOrgUnit = new Object();
+        this.activeOrgUnit.name = "Erik";
+        console.log("faen");
+        zone.afterTask();
     }
 }
 

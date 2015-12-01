@@ -1,5 +1,5 @@
 <div>
-    <div *ng-if="activeOrgUnit">
+    <div [hidden]="!active">
         <form *ng-if="editmode" (ng-submit)="onSubmit()" #of="form">
             <h3>{{activeOrgUnit.id?"Update Organizational Unit":"Add new Organizational Unit"}}</h3>
             <div class="form-group">
