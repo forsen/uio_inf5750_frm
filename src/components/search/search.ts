@@ -18,7 +18,7 @@ export class Search {
     groups: Array<any> = [];
     groupSet: Array<any> = [];
     counter: number = 0;
-    ownernshipSelector: any;
+    ownershipSelector: any;
     typeSelector: any;
     locationSelector: any;
     option: any;
@@ -27,13 +27,11 @@ export class Search {
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
-        //this.getFilterGroups();
         this.getUnitGroupSets();
-        this.ownernshipSelector = document.getElementById("ownershipSelector");
+        this.ownershipSelector = document.getElementById("ownershipSelector");
         this.typeSelector = document.getElementById("typeSelector");
         this.locationSelector = document.getElementById("locationSelector");
         this.searchBar = document.getElementById("livesearch");
-        this.ownernshipSelector.addEventListener("click", this.testFilter);
     }
 
     getMoreInfo(orgunit) {
@@ -55,15 +53,10 @@ export class Search {
         .map(res => res.organisationUnitGroupSets)
         .subscribe(
             zone.bind( res =>{
-                this.setOption("-- " + res[0].name + " --");
-                this.option.value = "";
-                this.ownernshipSelector.appendChild(this.option);
-                this.setOption("-- " + res[1].name + " --");
-                this.option.value = "";
-                this.typeSelector.appendChild(this.option);
-                this.setOption("-- " + res[2].name + " --");
-                this.option.value = "";
-                this.locationSelector.appendChild(this.option);
+                this.setOptionHeader(this.ownershipSelector, res[0].name);
+                this.setOptionHeader(this.typeSelector, res[1].name);
+                this.setOptionHeader(this.locationSelector, res[2].name);
+
                 for(var i = 0; i < res.length; i++) {
                     this.http.get(res[i].href)
                     .map(result => result.json())
@@ -71,20 +64,17 @@ export class Search {
                         zone.bind(result => {
                             if(result.displayName == "Facility Ownership"){
                                 for(var j = 0; j < result.organisationUnitGroups.length; j++) {
-                                    this.setOption(result.organisationUnitGroups[j].name);
-                                    this.ownernshipSelector.appendChild(this.option);
+                                    this.setOption(this.ownershipSelector, result.organisationUnitGroups[j].name);
                                 }
                             }
                             else if(result.displayName == "Facility Type"){
                                 for(var j = 0; j < result.organisationUnitGroups.length; j++) {
-                                    this.setOption(result.organisationUnitGroups[j].name);
-                                    this.typeSelector.appendChild(this.option);
+                                    this.setOption(this.typeSelector, result.organisationUnitGroups[j].name);
                                 }
                             }
                             else if(result.displayName == "Location Rural/Urban"){
                                 for(var j = 0; j < result.organisationUnitGroups.length; j++) {
-                                    this.setOption(result.organisationUnitGroups[j].name);
-                                    this.locationSelector.appendChild(this.option);
+                                    this.setOption(this.locationSelector, result.organisationUnitGroups[j].name);
                                 }
                             }
                     }));
@@ -93,16 +83,23 @@ export class Search {
         )
     }
 
-    setOption(value){
+    setOptionHeader(selector, value){
+        this.option = document.createElement("option");
+        this.option.text = "-- " + value + " --";
+        this.option.value = "";
+        selector.appendChild(this.option);
+    }
+
+    setOption(selector, value){
         this.option = document.createElement("option");
         this.option.text = value;
         this.option.value = value;
+        selector.appendChild(this.option);
     }
-
 
     setFilter(){
         console.log("Dette er setFilter");
-
+        console.log(this.ownershipSelector.value);
         var text = livesearch.value;
 
         //livesearch.value = "";
@@ -115,12 +112,6 @@ export class Search {
 
         this.searchBar.focus(true);
     }
-
-    testFilter(test){
-        console.log("Testfilter ble aktivert!");
-        console.log(test);
-    }
-
 }
 
 
