@@ -12,6 +12,8 @@ import {Headers, Http} from 'angular2/http';
 
 export class Map {
 
+    hideModal: any;
+    expandModal:any;
     map:Object;
     http:Http;
     LEVEL:number;
@@ -34,6 +36,27 @@ export class Map {
         this.currentPos = null;
         this.uprunned = false;
         // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
+        this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+        this.expandModal = document.getElementById("expandModal").style.visibility = "hidden";
+
+    }
+
+    showModal(){
+        return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
+    }
+
+    closeModal(){
+        console.log("hei");
+        return this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+
+    }
+
+    showExpandModal(){
+        return this.hideModal = document.getElementById("expandModal").style.visibility = "visible";
+    }
+
+    closeExpandModal(){
+        return this.hideModal = document.getElementById("expandModal").style.visibility = "hidden";
 
     }
 
@@ -88,8 +111,6 @@ export class Map {
 
         map.setCenter(pos, 0);
         map.setZoom(7);
-
-
     }
 
     logError(error) {
@@ -175,7 +196,7 @@ export class Map {
                 };
 
             }
-            console.log("her er iden: " +unit.properties.id);
+
             this.map.data.addGeoJson(unit);
             this.map.data.setStyle(function(feature) {
                 let color = 'gray';
@@ -201,19 +222,10 @@ export class Map {
                 if (instance.runned == false && instance.LEVEL < 4) {
                     instance.setRunned(true);
 
-                    let infowindow = new google.maps.InfoWindow({
-                        //TODO: Style this
-                        content: '<div> <button >DrillUP</button>' +
-                        ' <button ">DrillDOWN</button>' +
-                        '<button ">SEEINFO</button></div>'
-                    });
-
-                    infowindow.setPosition(event.latlng);
-                    // infowindow.open(instance.map);
+                    instance.showExpandModal();
 
                     let id = event.feature.O.id;
                     instance.setParent(id);
-
 
                     instance.map.data.forEach(function (feature) {
                         if (!(feature.O.id == id && instance.LEVEL == 3)) {
@@ -226,10 +238,7 @@ export class Map {
                     instance.getData('/' + id + '/children', instance);
                 } else if (instance.runned == false && instance.LEVEL >= 4) {
                     instance.setRunned(true);
-                    let infowindowNew = new google.maps.InfoWindow({
-                        //TODO: Style this
-                        content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="addUnit()">Yes</button></div>'
-                    });
+
                     instance.setcurrentPos(event.latLng);
 
                     var marker = new google.maps.Marker({
@@ -244,13 +253,7 @@ export class Map {
                     });
 
                     marker.setMap(instance.map);
-
-                    infowindowNew.open(instance.map, marker);
-
-                    infowindowNew.addListener('closeclick', function (e) {
-                        instance.setRunned(false);
-                        marker.setMap(null);
-                    });
+                    instance.showModal();
 
                     instance.addUnit();
 
