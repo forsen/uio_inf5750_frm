@@ -1,12 +1,14 @@
 <div>
-    <div [hidden]="!active" class="form-background">
+    <div [hidden]="!active" class="form-background" style="overflow-y:auto;">
         <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
             <h3>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h3>
 
             <div class="form-group">
                 <label>Name</label>
                 <input class="form-control" type="text" ng-control="name">
-
+                <p [hidden]="name.valid || name.untouched" class="alert alert-danger">
+                    Name is required
+                </p>
 
             </div>
             <div class="form-group">
@@ -31,7 +33,7 @@
                 <label>Opening Date</label>
                 <input class="form-control" type="date" ng-control="openingDate" #openingDate="form">
 
-                <p [hidden]="openingdate.valid" class="alert alert-danger">Opening date is required</p>
+                <p [hidden]="openingdate.valid || openingdate.untouched" class="alert alert-danger">Opening date is required</p>
             </div>
             <div class="form-group">
                 <label>Closed Date</label>
@@ -43,17 +45,14 @@
 
                 <p [hidden]="url.valid" class="alert alert-danger">The specified URL is not valid</p>
             </div>
-            <fieldset class="form-group">
+            <fieldset class="form-group" *ng-if="coordinatePoint">
                 <Legend>Coordinates</Legend>
                 <div class="form-group">
                     <label>lat</label>
-                    <input class="form-control" type="number" ng-control="lat" #lat="form"/>
+                    <input class="form-control" type="number" ng-control="lat" #lat="form" step="any" max="90" min="-90"/>
                     <label>long</label>
-                    <input class="form-control" type="number" ng-control="lng" #lng="form"/>
+                    <input class="form-control" type="number" ng-control="lng" #lng="form" step="any" max="180" min="-180"/>
                 </div>
-                <p>{{lat.valid}}</p>
-
-                <p>{{lng.valid}}</p>
             </fieldset>
 
 

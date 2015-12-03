@@ -27,6 +27,7 @@ export class Sidebar {
     newObject: boolean;
     editmode:boolean;
     active: boolean;
+    coordinatePoint: boolean;
 
     id: Control = new Control("");
     name: Control = new Control("", Validators.required);
@@ -49,6 +50,8 @@ export class Sidebar {
         this.http = http;
         this.editmode = false;
         this.active = false;
+        this.coordinatePoint = false;
+
         this.form = fb.group({
             "id": this.id,
             "name": this.name,
@@ -77,6 +80,7 @@ export class Sidebar {
     }
 
     updateValues(res){
+
         for(control in this.form.controls){
             if(res[control] !== undefined) {
                 this.form.controls[control].updateValue(res[control]);
@@ -84,12 +88,27 @@ export class Sidebar {
             else
                 this.form.controls[control].updateValue("");
         }
+
+        if(res.featureType === "POINT"){
+            this.coordinatePoint = true;
+            let coord = new Object();
+            coord = JSON.parse(res["coordinates"]);
+            this.form.controls.lat.updateValue(coord[0]);
+            this.form.controls.lng.updateValue(coord[1]);
+        }
+        else{
+            this.coordinatePoint = false;
+        }
     }
+
+
+
     onSubmit() {
         this.editmode = false;
 
         let headers = new Headers();
         headers.append('Accept', 'application/json');
+
         headers.append('Content-Type', 'application/json');
 
         let jsonObject = this.form.value;
@@ -116,19 +135,13 @@ export class Sidebar {
                 })
                 .map(res => res.json())
                 .subscribe(res => console.log(res));
-        }else{
-            this.http.put(dhisAPI + "/api/organisationUnits/" + this.form.controls.id.value, JSON.stringify(jsonObject),{
-                headers: headers
-            })
-            .map(res => res.json())
-            .subscribe(res => console.log(res));
+        }else {
+            this.http.put(dhisAPI + "/api/organisationUnits/" + this.form.controls.id.value, JSON.stringify(jsonObject), {
+                    headers: headers
+                })
+                .map(res => res.json())
+                .subscribe(res => console.log(res));
         }
-
-
-
-
-        //console.log(this.form);
-
 
     }
 
@@ -137,21 +150,15 @@ export class Sidebar {
     }
 
     add(data){
+        this.coordinatePoint = true;
         this.newObject=true;
-        this.setActive();
+        this.active = true;
         this.editmode = true;
-        console.log(data);
 
         this.form.controls.lat.updateValue(data.location.lat);
         this.form.controls.lng.updateValue(data.location.lng);
         this.form.controls.parent.updateValue(data.parent);
 
-        console.log("faen");
-
-    }
-
-    setActive(){
-        this.active = true;
     }
 }
 
