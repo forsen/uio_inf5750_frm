@@ -164,11 +164,25 @@ export class Map {
                 "properties": {
                     "name": item.name,
                     "id": item.id,
-                    "color": "yellow",
+                    "icon": null
+                    }
                 }
             };
             if (unit.geometry.type == 'Point') {
                 //ToDO: add en style på markeren !
+
+                instance.map.data.setStyle(function(feature) {
+                    var color = 'gray';
+                    if (feature.getProperty('isColorful')) {
+                        color = feature.getProperty('color');
+
+                    }
+                    return /** @type {google.maps.Data.StyleOptions} */({
+                        fillColor: color,
+                        strokeColor: color,
+                        strokeWeight: 2
+                    });
+                });
 
             }
 
