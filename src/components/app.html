@@ -6,7 +6,7 @@
             <mou-map (newactive)="sidebar.update($event)" (neworg)="sidebar.add($event)"#map></mou-map>
         </div>
         <div class="col-md-4">
-            <mou-sidebar #sidebar></mou-sidebar>
+            <mou-sidebar (tempmarker)="map.tempMarker($event)" #sidebar></mou-sidebar>
         </div>
     </div>
 </div>

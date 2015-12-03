@@ -1,4 +1,4 @@
-import {Component, NgFor, NgIf, NgModel, Control, ControlGroup, ControlArray, Validators, FormBuilder, CORE_DIRECTIVES,FORM_DIRECTIVES} from 'angular2/angular2';
+import {Component, NgFor, NgIf, EventEmitter, NgModel, Control, ControlGroup, ControlArray, Validators, FormBuilder, CORE_DIRECTIVES,FORM_DIRECTIVES} from 'angular2/angular2';
 import {Http, Headers} from 'angular2/http';
 
 declare var zone: Zone;
@@ -6,6 +6,7 @@ declare var zone: Zone;
 @Component({
     selector: 'mou-sidebar',
     directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, NgFor, NgModel, NgIf],
+    events: ['tempmarker'],
     templateUrl: './components/sidebar/sidebar.html',
     styles: [`
         .ng-valid.ng-dirty {
@@ -22,6 +23,7 @@ declare var zone: Zone;
 })
 
 export class Sidebar {
+
     form: ControlGroup;
     http:Http;
     newObject: boolean;
@@ -51,6 +53,7 @@ export class Sidebar {
         this.editmode = false;
         this.active = false;
         this.coordinatePoint = false;
+        this.tempmarker = new EventEmitter();
 
         this.form = fb.group({
             "id": this.id,
@@ -68,6 +71,23 @@ export class Sidebar {
             "address": this.address,
             "email": this.email,
             "phoneNumber": this.phoneNumber
+        });
+        let instance = this;
+        this.lat.valueChanges.observer({
+            next: (value) => {
+                if(instance.lng.value && value) {
+                    let pos = {lat: value, lng: instance.lng.value};
+                    this.tempmarker.next(pos);
+                }
+            }
+        });
+        this.lng.valueChanges.observer({
+            next: (value) => {
+                if(instance.lat.value && value) {
+                    let pos = {lat: instance.lat.value, lng: value};
+                    this.tempmarker.next(pos);
+                }
+            }
         });
     }
 
@@ -149,11 +169,16 @@ export class Sidebar {
         this.editmode = false;
     }
 
+
     add(data){
         this.coordinatePoint = true;
         this.newObject=true;
         this.active = true;
         this.editmode = true;
+
+        for(control in this.form.controls){
+            this.form.controls[control].updateValue("");
+        }
 
         this.form.controls.lat.updateValue(data.location.lat);
         this.form.controls.lng.updateValue(data.location.lng);
