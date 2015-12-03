@@ -333,14 +333,14 @@ export class Map {
     }
 
     showModal() {
-        return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
+        return this.hideModal = document.getElementById("divModal").style.display = "block";
     }
 
     closeModal() {
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+        this.hideModal = document.getElementById("divModal").style.display = "none";
 
         this.setRunned(false);
     }
