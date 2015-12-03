@@ -1,19 +1,19 @@
-html, body {
-    height: 100%;
-    padding-top: 70px;
-    background-color: #e2e2e2;
+* {
     margin: 0;
 }
 
-#map {
-    padding: 20px;
-    height: 750px;
-    margin: 0 auto;
-    width: 100%;
-    position: absolute;
-
+html, body {
+    height: 100%;
 }
 
+#map {
+    height: 100%;
+    width: 100%;
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
 
 /*
 .search div{
@@ -21,6 +21,8 @@ html, body {
 }*/
 
 .results > li > a{
+    position: relative;
+
     margin-top: 10px;
     display: block;
     padding: 3px 5px;
@@ -32,8 +34,9 @@ html, body {
 }
 
 .results > li > a:focus, .results > li > a:hover {
-    margin-top: 20px;
+    position: relative;
 
+    margin-top: 20px;
     color: #262626;
     text-decoration: none;
     background-color: #f5f5f5
@@ -44,28 +47,27 @@ html, body {
     margin-left: 649px;
     background-color: white;
     border-radius: 0px;
-
-
 }
 
 .dropdown-menu li{
     background-color: white;
     padding-left: 20px;
     padding-right: 20px;
-
-
 }
 
 #search {
-    width: 357px;
-    margin: 15px;
-    margin-left: 150px;
+    position: relative;
+    z-index: 1;
+    margin-top: 20px;
+    padding-left: 20px;
+    background: transparent;
+    display: inline-block;
+    width: 400px;
+    max-width: 100%;
 }
-
 
 #livesearch{
     box-shadow: 0 0 1px darkgrey;
-    width: 500px;
     padding: 5px 0 5px 20px;
     font-size: 16px;
     font-family: Montserrat, sans-serif;
@@ -122,14 +124,12 @@ html, body {
     border-left: 0 none;
     background: #BAB8B8;
     width: 60px;
-    float: left;
     padding: 0;
     margin: 0;
     text-align: center;
     height: 52px;
     cursor: pointer;
-    border-radius: 0px;
-
+    float: left;
 }
 
 .glyphicon-menu-down{
@@ -154,12 +154,9 @@ html, body {
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
     border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, .15);
     border-radius: 4px;
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-    border-radius: 0px;
-
 }
 
 .result li{
@@ -167,11 +164,6 @@ html, body {
     margin-left: 20px;
     padding: 0.5em 0.5em 0.5em 0;
     float: none;
-}
-
-.loadingpic{
-    width: 50px;
-    height: 50px;
 }
 
 .filtervalg{
@@ -185,14 +177,45 @@ html, body {
     border: 1px solid darkgrey;
     color: black;
     outline: none;
-    background: white;
+    background: #BAB8B8;
     box-sizing: border-box;
     transition: all 0.15s;
 }
 
+.hide {
+    display:none;
+}
+
+.exitsearch {
+    border-radius: 60px;
+    background-color: lightgrey;
+    border: black;
+    position: relative;
+}
+
+.exitsearch:hover{
+    background-color: white;
+    position: relative;
+
+}
+
+.exitsearch:after {
+    display: block;
+    margin: auto;
+    padding: 2px;
+    cursor: pointer;
+}
+.livesearch:not(:valid) ~ .close-icon {
+     display: none;
+ }
+
 
 #divModal{
     position: relative;
-    margin-bottom: 500px;
+    margin-top: 0;
+
 }
 
+.no-padding{
+    padding: 0;
+}

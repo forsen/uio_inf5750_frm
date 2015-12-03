@@ -1,7 +1,6 @@
 import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
 
-
 @Component({
     selector: 'mou-map',
     directives: [CORE_DIRECTIVES],
@@ -30,7 +29,17 @@ export class Map {
         this.activeId = null;
         this.newactive = new EventEmitter();
         this.neworg = new EventEmitter();
-        this.map = new google.maps.Map(document.getElementById("map"), {center: {lat: 0, lng: 0}, zoom: 12});
+        this.map = new google.maps.Map(document.getElementById("map"), {
+            center: {lat: 0, lng: 0},
+            zoom: 12,
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.BOTTOM_CENTER
+            },
+            zoomControlOptions:{
+                position: google.maps.ControlPosition.LEFT_BOTTOM
+            },
+            streetViewControl: false
+        });
         this.init();
         this.http = http;
         this.LEVEL = 2;
@@ -44,11 +53,11 @@ export class Map {
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+        this.hideModal = document.getElementById("divModal").style.display = "none";
     }
 
     showModal() {
-        return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
+        return this.hideModal = document.getElementById("divModal").style.display = "block";
     }
 
     closeModal() {

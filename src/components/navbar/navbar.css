@@ -1,13 +1,13 @@
-#navdiv{
+/*#navdiv{
     background-color: white;
     height: 85px;
     margin-bottom: 0;
     border-right: 0 none;
     border-top: 0 none;
     border-bottom: 1px solid darkgrey;
-    box-shadow: 0 0 2px darkgrey;
+    box-shadow: 0 0 100px darkgrey;
     border-left: 0 none;
-}
+}*/
 /*
 
 .dropdown-menu{

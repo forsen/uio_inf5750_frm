@@ -18,6 +18,10 @@ declare var zone: Zone;
         .form-background {
             padding: 10px;
             background: white;
+            width: 100%;
+            float: right;
+            height: 100vh;
+            z-index: 5;
         }
     `]
 })
@@ -92,6 +96,7 @@ export class Sidebar {
     }
 
     update(orgunitId) {
+        console.log("Skjer det noe her? ");
         this.active = true;
         this.newObject = false;
         this.http.get(dhisAPI + "/api/organisationUnits/" + orgunitId)

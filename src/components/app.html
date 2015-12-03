@@ -1,14 +1,9 @@
-<div class="container">
-    <mou-navbar (outevent)="map.update($event)"></mou-navbar>
+<div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <mou-map (newactive)="sidebar.update($event)" (neworg)="sidebar.add($event)"#map></mou-map>
-        </div>
-        <div class="col-md-4">
-            <mou-sidebar (tempmarker)="map.tempMarker($event)" #sidebar></mou-sidebar>
-        </div>
-    </div>
+    <div class="col-lg-9 col-md-8 col-xs-7"><mou-search (newsearch)="map.update($event)"></mou-search></div>
+    <div class="col-lg-3 col-md-4 col-xs-5 no-padding"><mou-sidebar (tempmarker)="map.tempMarker($event)" #sidebar></mou-sidebar></div>
+    <mou-map (newactive)="sidebar.update($event)" (neworg)="sidebar.add($event)"#map></mou-map>
+
 </div>
 
 

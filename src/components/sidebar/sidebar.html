@@ -1,5 +1,5 @@
 <div>
-    <div [hidden]="!active" class="form-background" style="overflow-y:auto;">
+    <div [hidden]="!active" class="form-background" style="overflow-y:auto; position:relative; float:right; ">
         <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
             <h3>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h3>
 

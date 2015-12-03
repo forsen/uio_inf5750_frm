@@ -1,6 +1,7 @@
 import {Component,EventEmitter, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import {Http} from 'angular2/http';
 import {LiveSearch} from "./livesearch";
+import {Sidebar} from "../sidebar/sidebar";
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
 declare var zone: Zone;
@@ -24,12 +25,14 @@ export class Search {
     option: any;
     searchBar: any;
     filterset: boolean = false;
-
+    emptySearch: any;
+    slide: any;
 
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
+        this.emptySearch = document.getElementById("divresult");
         this.getUnitGroupSets();
         this.ownershipSelector = document.getElementById("ownershipSelector");
         this.typeSelector = document.getElementById("typeSelector");
@@ -40,7 +43,7 @@ export class Search {
     }
 
     getMoreInfo(orgunit) {
-        console.log();
+        this.orgunits = [];
         this.newsearch.next(orgunit.id);
     }
 
@@ -49,6 +52,17 @@ export class Search {
     toggle() {
         this.visible = !this.visible;
         //this.getUnitGroupSets();
+    }
+
+    hideDiv(){
+        if(livesearch.value == "")
+            return true;
+
+    }
+
+
+    emptyByClick(){
+        return this.emptySearch = document.getElementById("divresult").style.visibility = "hidden";
     }
 
 

@@ -1,69 +1,62 @@
-<div id="search" >
+<div id="search">
 
     <label class="sr-only" for="livesearch">Search</label>
 
-        <input  mou-live-search
-               (results)="orgunits = $event"
-               (loading)="loading = $event"
-               type="text"
-               autofocus
-               class="livesearch"
-               name="livesearch"
-               id="livesearch"
-               placeholder="Search"
-                />
-    <img class="loadingpic" [hidden]="!loading"
-         src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
+    <form>
+        <div class="row">
+            <input
+                    mou-live-search
+                    (results)="orgunits = $event"
+                    (loading)="loading = $event"
+                    type="text"
+                    autofocus
+                    class="livesearch col-md-10"
+                    name="livesearch"
+                    id="livesearch"
+                    placeholder="Search"
+                    value=""/>
 
 
+            <!--<button class="exitsearch" id="exitsearch" (click)="emptyByClick()">
+          &cross; </button>-->
+            <button type="button" class="knapp col-md-2" (click)="toggle()"
+                    onclick="$('#ownershipSelector, #typeSelector, #locationSelector').prop('selectedIndex',0);"
+                    data-toggle="collapse" data-target="#dropdown-menu">
+                {{ visible ? '&xdtri;' : '&cross;' }}
+            </button>
+        </div>
+    </form>
 
-    <div class="divresult" id="divresult" [hidden]="checkOrgunits()" >
-        <ul class="dropdown-menu result">
-            <li *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)" >
-                <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
+<span [hidden]="hideDiv()">
+
+
+    <div class="divresult" id="divresult" [hidden]="checkOrgunits()">
+        <ul id="d" class="dropdown-menu result">
+            <li id="c" *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)">
+                <a id="left-menu" href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
             </li>
         </ul>
     </div>
 
+</span>
 
 
-<!--
-<a var-unit id="testunit" (click)="getMoreInfo(unit.id)" href="#"></a>
-*ng-for="#orgunit of filteredOrgunits"
-<a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
-(click)="getMoreInfo(orgunit)"
--->
+    <ul id="dropdown-menu" class="dropdown-menu">
+        <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
+
+        </select></li>
+        <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
+
+        </select></li>
+        <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
+
+        </select></li>
+    </ul>
+
 
 </div>
 
-<button type="button" class="knapp" data-toggle="collapse" data-target="#dropdown-menu">
 
 
-    <!--pil opp og ned-->
 
-    <div class="zippy">
-        <div (click)="toggle()" class="zippy__title">
-            {{ visible ? '&xdtri;' : '&xutri;' }} {{title}}
-        </div>
-        <div [hidden]="!visible" class="zippy__content">
-            <content></content>
-        </div>
-    </div>
-
-</button>
-
-<div>
-<ul id="dropdown-menu" class="dropdown-menu">
-    <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
-
-    </select></li>
-    <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
-
-    </select></li>
-    <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
-
-    </select></li>
-</ul>
-
-</div>
 
