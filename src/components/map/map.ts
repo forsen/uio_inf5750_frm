@@ -111,6 +111,8 @@ export class Map {
 
         map.setCenter(pos, 0);
         map.setZoom(7);
+
+
     }
 
     logError(error) {
