@@ -14,85 +14,133 @@ export class Map {
 
     map:Object;
     http: Http;
-
+    LEVEL: number;
+    runned: boolean;
+    parent: Object;
+    currentPos : Object;
+    uprunned: boolean;
     constructor(http:Http) {
         this.newactive = new EventEmitter();
+        this.newOrg = new EventEmitter();
         this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
-
+        this.LEVEL = 2;
+        this.runned = false;
         this.getData('?paging=false&level=2',this);
+        this.parent =null ;
+        this.currentPos = null;
+        this.uprunned = false;
+
     }
 
+    getMap(){
+        return this.map;
+    }
+
+    getHttp(){
+        return this.http;
+    }
+    setcurrentPos(latlng){
+        this.currentPos = latlng;
+    }
+     getcurrentPos(){
+         return this.currentPos;
+     }
+
+    setParent(id){
+        console.log("satte parents");
+        this.parent=id;
+    }
+    getParent(){
+        return this.parent;
+
+    }
+
+    setRunned(value){
+        this.runned = value;
+    }
+
+    setupRunned(value){
+        this.uprunned = value;
+    }
+
+    setLevel(value){
+        this.LEVEL = value;
+    }
+    addLevel(){
+        this.LEVEL++;
+    }
+    upLevel(){
+        this.LEVEL--;
+    }
 
     init() {
 
-        let initMap = this.initMap;
         let map = this.map;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                    let pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    initMap(pos,map);
-                }, function () {
-                //handleNoGeoLocation()
-                }
-            );
-        } else {
-            alert("You do not support geolocation");
-        }
+        let pos = {lat: 9.1, lng: -10.6};
 
-
+        map.setCenter(pos,12);
     }
 
-
-    initMap(location,map){
-
-        map.setCenter(location,12);
-
-
-
-        map.addListener('click', function (event) {
-                console.log("jule husker");
-            }
-        );
-
-    }
 
     logError(error) {
         console.error(error);
 
     }
 
-    getData(query,instance){
-        console.log(instance.http);
+    getData(query,instance, isParent){
         instance.http.get(dhisAPI+'/api/organisationUnits'+query)
             .map(res => res.json())
             .subscribe(
-                res => instance.parseResult(res),
+                res => instance.parseResult(res,instance,isParent),
                 error => instance.logError(error)
+
             );
 
     }
 
-    parseResult(res){
+    parseResult(res,instance,isParent){
+        console.log("parent: "+isParent);
 
-        if(res.organisationUnits) {
-            for (let item in res.organisationUnits) {
-                this.getData('/' + res.organisationUnits[item].id,this);
-            }
-            //liten hack
-        }//else if(res.name != false){
-           // for (let item in res.children) {
-             //   this.getData('/' + res.children[item].id,this);
-            //}
-        //}
-        else {
-
-            this.drawPolygon(res);
+        if(isParent) {
+            console.log(instance.LEVEL);
+            console.log('/'+res.parent.id+'/children');
+            console.log(res);
+            instance.setParent(res.parent.id);
+            instance.getData('/'+res.parent.id+'/children',instance,false);
         }
+        else{
+
+            console.log(res);
+            if (res.organisationUnits) {
+                for (let item in res.organisationUnits) {
+                    this.getData('/' + res.organisationUnits[item].id, this);
+
+                }
+                instance.setupRunned(false);
+                instance.setRunned(false);
+                //liten hack
+            } else if (!res.displayName && res.children) {
+                for (let item in res.children) {
+                    if (res.children[item].level == instance.LEVEL) {
+                        this.getData('/' + res.children[item].id, this);
+                    }
+                }
+                instance.setRunned(false);
+                instance.setupRunned(false);
+            }
+            else {
+                this.drawPolygon(res, instance);
+            }
+
+        }
+
     }
-    drawPolygon(item){
-        let instance = this;
+
+    drawPolygon(item, instance){
+        console.log("tegne polygon");
+        let bounds = new google.maps.LatLngBounds();
         let feature;
         let incoming: string;
         incoming = item.featureType.toLowerCase();
@@ -118,23 +166,105 @@ export class Map {
                 },
                 "properties": {
                     "name": item.name,
-                    "id": item.id
-                }
+                    "id": item.id,
+
+                },
+                "style": null
             };
+            if(unit.geometry.type == 'Point'){
+
+               //ToDO: add en style på markeren !
+
+            }
             this.map.data.addGeoJson(unit);
 
-            this.map.data.addListener('click', function(event) {
-               //TODO: spør om man vil ned/opp eller se info
+                this.map.data.addListener('click', function (event) {
+                    //TODO: spør om man vil ned/opp eller se info
+                    //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
 
-                let id = event.feature.O.id;
-                console.log(id);
+                    console.log(instance.LEVEL);
 
-                instance.map.data.forEach(function(feature) {
-                    instance.map.data.remove(feature);
+                    if (instance.runned == false && instance.LEVEL < 4) {
+                        instance.setRunned(true);
+
+                        let infowindow = new google.maps.InfoWindow({
+                            //TODO: Style this
+                            content: '<div> <button >DrillUP</button>' +
+                            ' <button ">DrillDOWN</button>' +
+                            '<button ">SEEINFO</button></div>'
+                        });
+
+                        infowindow.setPosition(event.latlng);
+                        // infowindow.open(instance.map);
+
+                        let id = event.feature.O.id;
+                        instance.setParent(id);
+                        console.log(id);
+
+                        instance.map.data.forEach(function (feature) {
+                            instance.map.data.remove(feature);
+                        });
+
+                        instance.addLevel();
+                        instance.getData('/' + id + '/children', instance);
+                    } else if (instance.runned == false && instance.LEVEL >= 4) {
+                        instance.setRunned(true);
+                        let infowindowNew = new google.maps.InfoWindow({
+                            //TODO: Style this
+                            content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
+                        });
+                        instance.setcurrentPos(event.latLng);
+
+                        var marker = new google.maps.Marker({
+                            position: event.latLng,
+                            map: instance.map,
+                            title: 'newOrg',
+                            icon: {
+                                path: google.maps.SymbolPath.CIRCLE,
+                                scale: 5
+                            }
+
+                        });
+
+                        marker.setMap(instance.map);
+
+                        infowindowNew.open(instance.map, marker);
+
+                        infowindowNew.addListener('closeclick', function (e) {
+                            marker.setMap(null);
+                        });
+
+                        instance.addUnit();
+
+
+                    }
+
+
                 });
-               // instance.getData('/' + id+'/children',instance);
-                instance.getData('/' + id,instance);
 
+
+            this.map.data.addListener('rightclick', function(event) {
+                if(instance.uprunned == false) {
+                    instance.setupRunned(true);
+
+                    instance.upLevel();
+
+                    if (instance.LEVEL > 1) {
+                        instance.map.data.forEach(function (feature) {
+                            instance.map.data.remove(feature);
+                        });
+
+                        let parent = instance.getParent();
+                        instance.getData('/'+parent, instance,true);
+                    }
+                    else {
+                        instance.addLevel();
+                        instance.setupRunned(true);
+                        //TODO skriv en warning om at man ikke kan gå opp
+
+                }
+
+                }
             });
 
 
@@ -146,14 +276,52 @@ export class Map {
 
     }
 
+    addUnit(){
 
-    createOrgUnit(){
-        console.log('you just added a new organisation unit');
+        let parent = this.getParent();
+        let pos = this.getcurrentPos();
+        let lat = pos.lat();
+        let lng = pos.lng()
+        let location= {lat: lat, lng: lng};
+        let event =  {location,parent};
+        this.newOrg.next(event);
+
     }
+
+    myFunction(){
+        console.log("Inne i myfunksjonen");
+    }
+
 
     update(event){
         this.newactive.next(event);
+        let getResult = Object;
+        let test = this.getMap();
+        let http = this.getHttp();
+
+        test.data.forEach(function (feature) {
+            test.data.remove(feature);
+        });
+        http.get(dhisAPI+'/api/organisationUnits/'+event)
+            .map(res => res.json())
+            .subscribe(
+                res=> this.mapUpdate(res, this)
+
+            );
+
+
+
+
     }
+
+    mapUpdate(res, instance){
+        console.log(res.level);
+        this.setLevel(res.level);
+        this.setParent(res.parent.id);
+        this.drawPolygon(res,instance);
+
+    }
+
 }
 
 
