@@ -93,6 +93,7 @@ export class Map {
     }
 
     getData(query, instance, isParent) {
+        console.log("hoi");
         instance.http.get(dhisAPI + '/api/organisationUnits' + query)
             .map(res => res.json())
             .subscribe(
@@ -102,6 +103,8 @@ export class Map {
     }
 
     parseResult(res, instance, isParent) {
+        console.log(res);
+
 
         if (isParent) {
             instance.setParent(res.parent.id);
@@ -116,7 +119,9 @@ export class Map {
                 instance.setupRunned(false);
                 instance.setRunned(false);
             } else if (!res.displayName && res.children) {
+                console.log("children");
                 for (let item in res.children) {
+                    console.log(res.children[item].level + " og " + instance.LEVEL);
                     if (res.children[item].level == instance.LEVEL) {
                         this.getData('/' + res.children[item].id, this);
                     }
@@ -125,6 +130,7 @@ export class Map {
                 instance.setupRunned(false);
             }
             else {
+                console.log("jeei");
                 this.drawPolygon(res, instance);
             }
         }
@@ -171,6 +177,7 @@ export class Map {
             this.map.data.addListener('click', function (event) {
 
                 console.log("klikket " + instance.runned + " og " + instance.LEVEL + " og " + event.feature.O.id);
+
                 //TODO: spør om man vil ned/opp eller se info
                 //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
 
@@ -192,14 +199,14 @@ export class Map {
                     console.log(id);
 
                     instance.map.data.forEach(function (feature) {
-                        console.log(feature.O.id !== id);
-                        console.log(feature.O.id + " og " + id);
-                        if (feature.O.id !== id) {
+                        if (!(feature.O.id == id && instance.LEVEL == 3)) {
                             instance.map.data.remove(feature);
+
                         }
                     });
 
                     instance.addLevel();
+
                     instance.getData('/' + id + '/children', instance);
                 } else if (instance.runned == false && instance.LEVEL >= 4) {
                     instance.setRunned(true);
@@ -303,7 +310,6 @@ export class Map {
     }
 
     mapUpdate(res, instance) {
-        console.log(res.level);
         this.setLevel(res.level);
         this.setParent(res.parent.id);
         this.drawPolygon(res, instance);
