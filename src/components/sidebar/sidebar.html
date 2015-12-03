@@ -1,92 +1,111 @@
 <div>
-    <div [hidden]="!active">
-        <form *ng-if="editmode" (ng-submit)="onSubmit()" #of="form">
-            <h3>{{activeOrgUnit.id?"Update Organizational Unit":"Add new Organizational Unit"}}</h3>
+    <div [hidden]="!active" class="form-background">
+        <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
+            <h3>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h3>
+
             <div class="form-group">
                 <label>Name</label>
-                <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.name" required ng-control="name" #name="form">
-                <p [hidden]="name.valid" class="alert alert-danger">
-                    Name is required
-                </p>
+                <input class="form-control" type="text" ng-control="name">
+
 
             </div>
             <div class="form-group">
                 <label>Short Name</label>
-                <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.shortName" required ng-control="shortname" #shortname="form">
-                <p [hidden]="shortname.valid" class="alert alert-danger">
+                <input class="form-control" type="text" ng-control="shortName" #shortname="form">
+
+                <p [hidden]="shortname.valid || shortname.untouched" class="alert alert-danger">
                     Short name is required
                 </p>
             </div>
 
             <div class="form-group">
                 <label>Description</label>
-                <textarea class="form-control" [(ng-model)]="activeOrgUnit.description" rows="3"></textarea>
+                <textarea class="form-control" ng-control="description" rows="3"></textarea>
             </div>
             <div class="form-group">
                 <label>Code</label>
-                <input class="form-control" type="text" [(ng-model)]="activeOrgUnit.code">
+                <input class="form-control" type="text" ng-control="code">
             </div>
+
             <div class="form-group">
                 <label>Opening Date</label>
-                <input class="form-control" type="date" [(ng-model)]="activeOrgUnit.openingDate" required ng-control="openingdate" #openingDate="form">
+                <input class="form-control" type="date" ng-control="openingDate" #openingDate="form">
+
                 <p [hidden]="openingdate.valid" class="alert alert-danger">Opening date is required</p>
             </div>
             <div class="form-group">
                 <label>Closed Date</label>
-                <input class="form-control" type="date" [(ng-model)]="activeOrgUnit.closedDate">
+                <input class="form-control" type="date" ng-control="closedDate">
             </div>
             <div class="form-group">
                 <label>URL</label>
-                <input class="form-control" type="url" [(ng-model)]="activeOrgUnit.url" ng-control="url" #url="form">
+                <input class="form-control" type="url" ng-control="url" #url="form">
+
                 <p [hidden]="url.valid" class="alert alert-danger">The specified URL is not valid</p>
             </div>
             <fieldset class="form-group">
-                <legend>Group(s)</legend>
-                <div *ng-for="#group of activeOrgUnit.organisationUnitGroups">
-                    <input class="form-control" type="text" [(ng-model)]="group.name">
+                <Legend>Coordinates</Legend>
+                <div class="form-group">
+                    <label>lat</label>
+                    <input class="form-control" type="number" ng-control="lat" #lat="form"/>
+                    <label>long</label>
+                    <input class="form-control" type="number" ng-control="lng" #lng="form"/>
                 </div>
+                <p>{{lat.valid}}</p>
+
+                <p>{{lng.valid}}</p>
+            </fieldset>
+
+
+            <fieldset class="form-group">
+                <legend>Contact information</legend>
+                <label>Contact person</label>
+                <input class="form-control" type="text" ng-control="contactPerson"/>
+                <label>Address</label>
+                <input class="form-control" type="text" ng-control="address"/>
+                <label>E-mail</label>
+                <input class="form-control" type="email" ng-control="email"/>
+                <label>Phone number</label>
+                <input class="form-control" type="text" ng-control="phoneNumber"/>
             </fieldset>
             <button type="button" (click)="cancel()" class="btn btn-default">Cancel</button>
-            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default">{{activeOrgUnit.id? "Update" :"Add"}}</button>
+            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default">{{newObject? "Add":"Update"}}
+            </button>
 
         </form>
+
 
         <section *ng-if="!editmode">
             <label for="actOrgUnitName">Name</label>
 
-            <p id="actOrgUnitName">{{(activeOrgUnit.name) || "[None]"}}</p>
+            <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p>
 
             <label for="actOrgUnitShortName">Short Name</label>
 
-            <p id="actOrgUnitShortName">{{(activeOrgUnit.shortName)||["None"]}}</p>
+            <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p>
 
             <label for="actOrgUnitDescription">Description</label>
 
-            <p id="actOrgUnitDescription">{{(activeOrgUnit.description)||"None"}}</p>
+            <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p>
 
             <label for="actOrgUnitCode">Code</label>
 
-            <p id="actOrgUnitCode">{{(activeOrgUnit.code)||["None"]}}</p>
+            <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p>
 
             <label for="actOrgUnitOpeningDate">Opening Date</label>
 
-            <p id="actOrgUnitOpeningDate">{{activeOrgUnit.openingDate||["None"]}}</p>
+            <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p>
 
             <label for="actOrgUnitClosingDate">Closed Date</label>
 
-            <p id="actOrgUnitClosingDate">{{activeOrgUnit.closingDate||["None"]}}</p>
+            <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p>
 
             <label for="actOrgUnitURL">Url</label>
 
-            <p id="actOrgUnitURL">{{(activeOrgUnit.url) ||["None"]}}</p>
+            <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p>
 
-            <label>Group(s)</label>
-            <ul *ng-for="#group of activeOrgUnit.organisationUnitGroups">
-                <li>{{group.name}}</li>
-            </ul>
             <button class="btn btn-default" (click)="editmode = !editmode">Edit</button>
         </section>
-
 
     </div>
 </div>
