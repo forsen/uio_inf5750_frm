@@ -12,6 +12,7 @@ import {Headers, Http} from 'angular2/http';
 
 export class Map {
 
+    hideModal: any;
     map:Object;
     http:Http;
     LEVEL:number;
@@ -32,7 +33,11 @@ export class Map {
         this.parent = null;
         this.currentPos = null;
         this.uprunned = false;
+        this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+    }
 
+    showModal(){
+        return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
     }
 
     getMap() {
@@ -203,10 +208,7 @@ export class Map {
                     instance.getData('/' + id + '/children', instance);
                 } else if (instance.runned == false && instance.LEVEL >= 4) {
                     instance.setRunned(true);
-                    let infowindowNew = new google.maps.InfoWindow({
-                        //TODO: Style this
-                        content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
-                    });
+
                     instance.setcurrentPos(event.latLng);
 
                     var marker = new google.maps.Marker({
@@ -222,12 +224,8 @@ export class Map {
 
                     marker.setMap(instance.map);
 
-                    infowindowNew.open(instance.map, marker);
+                    instance.showModal();
 
-                    infowindowNew.addListener('closeclick', function (e) {
-                        instance.setRunned(false);
-                        marker.setMap(null);
-                    });
 
                     instance.addUnit();
 
@@ -269,10 +267,6 @@ export class Map {
         }
 
 
-    }
-
-    visModal(){
-            return true;
     }
 
     addUnit() {
