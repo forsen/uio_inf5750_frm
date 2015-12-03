@@ -47,73 +47,32 @@ export class Map {
         this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
     }
 
-    showModal() {
-        return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
-    }
+    setActiveId(id) { this.activeId = id; }
 
-    closeModal() {
-        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+    getMap() { return this.map; }
 
-        this.setRunned(false);
+    getHttp() { return this.http; }
 
-    }
+    setcurrentPos(latlng) { this.currentPos = latlng; }
 
-    html() {
-        this.currentMarker.setMap(null);
+    getcurrentPos() { return this.currentPos; }
 
-        this.closeModal();
-    }
+    setParent(id) {  this.parent = id; }
 
-    setActiveId(id) {
-        this.activeId = id;
-    }
+    getParent() { return this.parent; }
 
-    getMap() {
-        return this.map;
-    }
+    setRunned(value) { this.runned = value; }
 
-    getHttp() {
-        return this.http;
-    }
+    setupRunned(value) { this.uprunned = value; }
 
-    setcurrentPos(latlng) {
-        this.currentPos = latlng;
-    }
+    setLevel(value) { this.LEVEL = value; }
 
-    getcurrentPos() {
-        return this.currentPos;
-    }
+    getLevel(){ return this.LEVEL; }
 
-    setParent(id) {
-        this.parent = id;
-    }
+    addLevel() { this.LEVEL++; }
 
-    getParent() {
-        return this.parent;
-    }
+    upLevel() { this.LEVEL--; }
 
-    setRunned(value) {
-        this.runned = value;
-    }
-
-    setupRunned(value) {
-        this.uprunned = value;
-    }
-
-    setLevel(value) {
-        this.LEVEL = value;
-    }
-
-    addLevel() {
-        this.LEVEL++;
-    }
-
-    upLevel() {
-        this.LEVEL--;
-    }
 
     init() {
 
@@ -122,7 +81,6 @@ export class Map {
 
         map.setCenter(pos, 0);
         map.setZoom(7);
-
 
     }
 
@@ -283,7 +241,6 @@ export class Map {
         this.addLevel();
         this.getData('/' + id + '/children', this);
 
-
     }
 
     drillUp() {
@@ -371,6 +328,19 @@ export class Map {
         this.setParent(res.parent.id);
         this.drawPolygon(res, instance);
 
+    }
+
+    showModal() {
+        return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
+    }
+
+    closeModal() {
+        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+
+        this.setRunned(false);
     }
 
 }
