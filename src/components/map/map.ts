@@ -5,14 +5,14 @@ import {Headers, Http} from 'angular2/http';
 @Component({
     selector: 'mou-map',
     directives: [CORE_DIRECTIVES],
-    events: ['newactive','neworg'],
+    events: ['newactive', 'neworg'],
     templateUrl: './components/map/map.html'
 })
 
 
 export class Map {
 
-    hideModal: any;
+    hideModal:any;
     map:Object;
     http:Http;
     LEVEL:number;
@@ -25,7 +25,7 @@ export class Map {
     constructor(http:Http) {
         this.newactive = new EventEmitter();
         this.neworg = new EventEmitter();
-        this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
+        this.map = new google.maps.Map(document.getElementById("map"), {center: {lat: 0, lng: 0}, zoom: 12});
         this.init();
         this.http = http;
         this.LEVEL = 2;
@@ -38,11 +38,11 @@ export class Map {
         this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
     }
 
-    showModal(){
+    showModal() {
         return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
     }
 
-    closeModal(){
+    closeModal() {
         console.log("hei");
         return this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
 
@@ -188,11 +188,11 @@ export class Map {
             }
 
             this.map.data.addGeoJson(unit);
-            this.map.data.setStyle(function(feature) {
+            this.map.data.setStyle(function (feature) {
                 let color = 'gray';
                 let icon;
-                if (feature.getProperty('icon')!== null) {
-                   icon = feature.getProperty('icon');
+                if (feature.getProperty('icon') !== null) {
+                    icon = feature.getProperty('icon');
                 }
                 color = feature.getProperty('color');
                 return /** @type {google.maps.Data.StyleOptions} */({
@@ -252,10 +252,6 @@ export class Map {
 
                     marker.setMap(instance.map);
                     instance.showModal();
-
-
-                    instance.addUnit();
-
                 }
             });
 
@@ -296,6 +292,8 @@ export class Map {
         let location = {lat: lat, lng: lng};
         let event = {location, parent};
         this.neworg.next(event);
+        this.closeModal();
+        this.setRunned(false); 
     }
 
     update(event) {
