@@ -20,6 +20,7 @@ export class Map {
     parent:Object;
     currentPos:Object;
     uprunned:boolean;
+    // COLORS:Object;
 
     constructor(http:Http) {
         this.newactive = new EventEmitter();
@@ -33,6 +34,7 @@ export class Map {
         this.parent = null;
         this.currentPos = null;
         this.uprunned = false;
+        // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
         this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
     }
 
@@ -172,15 +174,35 @@ export class Map {
                 "properties": {
                     "name": item.name,
                     "id": item.id,
-                    "color": "yellow",
+                    "color": "gray",
+                    "icon": null
                 }
             };
+
             if (unit.geometry.type == 'Point') {
-                //ToDO: add en style på markeren !
+                unit.properties.icon = {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 3
+                };
 
             }
 
             this.map.data.addGeoJson(unit);
+            this.map.data.setStyle(function(feature) {
+                let color = 'gray';
+                let icon;
+                if (feature.getProperty('icon')!== null) {
+                   icon = feature.getProperty('icon');
+                }
+                color = feature.getProperty('color');
+                return /** @type {google.maps.Data.StyleOptions} */({
+                    fillColor: color,
+                    strokeColor: color,
+                    strokeWeight: 2,
+                    icon: icon
+                });
+            });
+
 
             this.map.data.addListener('click', function (event) {
 
@@ -259,14 +281,14 @@ export class Map {
                     }
                 }
             });
-        } else {
+        }
+        else {
             // ToDO:
             console.log("fiks meg! gi warning på topp av kart");
         }
     }
 
     addUnit() {
-        console.log("her")
         let parent = this.getParent();
         let pos = this.getcurrentPos();
         let lat = pos.lat();
