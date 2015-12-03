@@ -271,6 +271,10 @@ export class Map {
 
     }
 
+    visModal(){
+            return true;
+    }
+
     addUnit() {
         let parent = this.getParent();
         let pos = this.getcurrentPos();
