@@ -67,8 +67,6 @@ export class Map {
 
     setLevel(value) { this.LEVEL = value; }
 
-    getLevel(){ return this.LEVEL; }
-
     addLevel() { this.LEVEL++; }
 
     upLevel() { this.LEVEL--; }
@@ -277,26 +275,6 @@ export class Map {
         let pos = this.getcurrentPos();
         let lat = pos.lat();
         let lng = pos.lng();
-        let map = this.map;
-
-
-
-          var
-         marker = new google.maps.Marker({
-         position: pos,
-         map: map,
-         title: 'newOrg',
-         icon: {
-         path: google.maps.SymbolPath.CIRCLE,
-         scale: 3
-         }
-         });
-         this
-         .
-         currentMarker = marker;
-         marker
-         .
-         setMap(map);
 
         let parent = this.getParent();
 
@@ -309,7 +287,7 @@ export class Map {
     }
 
     update(event) {
-        this.neworg.next(event);
+        this.newactive.next(event);
         let map = this.getMap();
         let http = this.getHttp();
 
@@ -330,6 +308,23 @@ export class Map {
 
     }
 
+
+    tempMarker(pos) {
+        let map = this.map;
+        if(this.currentMarker)
+            this.currentMarker.setMap(null);
+
+        this.currentMarker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            title: 'neworg',
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 3
+            }
+        });
+        this.currentMarker.setMap(map);
+    }
     showModal() {
         return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
     }

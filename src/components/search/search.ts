@@ -1,6 +1,9 @@
 import {Component,EventEmitter, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import {Http} from 'angular2/http';
 import {LiveSearch} from "./livesearch";
+import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
+
+declare var zone: Zone;
 
 @Component({
     selector: 'mou-search',
@@ -11,20 +14,33 @@ import {LiveSearch} from "./livesearch";
 })
 export class Search {
     orgunits: Array<any> = [];
+    filteredOrgunits: Array<any> = [];
     loading: boolean = false;
-    facilityType: Array<any> = [];
-    facilityOwnership: Array<any> = [];
-    facilityLocation: Array<any> = [];
+    groups: Array<any> = [];
+    groupSet: Array<any> = [];
+    ownershipSelector: any;
+    typeSelector: any;
+    locationSelector: any;
+    option: any;
+    searchBar: any;
+    filterset: boolean = false;
+
 
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
-
+        this.getUnitGroupSets();
+        this.ownershipSelector = document.getElementById("ownershipSelector");
+        this.typeSelector = document.getElementById("typeSelector");
+        this.locationSelector = document.getElementById("locationSelector");
+        this.searchBar = document.getElementById("livesearch");
+        this.orglist = document.getElementById("orglist");
+        this.a = document.getElementById("testunit");
     }
 
     getMoreInfo(orgunit) {
-        console.log("yolo");
+        console.log();
         this.newsearch.next(orgunit.id);
     }
 
@@ -32,48 +48,127 @@ export class Search {
 
     toggle() {
         this.visible = !this.visible;
+        //this.getUnitGroupSets();
     }
 
-    /*getFilterTypes(){
-        this.http.get(dhis + "/api/organisationUnitGroups/")
-            .map(res => res.json())
-            .map(res => res.organisationUnitGroups)
-            .subscribe(
-                zone.bind(res => {
-                   for(var i = 0; i < res.length; i++){
-                       this.http.get(res[i].href)
-                        .map(result => result.json())
-                        .map(result => result.organisationUnitGroupSet)
-                        .subscribe(
-                            zone.bind(result => {
-                                if(result.name == "Location Rural/Urban"){
-                                    this.facilityLocation.push(res[i].name);
-                                }
-                                else if(result.name == "Facility Type"){
-                                    this.facilityType.push(res[i].name);
-                                }
-                                else if(result.name == "")
-                            })
-                        )
-                   }
 
-                })
-            )
+    getUnitGroupSets(){
+        this.http.get(dhisAPI + "/api/organisationUnitGroupSets")
+        .map(res => res.json())
+        .map(res => res.organisationUnitGroupSets)
+        .subscribe(
+            zone.bind( res =>{
+                this.setOptionHeader(this.ownershipSelector, res[0].name);
+                this.setOptionHeader(this.typeSelector, res[1].name);
+                this.setOptionHeader(this.locationSelector, res[2].name);
+
+                for(var i = 0; i < res.length; i++) {
+                    this.http.get(res[i].href)
+                    .map(result => result.json())
+                    .subscribe(
+                        zone.bind(result => {
+                            if(result.displayName == "Facility Ownership"){
+                                for(var j = 0; j < result.organisationUnitGroups.length; j++) {
+                                    this.setOption(this.ownershipSelector, result.organisationUnitGroups[j].name);
+                                }
+                            }
+                            else if(result.displayName == "Facility Type"){
+                                for(var j = 0; j < result.organisationUnitGroups.length; j++) {
+                                    this.setOption(this.typeSelector, result.organisationUnitGroups[j].name);
+                                }
+                            }
+                            else if(result.displayName == "Location Rural/Urban"){
+                                for(var j = 0; j < result.organisationUnitGroups.length; j++) {
+                                    this.setOption(this.locationSelector, result.organisationUnitGroups[j].name);
+                                }
+                            }
+                    }));
+                }
+            })
+        )
     }
 
-    setFilterTypes(){
+    setOptionHeader(selector, value){
+        this.option = document.createElement("option");
+        this.option.text = "-- " + value + " --";
+        this.option.value = "";
+        selector.appendChild(this.option);
+    }
 
-    }*/
+    setOption(selector, value){
+        this.option = document.createElement("option");
+        this.option.text = value;
+        this.option.value = value;
+        selector.appendChild(this.option);
+    }
+
+    checkOrgunits(){
+        if(!this.orgunits.length == false && !this.filterset){
+            this.setFilter();
+            this.filterset = true;
+        }
+        else if(!this.orgunits.length){
+            this.filteredOrgunits = [];
+            if(this.filterset) {
+                this.filterset = false;
+            }
+
+        }
+        return !this.orgunits.length;
+    }
+
 
     setFilter(){
-        var text = livesearch.value;
-        livesearch.value = "";
-        console.log(text);
-        for(var i = 0; i < text.length; i++){
-            livesearch.value += text.charAt(i);
+        this.filteredOrgunits = [];
+
+        for (var i = 0; i < this.orgunits.length; i++) {
+            this.http.get(this.orgunits[i].href)
+                .map(res => res.json())
+                .subscribe(
+                    zone.bind(orgunits => {
+                        if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
+                            this.filteredOrgunits.push(orgunits);
+                        }
+                        else {
+                            var os = false; var ls = false;var ts = false;
+                            for (var group in orgunits.organisationUnitGroups) {
+                                if (this.ownershipSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == this.ownershipSelector.value) {
+                                        os = true;
+                                    }
+                                }
+                                if (this.ownershipSelector.value == "") {
+                                    os = true;
+                                }
+                                if (this.typeSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == this.typeSelector.value) {
+                                        ts = true;
+                                    }
+                                }
+                                if (this.typeSelector.value == "") {
+                                    ts = true;
+                                }
+                                if (this.locationSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == this.locationSelector.value) {
+                                        ls = true;
+                                    }
+                                }
+                                if (this.locationSelector.value == "") {
+                                    ls = true;
+                                }
+                                if (os == true && ts == true && ls == true) {
+                                    this.filteredOrgunits.push(orgunits);
+                                    os = false;
+                                    ts = false;
+                                    ls = false;
+
+                                }
+                            }
+                        }
+                    })
+                )
         }
     }
-
 }
 
 
