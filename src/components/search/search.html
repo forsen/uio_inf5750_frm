@@ -19,9 +19,10 @@
 
 <span [hidden]="hideDiv()">
 
-    <div class="divresult" id="divresult" [hidden]="!orgunits.length">
-        <ul id="d" class="dropdown-menu result"  >
-            <li  id="c" *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
+
+    <div class="divresult" id="divresult" [hidden]="checkOrgunits()" >
+        <ul id="d" class="dropdown-menu result">
+            <li id="c" *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)" >
                 <a id="left-menu" href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
             </li>
         </ul>
@@ -35,33 +36,17 @@
 
 
 
-    <ul id="dropdown-menu" class="dropdown-menu">
-        <li>Facility</li>
-        <li class="dropdown-header">Ownerships</li>
-        <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
-            <option value=""> All </option>
-            <option [value]="Mission">Mission</option>
-            <option value="NGO">NGO</option>
-            <option value="Private Clinic">Private Clinic</option>
-            <option value="Public facilities">Public facilities</option>
-        </select></li>
-        <li class="dropdown-header">Types</li>
-        <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
-            <option value=""> All </option>
-            <option value="CHC">CHC</option>
-            <option value="CHP">CHP</option>
-            <option value="Clinic">Clinic</option>
-            <option value="Hospital">Hospital</option>
-            <option value="MCHP">MCHP</option>
-        </select></li>
-        <li role="separator" class="divider"></li>
-        <li class="dropdown-header">Locations </li>
-        <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
-            <option value=""> All </option>
-            <option value="Rural">Rural</option>
-            <option value="Urban">Urban</option>
-        </select></li>
-    </ul>
+<ul id="dropdown-menu" class="dropdown-menu">
+    <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
+
+    </select></li>
+    <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
+
+    </select></li>
+    <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
+
+    </select></li>
+</ul>
 
 
 

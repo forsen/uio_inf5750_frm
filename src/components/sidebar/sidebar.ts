@@ -23,5 +23,9 @@ export class Sidebar {
             .map(res => res.json())
             .subscribe(res => this.activeOrgUnit = res)
     }
+
+    save(){
+        console.log("YOlo");
+    }
 }
 
