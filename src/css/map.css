@@ -15,7 +15,6 @@ html, body {
     z-index: 0;
 }
 
-
 /*
 .search div{
     position: relative;
@@ -60,13 +59,9 @@ html, body {
     position: relative;
     z-index: 1;
     margin-top: 20px;
-    margin-left: 700px;
     padding-left: 20px;
-    padding: 10px;
-    background: black;
-    color: white;
-    display:inline-block;
-
+    background: transparent;
+    display: inline-block;
 }
 
 #livesearch{
