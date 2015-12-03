@@ -82,9 +82,12 @@ export class Map {
     init() {
 
         let map = this.map;
-        let pos = {lat: 9.1, lng: -10.6};
+        let pos = {lat: 9.1, lng: -11.6};
 
-        map.setCenter(pos, 12);
+        map.setCenter(pos, 0);
+        map.setZoom(7);
+
+
     }
 
     logError(error) {
@@ -93,7 +96,6 @@ export class Map {
     }
 
     getData(query, instance, isParent) {
-        console.log("hoi");
         instance.http.get(dhisAPI + '/api/organisationUnits' + query)
             .map(res => res.json())
             .subscribe(
@@ -103,8 +105,6 @@ export class Map {
     }
 
     parseResult(res, instance, isParent) {
-        console.log(res);
-
 
         if (isParent) {
             instance.setParent(res.parent.id);
@@ -119,9 +119,7 @@ export class Map {
                 instance.setupRunned(false);
                 instance.setRunned(false);
             } else if (!res.displayName && res.children) {
-                console.log("children");
                 for (let item in res.children) {
-                    console.log(res.children[item].level + " og " + instance.LEVEL);
                     if (res.children[item].level == instance.LEVEL) {
                         this.getData('/' + res.children[item].id, this);
                     }
@@ -130,7 +128,6 @@ export class Map {
                 instance.setupRunned(false);
             }
             else {
-                console.log("jeei");
                 this.drawPolygon(res, instance);
             }
         }
@@ -176,8 +173,6 @@ export class Map {
 
             this.map.data.addListener('click', function (event) {
 
-                console.log("klikket " + instance.runned + " og " + instance.LEVEL + " og " + event.feature.O.id);
-
                 //TODO: spør om man vil ned/opp eller se info
                 //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
 
@@ -196,7 +191,6 @@ export class Map {
 
                     let id = event.feature.O.id;
                     instance.setParent(id);
-                    console.log(id);
 
                     instance.map.data.forEach(function (feature) {
                         if (!(feature.O.id == id && instance.LEVEL == 3)) {
@@ -206,13 +200,12 @@ export class Map {
                     });
 
                     instance.addLevel();
-
                     instance.getData('/' + id + '/children', instance);
                 } else if (instance.runned == false && instance.LEVEL >= 4) {
                     instance.setRunned(true);
                     let infowindowNew = new google.maps.InfoWindow({
                         //TODO: Style this
-                        content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
+                        content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="addUnit()">Yes</button></div>'
                     });
                     instance.setcurrentPos(event.latLng);
 
@@ -238,17 +231,13 @@ export class Map {
 
                     instance.addUnit();
 
-
                 }
-
-
             });
 
 
             this.map.data.addListener('rightclick', function (event) {
                 if (instance.uprunned == false) {
                     instance.setupRunned(true);
-
                     instance.upLevel();
 
                     if (instance.LEVEL > 1) {
@@ -265,17 +254,12 @@ export class Map {
                         //TODO skriv en warning om at man ikke kan gå opp
 
                     }
-
                 }
             });
-
-
         } else {
             // ToDO:
             console.log("fiks meg! gi warning på topp av kart");
         }
-
-
     }
 
     addUnit() {
@@ -288,14 +272,8 @@ export class Map {
         this.newOrg.next(event);
     }
 
-    //TODO slett denne når popup er klar !
-    myFunction() {
-        console.log("Inne i myfunksjonen");
-    }
-
     update(event) {
         this.newactive.next(event);
-        let getResult = Object;
         let test = this.getMap();
         let http = this.getHttp();
 
