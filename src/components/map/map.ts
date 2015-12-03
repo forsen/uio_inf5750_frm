@@ -12,8 +12,7 @@ import {Headers, Http} from 'angular2/http';
 
 export class Map {
 
-    hideModal: any;
-    expandModal:any;
+    hideModal:any;
     map:Object;
     http:Http;
     LEVEL:number;
@@ -21,9 +20,14 @@ export class Map {
     parent:Object;
     currentPos:Object;
     uprunned:boolean;
+    activeId:string;
+    currentMarker:Object;
+
     // COLORS:Object;
 
     constructor(http:Http) {
+
+        this.activeId = null;
         this.newactive = new EventEmitter();
         this.newOrg = new EventEmitter();
         this.map = new google.maps.Map(document.getElementById("map"), {center: {lat: 0, lng: 0}, zoom: 12});
@@ -35,29 +39,37 @@ export class Map {
         this.parent = null;
         this.currentPos = null;
         this.uprunned = false;
+        this.currentMarker = null;
         // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
+        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
-        this.expandModal = document.getElementById("expandModal").style.visibility = "hidden";
 
     }
 
-    showModal(){
+    showModal() {
         return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
     }
 
-    closeModal(){
-        console.log("hei");
-        return this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+    closeModal() {
+        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
+        this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+
+        this.setRunned(false);
 
     }
 
-    showExpandModal(){
-        return this.hideModal = document.getElementById("expandModal").style.visibility = "visible";
+    html() {
+        this.currentMarker.setMap(null);
+
+        this.closeModal();
     }
 
-    closeExpandModal(){
-        return this.hideModal = document.getElementById("expandModal").style.visibility = "hidden";
-
+    setActiveId(id) {
+        this.activeId = id;
     }
 
     getMap() {
@@ -159,7 +171,6 @@ export class Map {
     }
 
     drawPolygon(item, instance) {
-        let bounds = new google.maps.LatLngBounds();
         let feature;
         let incoming:string;
         incoming = item.featureType.toLowerCase();
@@ -200,89 +211,51 @@ export class Map {
             }
 
             this.map.data.addGeoJson(unit);
-            this.map.data.setStyle(function(feature) {
+            this.map.data.setStyle(function (feature) {
                 let color = 'gray';
                 let icon;
-                if (feature.getProperty('icon')!== null) {
-                   icon = feature.getProperty('icon');
+                if (feature.getProperty('icon') !== null) {
+                    icon = feature.getProperty('icon');
                 }
                 color = feature.getProperty('color');
                 return /** @type {google.maps.Data.StyleOptions} */({
                     fillColor: color,
                     strokeColor: color,
-                    strokeWeight: 2,
+                    strokeWeight: 3,
                     icon: icon
                 });
             });
 
 
             this.map.data.addListener('click', function (event) {
+                instance.setActiveId(event.feature.O.id);
+                instance.setcurrentPos(event.latLng);
 
-                //TODO: spør om man vil ned/opp eller se info
+
                 //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
-
-                if (instance.runned == false && instance.LEVEL < 4) {
-                    instance.setRunned(true);
-
-                    instance.showExpandModal();
-
-                    let id = event.feature.O.id;
-                    instance.setParent(id);
-
-                    instance.map.data.forEach(function (feature) {
-                        if (!(feature.O.id == id && instance.LEVEL == 3)) {
-                            instance.map.data.remove(feature);
-
-                        }
-                    });
-
-                    instance.addLevel();
-                    instance.getData('/' + id + '/children', instance);
-                } else if (instance.runned == false && instance.LEVEL >= 4) {
-                    instance.setRunned(true);
-
-                    instance.setcurrentPos(event.latLng);
-
-                    var marker = new google.maps.Marker({
-                        position: event.latLng,
-                        map: instance.map,
-                        title: 'newOrg',
-                        icon: {
-                            path: google.maps.SymbolPath.CIRCLE,
-                            scale: 5
-                        }
-
-                    });
-
-                    marker.setMap(instance.map);
+                if (instance.uprunned == false && instance.LEVEL == 2) {
+                    this.hideModal = document.getElementById("topLevel").style.visibility = "visible";
+                    this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
+                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
                     instance.showModal();
 
-                    instance.addUnit();
+                }
+                else if (instance.runned == false && instance.LEVEL < 4) {
+                    this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
+                    this.hideModal = document.getElementById("middleLevel").style.visibility = "visible";
+                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
+                    instance.showModal();
+                } else if (instance.runned == false && instance.LEVEL <= 4) {
+
+                    this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
+                    this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
+                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "visible";
+
+                    instance.setcurrentPos(event.latLng);
+                    instance.showModal();
 
                 }
-            });
 
-
-            this.map.data.addListener('rightclick', function (event) {
-                if (instance.uprunned == false) {
-                    instance.setupRunned(true);
-                    instance.upLevel();
-
-                    if (instance.LEVEL > 1) {
-                        instance.map.data.forEach(function (feature) {
-                            instance.map.data.remove(feature);
-                        });
-
-                        let parent = instance.getParent();
-                        instance.getData('/' + parent, instance, true);
-                    }
-                    else {
-                        instance.addLevel();
-                        instance.setupRunned(true);
-                        //TODO skriv en warning om at man ikke kan gå opp
-
-                    }
-                }
             });
         }
         else {
@@ -291,23 +264,98 @@ export class Map {
         }
     }
 
+    drillDown() {
+        this.closeModal();
+        let map = this.getMap();
+        let id = this.activeId;
+        let level = this.LEVEL;
+        console.log(id);
+        this.setRunned(true);
+        this.setParent(id);
+
+        map.data.forEach(function (feature) {
+            if (!(feature.O.id == id && level == 3)) {
+                map.data.remove(feature);
+
+            }
+        });
+
+        this.addLevel();
+        this.getData('/' + id + '/children', this);
+
+
+    }
+
+    drillUp() {
+
+        if (this.LEVEL > 2) {
+            this.setupRunned(true);
+            this.upLevel();
+            let instance = this;
+            this.closeModal();
+            this.map.data.forEach(function (feature) {
+                instance.map.data.remove(feature);
+
+            });
+            let parent = instance.getParent();
+            instance.getData('/' + parent, instance, true);
+        }
+        this.closeModal();
+    }
+
+    seeDetails() {
+        let map = this.getMap();
+        let id = this.activeId;
+        this.closeModal();
+        map.data.forEach(function (feature) {
+            if (feature.getProperty('id') == id) {
+                feature.setProperty('color', 'red');
+            }
+        });
+        this.newactive.next(this.activeId);
+    }
+
     addUnit() {
-        let parent = this.getParent();
+        this.closeModal();
         let pos = this.getcurrentPos();
         let lat = pos.lat();
-        let lng = pos.lng()
+        let lng = pos.lng();
+        let map = this.map;
+
+
+
+          var
+         marker = new google.maps.Marker({
+         position: pos,
+         map: map,
+         title: 'newOrg',
+         icon: {
+         path: google.maps.SymbolPath.CIRCLE,
+         scale: 3
+         }
+         });
+         this
+         .
+         currentMarker = marker;
+         marker
+         .
+         setMap(map);
+
+        let parent = this.getParent();
+
+
         let location = {lat: lat, lng: lng};
         let event = {location, parent};
         this.newOrg.next(event);
     }
 
     update(event) {
-        this.newactive.next(event);
-        let test = this.getMap();
+
+        let map = this.getMap();
         let http = this.getHttp();
 
-        test.data.forEach(function (feature) {
-            test.data.remove(feature);
+        map.data.forEach(function (feature) {
+            map.data.remove(feature);
         });
         http.get(dhisAPI + '/api/organisationUnits/' + event)
             .map(res => res.json())
