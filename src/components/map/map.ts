@@ -22,6 +22,7 @@ export class Map {
     uprunned:boolean;
     activeId:string;
     currentMarker:Object;
+    popup:Object;
 
     // COLORS:Object;
 
@@ -40,6 +41,7 @@ export class Map {
         this.currentPos = null;
         this.uprunned = false;
         this.currentMarker = null;
+        this.popup = null;
         // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
@@ -71,7 +73,6 @@ export class Map {
 
     upLevel() { this.LEVEL--; }
 
-
     init() {
 
         let map = this.map;
@@ -97,7 +98,6 @@ export class Map {
     }
 
     parseResult(res, instance, isParent) {
-
         if (isParent) {
             instance.setParent(res.parent.id);
             instance.getData('/' + res.parent.id + '/children', instance, false);
@@ -124,7 +124,6 @@ export class Map {
             }
         }
     }
-
     drawPolygon(item, instance) {
         let feature;
         let incoming:string;
@@ -156,13 +155,12 @@ export class Map {
                     "icon": null
                 }
             };
-
             if (unit.geometry.type == 'Point') {
                 unit.properties.icon = {
                     path: google.maps.SymbolPath.CIRCLE,
+                    strokeColor: 'black',
                     scale: 3
                 };
-
             }
 
             this.map.data.addGeoJson(unit);
@@ -181,11 +179,9 @@ export class Map {
                 });
             });
 
-
             this.map.data.addListener('click', function (event) {
                 instance.setActiveId(event.feature.O.id);
                 instance.setcurrentPos(event.latLng);
-
 
                 //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
                 if (instance.uprunned == false && instance.LEVEL == 2) {
@@ -208,10 +204,7 @@ export class Map {
 
                     instance.setcurrentPos(event.latLng);
                     instance.showModal();
-
                 }
-
-
             });
         }
         else {
@@ -265,6 +258,15 @@ export class Map {
         map.data.forEach(function (feature) {
             if (feature.getProperty('id') == id) {
                 feature.setProperty('color', 'red');
+                if (feature.getProperty('icon') !== null) {
+                    feature.O.icon.strokeColor = 'red';
+                }
+            }
+            else {
+                feature.setProperty('color', 'gray');
+                if (feature.getProperty('icon') !== null) {
+                    feature.O.icon.strokeColor = 'black';
+                }
             }
         });
         this.newactive.next(this.activeId);
@@ -275,9 +277,7 @@ export class Map {
         let pos = this.getcurrentPos();
         let lat = pos.lat();
         let lng = pos.lng();
-
         let parent = this.getParent();
-
 
         let location = {lat: lat, lng: lng};
         let event = {location, parent};
@@ -308,10 +308,9 @@ export class Map {
 
     }
 
-
     tempMarker(pos) {
         let map = this.map;
-        if(this.currentMarker)
+        if (this.currentMarker)
             this.currentMarker.setMap(null);
 
         this.currentMarker = new google.maps.Marker({
@@ -325,6 +324,7 @@ export class Map {
         });
         this.currentMarker.setMap(map);
     }
+
     showModal() {
         return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
     }
