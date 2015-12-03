@@ -1,11 +1,11 @@
 import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
-
+import {Search} from "../search/search";
 
 @Component({
     selector: 'mou-map',
-    directives: [CORE_DIRECTIVES],
-    events: ['newactive'],
+    directives: [CORE_DIRECTIVES, Search],
+    events: ['newactive', 'outevent'],
     templateUrl: './components/map/map.html'
 })
 
@@ -16,12 +16,18 @@ export class Map {
     http: Http;
 
     constructor(http:Http) {
+        this.outevent = new EventEmitter();
+
         this.newactive = new EventEmitter();
         this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
 
         this.getData('?paging=false&level=2',this);
+    }
+
+    inevent(e){
+        this.outevent.next(e);
     }
 
 

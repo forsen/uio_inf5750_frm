@@ -1,4 +1,4 @@
-<!--<div id="search">
+<div id="search">
 
     <label class="sr-only" for="livesearch">Search</label>
 
@@ -14,7 +14,7 @@
                placeholder="Search"
                 value = "" />
 
- <button class="emptysearch"(click)="hideDiv()">
+ <button class="exitsearch" id="exitsearch" (click)="emptyByClick()">
         &cross; </button></form>
 
 <span [hidden]="hideDiv()">
@@ -22,13 +22,12 @@
     <div class="divresult" id="divresult" [hidden]="!orgunits.length">
         <ul id="d" class="dropdown-menu result"  >
             <li  id="c" *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
-                <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
+                <a id="left-menu" href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
             </li>
         </ul>
     </div>
 
 </span>
-
 
     <button type="button" class="knapp" (click)="toggle()" onclick="$('#ownershipSelector, #typeSelector, #locationSelector').prop('selectedIndex',0);" data-toggle="collapse" data-target="#dropdown-menu">
         {{ visible ? '&xdtri;' : '&cross;' }}
@@ -62,11 +61,12 @@
             <option value="Rural">Rural</option>
             <option value="Urban">Urban</option>
         </select></li>
-
     </ul>
 
+
+
 </div>
--->
+
 
 
 

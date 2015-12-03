@@ -4,14 +4,15 @@
 
 html, body {
     height: 100%;
-
 }
 
 #map {
-    min-height: 100% !important;
-    height: auto !important;
     height: 100%;
-    margin: 0 auto -20px;
+    width: 100%;
+    position:absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
 
 
@@ -19,8 +20,10 @@ html, body {
 .search div{
     position: relative;
 }*/
-/*
+
 .results > li > a{
+    position: relative;
+
     margin-top: 10px;
     display: block;
     padding: 3px 5px;
@@ -32,8 +35,9 @@ html, body {
 }
 
 .results > li > a:focus, .results > li > a:hover {
-    margin-top: 20px;
+    position: relative;
 
+    margin-top: 20px;
     color: #262626;
     text-decoration: none;
     background-color: #f5f5f5
@@ -44,27 +48,26 @@ html, body {
     margin-left: 649px;
     background-color: white;
     border-radius: 0px;
-
-
 }
 
 .dropdown-menu li{
     background-color: white;
     padding-left: 20px;
     padding-right: 20px;
-
-
 }
 
 #search {
-    width: 500px;
-    height: 120px;
-    margin: 15px;
-    margin-left: 150px;
-    background-color: red;
     position: relative;
-}
+    z-index: 1;
+    margin-top: 20px;
+    margin-left: 700px;
+    padding-left: 20px;
+    padding: 10px;
+    background: black;
+    color: white;
+    display:inline-block;
 
+}
 
 #livesearch{
     box-shadow: 0 0 1px darkgrey;
@@ -187,20 +190,20 @@ html, body {
     display:none;
 }
 
-.emptysearch {
+.exitsearch {
     border-radius: 60px;
     background-color: lightgrey;
     border: black;
     position: relative;
 }
 
-.emptysearch:hover{
+.exitsearch:hover{
     background-color: white;
     position: relative;
 
 }
 
-.emptysearch:after {
+.exitsearch:after {
     display: block;
     margin: auto;
     padding: 2px;
@@ -210,4 +213,11 @@ html, body {
      display: none;
  }
 
-*/
+.sideBar{
+    height: 300px;
+    width: 300px;
+    background-color: white;
+    position: relative;
+
+}
+

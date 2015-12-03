@@ -1,10 +1,11 @@
 import {Component,EventEmitter, View, CORE_DIRECTIVES} from 'angular2/angular2';
 import {Http} from 'angular2/http';
 import {LiveSearch} from "./livesearch";
+import {Sidebar} from "../sidebar/sidebar";
 
 @Component({
     selector: 'mou-search',
-    directives: [CORE_DIRECTIVES, LiveSearch],
+    directives: [CORE_DIRECTIVES, LiveSearch, Sidebar],
     events: ['newsearch'],
     templateUrl: './components/search/search.html',
     styleUrls: ['./components/search/search.css']
@@ -15,19 +16,27 @@ export class Search {
     facilityType: Array<any> = [];
     facilityOwnership: Array<any> = [];
     facilityLocation: Array<any> = [];
-
+    emptySearch: any;
+    slide: any;
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
+        this.emptySearch = document.getElementById("divresult");
 
     }
+
+
+
 
     getMoreInfo(orgunit) {
         this.orgunits = [];
         console.log("yolo");
         this.newsearch.next(orgunit.id);
     }
+
+
+
 
     toggle() {
         this.visible = !this.visible;
@@ -38,6 +47,11 @@ export class Search {
         if(livesearch.value == "")
             return true;
 
+    }
+
+
+    emptyByClick(){
+        return this.emptySearch = document.getElementById("divresult").style.visibility = "hidden";
     }
 
 
