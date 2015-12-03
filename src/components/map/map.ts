@@ -13,65 +13,69 @@ import {Headers, Http} from 'angular2/http';
 export class Map {
 
     map:Object;
-    http: Http;
-    LEVEL: number;
-    runned: boolean;
-    parent: Object;
-    currentPos : Object;
-    uprunned: boolean;
+    http:Http;
+    LEVEL:number;
+    runned:boolean;
+    parent:Object;
+    currentPos:Object;
+    uprunned:boolean;
+
     constructor(http:Http) {
         this.newactive = new EventEmitter();
         this.newOrg = new EventEmitter();
-        this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
+        this.map = new google.maps.Map(document.getElementById("map"), {center: {lat: 0, lng: 0}, zoom: 12});
         this.init();
         this.http = http;
         this.LEVEL = 2;
         this.runned = false;
-        this.getData('?paging=false&level=2',this);
-        this.parent =null ;
+        this.getData('?paging=false&level=2', this);
+        this.parent = null;
         this.currentPos = null;
         this.uprunned = false;
 
     }
 
-    getMap(){
+    getMap() {
         return this.map;
     }
 
-    getHttp(){
+    getHttp() {
         return this.http;
     }
-    setcurrentPos(latlng){
+
+    setcurrentPos(latlng) {
         this.currentPos = latlng;
     }
-     getcurrentPos(){
-         return this.currentPos;
-     }
 
-    setParent(id){
-        console.log("satte parents");
-        this.parent=id;
+    getcurrentPos() {
+        return this.currentPos;
     }
-    getParent(){
+
+    setParent(id) {
+        this.parent = id;
+    }
+
+    getParent() {
         return this.parent;
-
     }
 
-    setRunned(value){
+    setRunned(value) {
         this.runned = value;
     }
 
-    setupRunned(value){
+    setupRunned(value) {
         this.uprunned = value;
     }
 
-    setLevel(value){
+    setLevel(value) {
         this.LEVEL = value;
     }
-    addLevel(){
+
+    addLevel() {
         this.LEVEL++;
     }
-    upLevel(){
+
+    upLevel() {
         this.LEVEL--;
     }
 
@@ -80,39 +84,30 @@ export class Map {
         let map = this.map;
         let pos = {lat: 9.1, lng: -10.6};
 
-        map.setCenter(pos,12);
+        map.setCenter(pos, 12);
     }
-
 
     logError(error) {
         console.error(error);
 
     }
 
-    getData(query,instance, isParent){
-        instance.http.get(dhisAPI+'/api/organisationUnits'+query)
+    getData(query, instance, isParent) {
+        instance.http.get(dhisAPI + '/api/organisationUnits' + query)
             .map(res => res.json())
             .subscribe(
-                res => instance.parseResult(res,instance,isParent),
+                res => instance.parseResult(res, instance, isParent),
                 error => instance.logError(error)
-
             );
-
     }
 
-    parseResult(res,instance,isParent){
-        console.log("parent: "+isParent);
+    parseResult(res, instance, isParent) {
 
-        if(isParent) {
-            console.log(instance.LEVEL);
-            console.log('/'+res.parent.id+'/children');
-            console.log(res);
+        if (isParent) {
             instance.setParent(res.parent.id);
-            instance.getData('/'+res.parent.id+'/children',instance,false);
+            instance.getData('/' + res.parent.id + '/children', instance, false);
         }
-        else{
-
-            console.log(res);
+        else {
             if (res.organisationUnits) {
                 for (let item in res.organisationUnits) {
                     this.getData('/' + res.organisationUnits[item].id, this);
@@ -120,7 +115,6 @@ export class Map {
                 }
                 instance.setupRunned(false);
                 instance.setRunned(false);
-                //liten hack
             } else if (!res.displayName && res.children) {
                 for (let item in res.children) {
                     if (res.children[item].level == instance.LEVEL) {
@@ -133,31 +127,28 @@ export class Map {
             else {
                 this.drawPolygon(res, instance);
             }
-
         }
-
     }
 
-    drawPolygon(item, instance){
-        console.log("tegne polygon");
+    drawPolygon(item, instance) {
         let bounds = new google.maps.LatLngBounds();
         let feature;
-        let incoming: string;
+        let incoming:string;
         incoming = item.featureType.toLowerCase();
-        switch(incoming){
+        switch (incoming) {
             case "point":
                 feature = 'Point';
                 break;
             case "multi_polygon":
                 feature = 'MultiPolygon';
                 break;
-             case "polygon":
-                 feature = 'MultiPolygon';
+            case "polygon":
+                feature = 'MultiPolygon';
                 break;
             default:
         }
-          // TODO: test på feature og behandle type: NONE
-        if(feature !== undefined) {
+        // TODO: test på feature og behandle type: NONE
+        if (feature !== undefined) {
             let unit = {
                 "type": "Feature",
                 "geometry": {
@@ -167,84 +158,88 @@ export class Map {
                 "properties": {
                     "name": item.name,
                     "id": item.id,
-
-                },
-                "style": null
+                    "color": "yellow",
+                }
             };
-            if(unit.geometry.type == 'Point'){
-
-               //ToDO: add en style på markeren !
+            if (unit.geometry.type == 'Point') {
+                //ToDO: add en style på markeren !
 
             }
+
             this.map.data.addGeoJson(unit);
 
-                this.map.data.addListener('click', function (event) {
-                    //TODO: spør om man vil ned/opp eller se info
-                    //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
+            this.map.data.addListener('click', function (event) {
 
-                    console.log(instance.LEVEL);
+                console.log("klikket " + instance.runned + " og " + instance.LEVEL + " og " + event.feature.O.id);
+                //TODO: spør om man vil ned/opp eller se info
+                //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
 
-                    if (instance.runned == false && instance.LEVEL < 4) {
-                        instance.setRunned(true);
+                if (instance.runned == false && instance.LEVEL < 4) {
+                    instance.setRunned(true);
 
-                        let infowindow = new google.maps.InfoWindow({
-                            //TODO: Style this
-                            content: '<div> <button >DrillUP</button>' +
-                            ' <button ">DrillDOWN</button>' +
-                            '<button ">SEEINFO</button></div>'
-                        });
+                    let infowindow = new google.maps.InfoWindow({
+                        //TODO: Style this
+                        content: '<div> <button >DrillUP</button>' +
+                        ' <button ">DrillDOWN</button>' +
+                        '<button ">SEEINFO</button></div>'
+                    });
 
-                        infowindow.setPosition(event.latlng);
-                        // infowindow.open(instance.map);
+                    infowindow.setPosition(event.latlng);
+                    // infowindow.open(instance.map);
 
-                        let id = event.feature.O.id;
-                        instance.setParent(id);
-                        console.log(id);
+                    let id = event.feature.O.id;
+                    instance.setParent(id);
+                    console.log(id);
 
-                        instance.map.data.forEach(function (feature) {
+                    instance.map.data.forEach(function (feature) {
+                        console.log(feature.O.id !== id);
+                        console.log(feature.O.id + " og " + id);
+                        if (feature.O.id !== id) {
                             instance.map.data.remove(feature);
-                        });
+                        }
+                    });
 
-                        instance.addLevel();
-                        instance.getData('/' + id + '/children', instance);
-                    } else if (instance.runned == false && instance.LEVEL >= 4) {
-                        instance.setRunned(true);
-                        let infowindowNew = new google.maps.InfoWindow({
-                            //TODO: Style this
-                            content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
-                        });
-                        instance.setcurrentPos(event.latLng);
+                    instance.addLevel();
+                    instance.getData('/' + id + '/children', instance);
+                } else if (instance.runned == false && instance.LEVEL >= 4) {
+                    instance.setRunned(true);
+                    let infowindowNew = new google.maps.InfoWindow({
+                        //TODO: Style this
+                        content: '<div>Du you want to add a new OrgUnit here ?    <button onclick="myFunction()">Yes</button></div>'
+                    });
+                    instance.setcurrentPos(event.latLng);
 
-                        var marker = new google.maps.Marker({
-                            position: event.latLng,
-                            map: instance.map,
-                            title: 'newOrg',
-                            icon: {
-                                path: google.maps.SymbolPath.CIRCLE,
-                                scale: 5
-                            }
+                    var marker = new google.maps.Marker({
+                        position: event.latLng,
+                        map: instance.map,
+                        title: 'newOrg',
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 5
+                        }
 
-                        });
+                    });
 
-                        marker.setMap(instance.map);
+                    marker.setMap(instance.map);
 
-                        infowindowNew.open(instance.map, marker);
+                    infowindowNew.open(instance.map, marker);
 
-                        infowindowNew.addListener('closeclick', function (e) {
-                            marker.setMap(null);
-                        });
+                    infowindowNew.addListener('closeclick', function (e) {
+                        instance.setRunned(false);
+                        marker.setMap(null);
+                    });
 
-                        instance.addUnit();
-
-
-                    }
-
-
-                });
+                    instance.addUnit();
 
 
-            this.map.data.addListener('rightclick', function(event) {
-                if(instance.uprunned == false) {
+                }
+
+
+            });
+
+
+            this.map.data.addListener('rightclick', function (event) {
+                if (instance.uprunned == false) {
                     instance.setupRunned(true);
 
                     instance.upLevel();
@@ -255,20 +250,20 @@ export class Map {
                         });
 
                         let parent = instance.getParent();
-                        instance.getData('/'+parent, instance,true);
+                        instance.getData('/' + parent, instance, true);
                     }
                     else {
                         instance.addLevel();
                         instance.setupRunned(true);
                         //TODO skriv en warning om at man ikke kan gå opp
 
-                }
+                    }
 
                 }
             });
 
 
-        }else {
+        } else {
             // ToDO:
             console.log("fiks meg! gi warning på topp av kart");
         }
@@ -276,24 +271,22 @@ export class Map {
 
     }
 
-    addUnit(){
-
+    addUnit() {
         let parent = this.getParent();
         let pos = this.getcurrentPos();
         let lat = pos.lat();
         let lng = pos.lng()
-        let location= {lat: lat, lng: lng};
-        let event =  {location,parent};
+        let location = {lat: lat, lng: lng};
+        let event = {location, parent};
         this.newOrg.next(event);
-
     }
 
-    myFunction(){
+    //TODO slett denne når popup er klar !
+    myFunction() {
         console.log("Inne i myfunksjonen");
     }
 
-
-    update(event){
+    update(event) {
         this.newactive.next(event);
         let getResult = Object;
         let test = this.getMap();
@@ -302,23 +295,18 @@ export class Map {
         test.data.forEach(function (feature) {
             test.data.remove(feature);
         });
-        http.get(dhisAPI+'/api/organisationUnits/'+event)
+        http.get(dhisAPI + '/api/organisationUnits/' + event)
             .map(res => res.json())
             .subscribe(
                 res=> this.mapUpdate(res, this)
-
             );
-
-
-
-
     }
 
-    mapUpdate(res, instance){
+    mapUpdate(res, instance) {
         console.log(res.level);
         this.setLevel(res.level);
         this.setParent(res.parent.id);
-        this.drawPolygon(res,instance);
+        this.drawPolygon(res, instance);
 
     }
 
