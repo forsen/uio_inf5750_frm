@@ -16,15 +16,23 @@
          src="https://www.brown.edu/sites/default/themes/pawtuxet/img/loader-larger.gif">
 
 
-    <div  class="divresult" id="divresult" [hidden]="!orgunits.length">
-        <ul class="dropdown-menu result"  >
-            <li *ng-for="#orgunit of orgunits" (click)="getMoreInfo(orgunit)">
+
+    <div class="divresult" id="divresult" [hidden]="checkOrgunits()" >
+        <ul class="dropdown-menu result">
+            <li *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)" >
                 <a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
             </li>
         </ul>
     </div>
 
 
+
+<!--
+<a var-unit id="testunit" (click)="getMoreInfo(unit.id)" href="#"></a>
+*ng-for="#orgunit of filteredOrgunits"
+<a href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
+(click)="getMoreInfo(orgunit)"
+-->
 
 </div>
 

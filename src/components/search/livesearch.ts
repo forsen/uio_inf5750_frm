@@ -35,7 +35,7 @@ export class LiveSearch {
             .subscribe(
                 zone.bind(orgunits => {
                     //this.filterUnits(orgunits)
-                    this.results.next(this.filterUnits(orgunits));
+                    this.results.next(orgunits/*this.filterUnits(orgunits)*/);
                 }),
                 zone.bind(err => {
                     console.log(err);
@@ -97,7 +97,6 @@ export class LiveSearch {
                     })
                 )
         }
-        console.log(filteredOrgunits);
         return filteredOrgunits;
     }
 }

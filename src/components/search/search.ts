@@ -14,15 +14,18 @@ declare var zone: Zone;
 })
 export class Search {
     orgunits: Array<any> = [];
+    filteredOrgunits: Array<any> = [];
     loading: boolean = false;
     groups: Array<any> = [];
     groupSet: Array<any> = [];
-    counter: number = 0;
     ownershipSelector: any;
     typeSelector: any;
     locationSelector: any;
     option: any;
     searchBar: any;
+    filterset: boolean = false;
+
+
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
@@ -32,10 +35,12 @@ export class Search {
         this.typeSelector = document.getElementById("typeSelector");
         this.locationSelector = document.getElementById("locationSelector");
         this.searchBar = document.getElementById("livesearch");
+        this.orglist = document.getElementById("orglist");
+        this.a = document.getElementById("testunit");
     }
 
     getMoreInfo(orgunit) {
-        console.log("yolo");
+        console.log();
         this.newsearch.next(orgunit.id);
     }
 
@@ -97,20 +102,72 @@ export class Search {
         selector.appendChild(this.option);
     }
 
+    checkOrgunits(){
+        if(!this.orgunits.length == false && !this.filterset){
+            this.setFilter();
+            this.filterset = true;
+        }
+        else if(!this.orgunits.length){
+            this.filteredOrgunits = [];
+            if(this.filterset) {
+                this.filterset = false;
+            }
+
+        }
+        return !this.orgunits.length;
+    }
+
+
     setFilter(){
-        console.log("Dette er setFilter");
-        console.log(this.ownershipSelector.value);
-        var text = livesearch.value;
+        this.filteredOrgunits = [];
 
-        //livesearch.value = "";
-        //console.log(this.searchBar.key);
+        for (var i = 0; i < this.orgunits.length; i++) {
+            this.http.get(this.orgunits[i].href)
+                .map(res => res.json())
+                .subscribe(
+                    zone.bind(orgunits => {
+                        if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
+                            this.filteredOrgunits.push(orgunits);
+                        }
+                        else {
+                            var os = false; var ls = false;var ts = false;
+                            for (var group in orgunits.organisationUnitGroups) {
+                                if (this.ownershipSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == this.ownershipSelector.value) {
+                                        os = true;
+                                    }
+                                }
+                                if (this.ownershipSelector.value == "") {
+                                    os = true;
+                                }
+                                if (this.typeSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == this.typeSelector.value) {
+                                        ts = true;
+                                    }
+                                }
+                                if (this.typeSelector.value == "") {
+                                    ts = true;
+                                }
+                                if (this.locationSelector.value != "") {
+                                    if (orgunits.organisationUnitGroups[group].name == this.locationSelector.value) {
+                                        ls = true;
+                                    }
+                                }
+                                if (this.locationSelector.value == "") {
+                                    ls = true;
+                                }
+                                if (os == true && ts == true && ls == true) {
+                                    this.filteredOrgunits.push(orgunits);
+                                    os = false;
+                                    ts = false;
+                                    ls = false;
 
-        /*for(var i = 0; i < text.length; i++){
-            livesearch.value += text.charAt(i);
-        }*/
-        //this.searchBar.createEvent('keyup');
-
-        this.searchBar.focus(true);
+                                }
+                            }
+                        }
+                    })
+                )
+        }
     }
 }
 
