@@ -87,9 +87,12 @@ export class Map {
     init() {
 
         let map = this.map;
-        let pos = {lat: 9.1, lng: -10.6};
+        let pos = {lat: 9.1, lng: -11.6};
 
-        map.setCenter(pos, 12);
+        map.setCenter(pos, 0);
+        map.setZoom(7);
+
+
     }
 
     logError(error) {
@@ -175,7 +178,6 @@ export class Map {
 
             this.map.data.addListener('click', function (event) {
 
-                console.log("klikket " + instance.runned + " og " + instance.LEVEL + " og " + event.feature.O.id);
                 //TODO: spør om man vil ned/opp eller se info
                 //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
 
@@ -194,13 +196,11 @@ export class Map {
 
                     let id = event.feature.O.id;
                     instance.setParent(id);
-                    console.log(id);
 
                     instance.map.data.forEach(function (feature) {
-                        console.log(feature.O.id !== id);
-                        console.log(feature.O.id + " og " + id);
-                        if (feature.O.id !== id) {
+                        if (!(feature.O.id == id && instance.LEVEL == 3)) {
                             instance.map.data.remove(feature);
+
                         }
                     });
 
@@ -229,17 +229,13 @@ export class Map {
 
                     instance.addUnit();
 
-
                 }
-
-
             });
 
 
             this.map.data.addListener('rightclick', function (event) {
                 if (instance.uprunned == false) {
                     instance.setupRunned(true);
-
                     instance.upLevel();
 
                     if (instance.LEVEL > 1) {
@@ -256,17 +252,12 @@ export class Map {
                         //TODO skriv en warning om at man ikke kan gå opp
 
                     }
-
                 }
             });
-
-
         } else {
             // ToDO:
             console.log("fiks meg! gi warning på topp av kart");
         }
-
-
     }
 
     addUnit() {
@@ -279,14 +270,8 @@ export class Map {
         this.newOrg.next(event);
     }
 
-    //TODO slett denne når popup er klar !
-    myFunction() {
-        console.log("Inne i myfunksjonen");
-    }
-
     update(event) {
         this.newactive.next(event);
-        let getResult = Object;
         let test = this.getMap();
         let http = this.getHttp();
 
@@ -301,7 +286,6 @@ export class Map {
     }
 
     mapUpdate(res, instance) {
-        console.log(res.level);
         this.setLevel(res.level);
         this.setParent(res.parent.id);
         this.drawPolygon(res, instance);
