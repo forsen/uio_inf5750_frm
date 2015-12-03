@@ -1,16 +1,17 @@
-html, body {
-    height: 100%;
-    padding-top: 70px;
-    background-color: #e2e2e2;
+* {
     margin: 0;
 }
 
-#map {
-    padding: 20px;
-    height: 750px;
-    margin: 0 auto;
-    width: 100%;
+html, body {
+    height: 100%;
 
+}
+
+#map {
+    min-height: 100% !important;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -20px;
 }
 
 
@@ -18,7 +19,7 @@ html, body {
 .search div{
     position: relative;
 }*/
-
+/*
 .results > li > a{
     margin-top: 10px;
     display: block;
@@ -56,9 +57,12 @@ html, body {
 }
 
 #search {
-    width: 357px;
+    width: 500px;
+    height: 120px;
     margin: 15px;
     margin-left: 150px;
+    background-color: red;
+    position: relative;
 }
 
 
@@ -121,15 +125,12 @@ html, body {
     border-left: 0 none;
     background: #BAB8B8;
     width: 60px;
-    position: fixed;
     padding: 0;
     margin: 0;
     text-align: center;
     height: 52px;
     cursor: pointer;
     float: left;
-    position: -webkit-sticky;
-    position: sticky;
 }
 
 .glyphicon-menu-down{
@@ -154,12 +155,9 @@ html, body {
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
     border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, .15);
     border-radius: 4px;
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-    border-radius: 0px;
-
 }
 
 .result li{
@@ -193,17 +191,17 @@ html, body {
     border-radius: 60px;
     background-color: lightgrey;
     border: black;
-    margin-left: 520px;
+    position: relative;
 }
 
 .emptysearch:hover{
     background-color: white;
+    position: relative;
 
 }
 
 .emptysearch:after {
     display: block;
-    position: absolute;
     margin: auto;
     padding: 2px;
     cursor: pointer;
@@ -211,3 +209,5 @@ html, body {
 .livesearch:not(:valid) ~ .close-icon {
      display: none;
  }
+
+*/

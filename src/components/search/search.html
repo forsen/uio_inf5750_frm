@@ -1,8 +1,8 @@
-<div id="search">
-<form>
+<!--<div id="search">
+
     <label class="sr-only" for="livesearch">Search</label>
 
-        <input
+      <form> <input
                 mou-live-search
                (results)="orgunits = $event"
                (loading)="loading = $event"
@@ -14,9 +14,8 @@
                placeholder="Search"
                 value = "" />
 
-    <button class="emptysearch"(click)="hideDiv()">
-        &cross; </button>
-</form>
+ <button class="emptysearch"(click)="hideDiv()">
+        &cross; </button></form>
 
 <span [hidden]="hideDiv()">
 
@@ -31,42 +30,44 @@
 </span>
 
 
-</div>
+    <button type="button" class="knapp" (click)="toggle()" onclick="$('#ownershipSelector, #typeSelector, #locationSelector').prop('selectedIndex',0);" data-toggle="collapse" data-target="#dropdown-menu">
+        {{ visible ? '&xdtri;' : '&cross;' }}
+    </button>
 
 
-<button type="button" class="knapp" (click)="toggle()" onclick="$('#ownershipSelector, #typeSelector, #locationSelector').prop('selectedIndex',0);" data-toggle="collapse" data-target="#dropdown-menu">
-            {{ visible ? '&xdtri;' : '&cross;' }}
-</button>
 
+    <ul id="dropdown-menu" class="dropdown-menu">
+        <li>Facility</li>
+        <li class="dropdown-header">Ownerships</li>
+        <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
+            <option value=""> All </option>
+            <option [value]="Mission">Mission</option>
+            <option value="NGO">NGO</option>
+            <option value="Private Clinic">Private Clinic</option>
+            <option value="Public facilities">Public facilities</option>
+        </select></li>
+        <li class="dropdown-header">Types</li>
+        <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
+            <option value=""> All </option>
+            <option value="CHC">CHC</option>
+            <option value="CHP">CHP</option>
+            <option value="Clinic">Clinic</option>
+            <option value="Hospital">Hospital</option>
+            <option value="MCHP">MCHP</option>
+        </select></li>
+        <li role="separator" class="divider"></li>
+        <li class="dropdown-header">Locations </li>
+        <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
+            <option value=""> All </option>
+            <option value="Rural">Rural</option>
+            <option value="Urban">Urban</option>
+        </select></li>
 
-<div>
-<ul id="dropdown-menu" class="dropdown-menu">
-    <li>Facility</li>
-    <li class="dropdown-header">Ownerships</li>
-    <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
-        <option value=""> All </option>
-        <option [value]="Mission">Mission</option>
-        <option value="NGO">NGO</option>
-        <option value="Private Clinic">Private Clinic</option>
-        <option value="Public facilities">Public facilities</option>
-    </select></li>
-    <li class="dropdown-header">Types</li>
-    <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
-        <option value=""> All </option>
-        <option value="CHC">CHC</option>
-        <option value="CHP">CHP</option>
-        <option value="Clinic">Clinic</option>
-        <option value="Hospital">Hospital</option>
-        <option value="MCHP">MCHP</option>
-    </select></li>
-    <li role="separator" class="divider"></li>
-    <li class="dropdown-header">Locations </li>
-    <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
-        <option value=""> All </option>
-        <option value="Rural">Rural</option>
-        <option value="Urban">Urban</option>
-    </select></li>
-
-</ul>
+    </ul>
 
 </div>
+-->
+
+
+
+
