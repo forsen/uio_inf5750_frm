@@ -40,6 +40,12 @@ export class Map {
         return this.hideModal = document.getElementById("divModal").style.visibility = "visible";
     }
 
+    closeModal(){
+        console.log("hei");
+        return this.hideModal = document.getElementById("divModal").style.visibility = "hidden";
+
+    }
+
     getMap() {
         return this.map;
     }
@@ -223,7 +229,6 @@ export class Map {
                     });
 
                     marker.setMap(instance.map);
-
                     instance.showModal();
 
 
@@ -261,6 +266,7 @@ export class Map {
     }
 
     addUnit() {
+        console.log("her")
         let parent = this.getParent();
         let pos = this.getcurrentPos();
         let lat = pos.lat();
