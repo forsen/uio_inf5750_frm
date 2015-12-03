@@ -5,7 +5,7 @@ import {Headers, Http} from 'angular2/http';
 @Component({
     selector: 'mou-map',
     directives: [CORE_DIRECTIVES],
-    events: ['newactive'],
+    events: ['newactive','neworg'],
     templateUrl: './components/map/map.html'
 })
 
@@ -24,8 +24,8 @@ export class Map {
 
     constructor(http:Http) {
         this.newactive = new EventEmitter();
-        this.newOrg = new EventEmitter();
-        this.map = new google.maps.Map(document.getElementById("map"), {center: {lat: 0, lng: 0}, zoom: 12});
+        this.neworg = new EventEmitter();
+        this.map = new google.maps.Map(document.getElementById("map"),{center: {lat:0,lng:0}, zoom:12});
         this.init();
         this.http = http;
         this.LEVEL = 2;
@@ -295,7 +295,7 @@ export class Map {
         let lng = pos.lng()
         let location = {lat: lat, lng: lng};
         let event = {location, parent};
-        this.newOrg.next(event);
+        this.neworg.next(event);
     }
 
     update(event) {
