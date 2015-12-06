@@ -48,9 +48,9 @@
             <fieldset class="form-group">
                 <Legend>Coordinates</Legend>
                 <div *ng-if="featureType.value == 'POINT'" class="form-group">
-                    <label>lat</label>
+                    <label>Latitude</label>
                     <input class="form-control" type="number" ng-control="lat" #lat="form" step="any" max="90" min="-90"/>
-                    <label>long</label>
+                    <label>Longitude</label>
                     <input class="form-control" type="number" ng-control="lng" #lng="form" step="any" max="180" min="-180"/>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
@@ -110,20 +110,18 @@
             <fieldset>
                 <legend>Coordinates</legend>
                 <div *ng-if="featureType.value == 'POINT'" class="form-group">
-                    <label>lat</label>
+                    <label>Latitude</label>
                     <p>{{form.controls.lat.value}}</p>
-                    <label>long</label>
+                    <label>Longitude</label>
                     <p>{{form.controls.lng.value}}</p>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
                     <p>This organisation unit has no associated coordinates</p>
                 </div>
-                <!--
-                <div *ng-if="featureType.value == 'POLYGON' || 'featureType.value == 'MULTI_POLYGON'">
-                    <label>polygon</label>
-                    <p>{{form.controls.coordinates.value}}</p>
+                <div *ng-if="featureType.value == 'POLYGON' || featureType.value == 'MULTI_POLYGON'">
+                    <p>polygon</p>
                 </div>
-                -->
+
             </fieldset>
 
             <fieldset>

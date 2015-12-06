@@ -51,6 +51,7 @@ export class Sidebar {
     email: Control = new Control("");
     phoneNumber: Control = new Control("");
     featureType: Control = new Control("");
+    coordinates: Control = new Control("");
 
 
     constructor(http:Http, fb: FormBuilder) {
@@ -76,7 +77,8 @@ export class Sidebar {
             "address": this.address,
             "email": this.email,
             "phoneNumber": this.phoneNumber,
-            "featureType": this.featureType
+            "featureType": this.featureType,
+            "coordinates": this.coordinates
         });
         let instance = this;
         this.lat.valueChanges.observer({
