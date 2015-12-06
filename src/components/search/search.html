@@ -14,11 +14,12 @@
                     name="livesearch"
                     id="livesearch"
                     placeholder="Search"
+                    onblur= "this.placeholder = 'Search'"
+                    onfocus="this.placeholder = ''"
                     value=""/>
 
 
-            <!--   onblur= "this.placeholder = 'Search'"
-                    onfocus="this.placeholder = ''"-->
+
 
 
             <button type="button" class="knapp col-md-2" (click)="toggle()"

@@ -119,6 +119,7 @@ html, body {
 }
 
 .result{
+    opacity: 0.8;
     height: 25vh;
     overflow: scroll;
     position: relative;
@@ -242,7 +243,9 @@ html, body {
 #divModal{
     position: relative;
     margin-top: 0;
-
+    width: 20%;
+    background: red;
+    overflow: hidden;
 }
 
 /* other */
