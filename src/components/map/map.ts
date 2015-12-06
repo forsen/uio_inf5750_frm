@@ -15,11 +15,12 @@ export class Map {
     map:Object;
     http:Http;
     LEVEL:number;
+    allLevels:Object;
     runned:boolean;
-    parent:Object;
-    currentPos:Object;
     uprunned:boolean;
+    parent:Object;
     activeId:string;
+    currentPos:Object;
     currentMarker:Object;
 
     // COLORS:Object;
@@ -35,16 +36,17 @@ export class Map {
             mapTypeControlOptions: {
                 position: google.maps.ControlPosition.BOTTOM_CENTER
             },
-            zoomControlOptions:{
+            zoomControlOptions: {
                 position: google.maps.ControlPosition.LEFT_BOTTOM
             },
             streetViewControl: false
         });
         this.init();
         this.http = http;
-        this.LEVEL = 2;
+        this.LEVEL = 2;//
         this.runned = false;
-        this.getData('?paging=false&level=2', this);
+        this.getLevels(this);
+        // this.getData('?paging=false&level=2', this);/////////////////////////////////////////////////////////
         this.parent = null;
         this.currentPos = null;
         this.uprunned = false;
@@ -56,29 +58,53 @@ export class Map {
         this.hideModal = document.getElementById("divModal").style.display = "none";
     }
 
-    setActiveId(id) { this.activeId = id; }
+    setActiveId(id) {
+        this.activeId = id;
+    }
 
-    getMap() { return this.map; }
+    getMap() {
+        return this.map;
+    }
 
-    getHttp() { return this.http; }
+    getHttp() {
+        return this.http;
+    }
 
-    setcurrentPos(latlng) { this.currentPos = latlng; }
+    setcurrentPos(latlng) {
+        this.currentPos = latlng;
+    }
 
-    getcurrentPos() { return this.currentPos; }
+    getcurrentPos() {
+        return this.currentPos;
+    }
 
-    setParent(id) {  this.parent = id; }
+    setParent(id) {
+        this.parent = id;
+    }
 
-    getParent() { return this.parent; }
+    getParent() {
+        return this.parent;
+    }
 
-    setRunned(value) { this.runned = value; }
+    setRunned(value) {
+        this.runned = value;
+    }
 
-    setupRunned(value) { this.uprunned = value; }
+    setupRunned(value) {
+        this.uprunned = value;
+    }
 
-    setLevel(value) { this.LEVEL = value; }
+    setLevel(value) {
+        this.LEVEL = value;
+    }
 
-    addLevel() { this.LEVEL++; }
+    addLevel() {
+        this.LEVEL++;
+    }
 
-    upLevel() { this.LEVEL--; }
+    upLevel() {
+        this.LEVEL--;
+    }
 
     init() {
 
@@ -102,6 +128,20 @@ export class Map {
                 res => instance.parseResult(res, instance, isParent),
                 error => instance.logError(error)
             );
+    }
+
+    getLevels() {
+        this.http.get(dhisAPI + '/api/organisationUnitLevels')
+            .map(res => res.json())
+            .subscribe(
+                res => this.saveLevelTotalandGetdata(res,this),
+                err => this.logError(err)
+            );
+    }
+
+    saveLevelTotalandGetdata(res,instance){
+        instance.allLevels = res.pager.total;
+        instance.getData('?paging=false&level=2',instance,false);
     }
 
     parseResult(res, instance, isParent) {
@@ -131,6 +171,7 @@ export class Map {
             }
         }
     }
+
     drawPolygon(item, instance) {
         let feature;
         let incoming:string;
@@ -190,7 +231,6 @@ export class Map {
                 instance.setActiveId(event.feature.O.id);
                 instance.setcurrentPos(event.latLng);
 
-                //TODO: finne liste over alle levels slike at man ikke har hardkodet inn < 4 !!
                 if (instance.uprunned == false && instance.LEVEL == 2) {
                     this.hideModal = document.getElementById("topLevel").style.visibility = "visible";
                     this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
@@ -198,12 +238,12 @@ export class Map {
                     instance.showModal();
 
                 }
-                else if (instance.runned == false && instance.LEVEL < 4) {
+                else if (instance.runned == false && instance.LEVEL < instance.allLevels) {
                     this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
                     this.hideModal = document.getElementById("middleLevel").style.visibility = "visible";
                     this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
                     instance.showModal();
-                } else if (instance.runned == false && instance.LEVEL <= 4) {
+                } else if (instance.runned == false && instance.LEVEL <= instance.allLevels) {
 
                     this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
                     this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
@@ -243,18 +283,21 @@ export class Map {
 
     drillUp() {
 
-        if (this.LEVEL > 2) {
-            this.setupRunned(true);
-            this.upLevel();
-            let instance = this;
-            this.closeModal();
-            this.map.data.forEach(function (feature) {
-                instance.map.data.remove(feature);
 
-            });
-            let parent = instance.getParent();
-            instance.getData('/' + parent, instance, true);
+        this.setupRunned(true);
+        this.upLevel();
+        let instance = this;
+        this.closeModal();
+        this.map.data.forEach(function (feature) {
+            instance.map.data.remove(feature);
+
+        });
+        if(this.currentMarker !== null){
+            this.currentMarker.setMap(null);
         }
+        let parent = instance.getParent();
+        instance.getData('/' + parent, instance, true);
+
         this.closeModal();
     }
 
