@@ -22,6 +22,7 @@ export class Map {
     activeId:string;
     currentPos:Object;
     currentMarker:Object;
+    isSearched:boolean;
 
     // COLORS:Object;
 
@@ -46,11 +47,11 @@ export class Map {
         this.LEVEL = 2;//
         this.runned = false;
         this.getLevels(this);
-        // this.getData('?paging=false&level=2', this);/////////////////////////////////////////////////////////
         this.parent = null;
         this.currentPos = null;
         this.uprunned = false;
         this.currentMarker = null;
+        this.isSearched = false;
         // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
@@ -134,14 +135,14 @@ export class Map {
         this.http.get(dhisAPI + '/api/organisationUnitLevels')
             .map(res => res.json())
             .subscribe(
-                res => this.saveLevelTotalandGetdata(res,this),
+                res => this.saveLevelTotalandGetdata(res, this),
                 err => this.logError(err)
             );
     }
 
-    saveLevelTotalandGetdata(res,instance){
+    saveLevelTotalandGetdata(res, instance) {
         instance.allLevels = res.pager.total;
-        instance.getData('?paging=false&level=2',instance,false);
+        instance.getData('?paging=false&level=2', instance, false);
     }
 
     parseResult(res, instance, isParent) {
@@ -197,6 +198,7 @@ export class Map {
                     "coordinates": JSON.parse(item.coordinates)
                 },
                 "properties": {
+                    "title": item.name,
                     "name": item.name,
                     "id": item.id,
                     "color": "gray",
@@ -226,7 +228,9 @@ export class Map {
                     icon: icon
                 });
             });
-
+            if(instance.isSearched){
+                instance.seeDetails();
+            }
             this.map.data.addListener('click', function (event) {
                 instance.setActiveId(event.feature.O.id);
                 instance.setcurrentPos(event.latLng);
@@ -253,10 +257,6 @@ export class Map {
                     instance.showModal();
                 }
             });
-        }
-        else {
-            // ToDO:
-            console.log("fiks meg! gi warning på topp av kart");
         }
     }
 
@@ -292,7 +292,7 @@ export class Map {
             instance.map.data.remove(feature);
 
         });
-        if(this.currentMarker !== null){
+        if (this.currentMarker !== null) {
             this.currentMarker.setMap(null);
         }
         let parent = instance.getParent();
@@ -311,6 +311,7 @@ export class Map {
                 if (feature.getProperty('icon') !== null) {
                     feature.O.icon.strokeColor = 'red';
                 }
+                this.isSearched=false;
             }
             else {
                 feature.setProperty('color', 'gray');
@@ -349,12 +350,23 @@ export class Map {
             .subscribe(
                 res=> this.mapUpdate(res, this)
             );
+
     }
 
     mapUpdate(res, instance) {
         this.setLevel(res.level);
+        this.setActiveId(res.id);
+        this.isSearched = true;
         this.setParent(res.parent.id);
-        this.drawPolygon(res, instance);
+
+        instance.getData('/' + res.parent.id + '/children', instance);
+        if (res.coordinates == null || instance.LEVEL == instance.allLevels) {
+            instance.http.get(dhisAPI + '/api/organisationUnits/' + res.parent.id)
+                .map(res => res.json())
+                .subscribe(
+                    res => instance.drawPolygon(res, instance)
+                );
+        }
 
     }
 
