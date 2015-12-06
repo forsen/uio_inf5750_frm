@@ -23,7 +23,8 @@ export class Map {
     currentPos:Object;
     currentMarker:Object;
     isSearched:boolean;
-
+    popupON:boolean;
+    popup:Object;
     COLORS:Object;
     colornum: number;
 
@@ -55,6 +56,8 @@ export class Map {
         this.isSearched = false;
         this.colornum = 0;
         this.COLORS = ['#0a0f0f','#141f1f','#1f2e2e','#293d3d','#334c4c','#3d5c5c','#476b6b','#527a7a','#5c8a8a','#669999','#75a3a3','#85adad'];
+        this.popupON = false;
+        this.popup=null;
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
@@ -263,6 +266,25 @@ export class Map {
                     instance.showModal();
                 }
             });
+
+
+            this.map.data.addListener('mouseover', function (e) {  
+                if(!instance.popupON) {
+                    instance.popupON = true;
+                    console.log("hei");
+                    instance.popup = new google.maps.InfoWindow({
+                        content: e.feature.getProperty('name'),
+                        position: e.latLng
+                    });
+                    instance.popup.open(instance.map);
+
+                }
+            }); 
+            this.map.data.addListener('mouseout', function (event) {  
+                instance.popupON = false;
+                instance.popup.open(null); 
+            });
+
         }
     }
 
@@ -371,7 +393,7 @@ export class Map {
         http.get(dhisAPI + '/api/organisationUnits/' + event)
             .map(res => res.json())
             .subscribe(
-                res=> this.mapUpdate(res, this)
+                res => this.mapUpdate(res, this)
             );
 
     }
@@ -409,7 +431,6 @@ export class Map {
         });
         this.currentMarker.setMap(map);
         map.panTo(this.currentMarker.getPosition());
-        //console.log(this.currentMarker.getPosition());
     }
 
     showModal() {
