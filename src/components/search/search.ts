@@ -26,10 +26,6 @@ export class Search {
     searchBar:any;
     filterset:boolean = false;
     emptySearch:any;
-    dropdown:any;
-    slide:any;
-    noresult:Object;
-
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
@@ -40,10 +36,6 @@ export class Search {
         this.typeSelector = document.getElementById("typeSelector");
         this.locationSelector = document.getElementById("locationSelector");
         this.searchBar = document.getElementById("livesearch");
-        this.orglist = document.getElementById("orglist");
-        this.a = document.getElementById("testunit");
-        this.dropdown = document.getElementById("dropdown-menu");
-        this.noresult = {name: "No matching result", lastUpdated: ""};
     }
 
     getMoreInfo(orgunit) {
@@ -68,20 +60,12 @@ export class Search {
     }
 
     hideDiv() {
-        if (livesearch.value == "")
+        if (this.searchBar.value == "")
             return true;
-
     }
 
     emptyByClick() {
         return this.emptySearch = document.getElementById("divresult").style.visibility = "hidden";
-    }
-
-    searchKeydown() {
-        if (this.filterset) {
-            this.filterset = false;
-            this.setFilter();
-        }
     }
 
     getUnitGroupSets() {
@@ -150,11 +134,13 @@ export class Search {
                 this.filterset = false;
             }
         }
-        if(livesearch.value > 2)
+        if(this.filteredOrgunits.length == 0){
             return false;
+        }
 
-        else
-            !this.orgunits.length;
+        else{
+            return !this.orgunits.length;
+        }
     }
 
 
