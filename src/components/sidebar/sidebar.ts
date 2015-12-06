@@ -23,6 +23,28 @@ declare var zone: Zone;
             height: 100vh;
             z-index: 5;
         }
+        p {
+           font-size: 14pt;
+        }
+        .label-text {
+            font-size: 16pt;
+        }
+        #nonedit{
+            margin: auto;
+            padding: 10px;
+        }
+        .sidebar{
+            box-shadow: -1px 0px 20px #888888;
+
+        }
+        .slide{
+            -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+            -moz-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+            -o-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+            transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+            line-height: 20px;
+        }
+
     `]
 })
 
@@ -53,6 +75,7 @@ export class Sidebar {
     address: Control = new Control("");
     email: Control = new Control("");
     phoneNumber: Control = new Control("");
+    exitButton: any;
     featureType: Control = new Control("");
     coordinates: Control = new Control("");
     ctrlGroups: Control[]= [new Control('')];
@@ -86,6 +109,7 @@ export class Sidebar {
         this.active = false;
         this.coordinatePoint = false;
         this.tempmarker = new EventEmitter();
+        this.exitButton = document.getElementById("slideout")
 
         let instance = this;
         this.lat.valueChanges.observer({
@@ -242,6 +266,10 @@ export class Sidebar {
         this.form.controls.lng.updateValue(data.location.lng);
         this.form.controls.parent.updateValue(data.parent);
 
+    }
+
+    exit(){
+        this.active = false;
     }
 
     findOrgUnitSets(){

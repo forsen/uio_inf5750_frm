@@ -1,20 +1,8 @@
 <div>
-    <div [hidden]="!active" class="form-background" style="overflow-y:auto; position:relative; float:right; ">
-
-
-        <form [ng-form-model]="form">
-
-        </form>
-
-        <form [hidden]="!editmode" [ng-form-model]="form" (ng-submit)="onSubmit()" #of="form">
-
-<!--
-                <ul ng-control-group="groups">
-                    <li ng-for="#ctrl of groupsArray; #i = index"><input ng-control="{{i}}">
-                    </li>
-                </ul>
--->
-            <h2>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h2>
+    <div [hidden]="!active" class="form-background sidebar slide" style="overflow-y:auto; position:relative; float:right; ">
+        <button id="slideout" (click)="exit()"><span class="glyphicon glyphicon-chevron-right"></span> </button>
+        <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
+            <h3>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h3>
 
             <div class="form-group">
                 <label>Name</label>
@@ -100,43 +88,35 @@
 
         </form>
 
-        <!--
 
-        <form [ng-form-model]="form">
-            <ul ng-control-group="groups">
-                <li *ng-for="#group of ctrlGroups; #i = index"><input ng-control="{{i}}"></li>
-            </ul>
-        </form>
--->
-        <section *ng-if="!editmode">
-            <h2>Organisation Unit</h2>
-            <label for="actOrgUnitName">Name</label>
+        <section id="nonedit" *ng-if="!editmode">
+            <label class="label-text" for="actOrgUnitName">Name</label>
 
-            <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p>
+            <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p><hr>
 
-            <label for="actOrgUnitShortName">Short Name</label>
+            <label class="label-text" for="actOrgUnitShortName">Short Name</label>
 
-            <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p>
+            <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p><hr>
 
-            <label for="actOrgUnitDescription">Description</label>
+            <label class="label-text" for="actOrgUnitDescription">Description</label>
 
-            <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p>
+            <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p><hr>
 
-            <label for="actOrgUnitCode">Code</label>
+            <label class="label-text" for="actOrgUnitCode">Code</label>
 
-            <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p>
+            <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p><hr>
 
-            <label for="actOrgUnitOpeningDate">Opening Date</label>
+            <label class="label-text" for="actOrgUnitOpeningDate">Opening Date</label>
 
-            <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p>
+            <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p><hr>
 
-            <label for="actOrgUnitClosingDate">Closed Date</label>
+            <label class="label-text" for="actOrgUnitClosingDate">Closed Date</label>
 
-            <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p>
+            <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p><hr>
 
-            <label for="actOrgUnitURL">Url</label>
+            <label class="label-text" for="actOrgUnitURL">Url</label>
 
-            <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p>
+            <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p><hr>
 
             <fieldset>
                 <legend>Coordinates</legend>
