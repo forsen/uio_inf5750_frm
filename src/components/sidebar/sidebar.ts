@@ -28,12 +28,15 @@ declare var zone: Zone;
 
 export class Sidebar {
 
-    form: ControlGroup;
+
     http:Http;
     newObject: boolean;
     editmode:boolean;
     active: boolean;
     coordinatePoint: boolean;
+
+    groupSets: Array<any> = [];
+    groupsDoubleArray: any[][] = [];
 
     id: Control = new Control("");
     name: Control = new Control("", Validators.required);
@@ -52,7 +55,30 @@ export class Sidebar {
     phoneNumber: Control = new Control("");
     featureType: Control = new Control("");
     coordinates: Control = new Control("");
+    ctrlGroups: Control[]= [new Control('')];
+    groupsArray: ControlArray = new ControlArray(this.ctrlGroups);
 
+
+    form: ControlGroup = new ControlGroup({
+        organisationUnitGroups: this.groupsArray,
+        id: this.id,
+        name: this.name,
+        shortName: this.shortName,
+        description: this.description,
+        code: this.code,
+        openingDate: this.openingDate,
+        closedDate: this.closedDate,
+        url: this.url,
+        lat: this.lat,
+        lng: this.lng,
+        parent: this.parent,
+        contactPerson: this.contactPerson,
+        address: this.address,
+        email: this.email,
+        phoneNumber: this.phoneNumber,
+        featureType: this.featureType,
+        coordinates: this.coordinates
+    });
 
     constructor(http:Http, fb: FormBuilder) {
         this.http = http;
@@ -61,25 +87,6 @@ export class Sidebar {
         this.coordinatePoint = false;
         this.tempmarker = new EventEmitter();
 
-        this.form = fb.group({
-            "id": this.id,
-            "name": this.name,
-            "shortName": this.shortName,
-            "description": this.description,
-            "code": this.code,
-            "openingDate": this.openingDate,
-            "closedDate": this.closedDate,
-            "url": this.url,
-            "lat": this.lat,
-            "lng": this.lng,
-            "parent": this.parent,
-            "contactPerson": this.contactPerson,
-            "address": this.address,
-            "email": this.email,
-            "phoneNumber": this.phoneNumber,
-            "featureType": this.featureType,
-            "coordinates": this.coordinates
-        });
         let instance = this;
         this.lat.valueChanges.observer({
             next: (value) => {
@@ -97,6 +104,9 @@ export class Sidebar {
                 }
             }
         });
+
+        this.findOrgUnitSets();
+
     }
 
     update(orgunitId) {
@@ -111,11 +121,15 @@ export class Sidebar {
     updateValues(res){
 
         for(control in this.form.controls){
-            if(res[control] !== undefined) {
+            if(this.form.controls[control] instanceof ControlArray){
+                console.log("nothing to do here");
+            }
+            else if(res[control] !== undefined) {
                 this.form.controls[control].updateValue(res[control]);
             }
             else
                 this.form.controls[control].updateValue("");
+
         }
 
         // Date fix:
@@ -136,6 +150,18 @@ export class Sidebar {
         else{
             this.coordinatePoint = false;
         }
+
+        for(var i = 0; i < this.groupsDoubleArray.length; i++){
+            for(var j = 0; j < this.groupsDoubleArray[i].length; j++){
+                for( group in res.organisationUnitGroups){
+                    if( res.organisationUnitGroups[group].id == this.groupsDoubleArray[i][j].id ){
+                        this.form.controls.organisationUnitGroups.controls[i].updateValue(this.groupsDoubleArray[i][j].name);
+                    }
+                }
+            }
+        }
+
+        console.log("faenskap");
     }
 
 
@@ -155,6 +181,15 @@ export class Sidebar {
                 delete jsonObject[key];
             }
         });
+
+        $.each(jsonObject.organisationUnitGroups, function(key, value){
+            if( value === "" || value === null){
+                delete jsonObject.organisationUnitGroups[key];
+            } else {
+                jsonObject.organisationUnitGroups[key].id = value;
+            }
+        });
+
 
         jsonObject.openingDate = (new Date(this.form.value.openingDate)).toISOString();
 
@@ -199,13 +234,49 @@ export class Sidebar {
         this.editmode = true;
 
         for(control in this.form.controls){
-            this.form.controls[control].updateValue("");
+            if(!(this.form.controls[control] instanceof ControlArray))
+                this.form.controls[control].updateValue("");
         }
 
         this.form.controls.lat.updateValue(data.location.lat);
         this.form.controls.lng.updateValue(data.location.lng);
         this.form.controls.parent.updateValue(data.parent);
 
+    }
+
+    findOrgUnitSets(){
+        let instance = this;
+        this.http.get(dhisAPI + "/api/organisationUnitGroupSets?paging=false")
+            .map(res => res.json())
+            .map(res => res.organisationUnitGroupSets)
+            .subscribe(res => this.addOrgUnitSets(instance, res))
+    }
+
+    addOrgUnitSets(instance, res){
+        instance.ctrlArray.removeAt(0);
+        for( group in res){
+            console.log(instance.form.controls);
+            instance.groupsArray.push(new Control(''));
+            instance.groupSets.push(res[group]);
+
+            this.http.get(dhisAPI + "/api/organisationUnitGroupSets/" + res[group].id)
+                .map(res => res.json())
+                .map(res => res.organisationUnitGroups)
+                .subscribe(res => this.addOrgUnitGroup(instance, res))
+
+            //    instance.form.push(new Control(""));
+        }
+        console.log(instance.groupSets);
+    }
+
+    addOrgUnitGroup(instance, res){
+        let ar: Array<any> = [];
+        for( group in res){
+            ar.push(res[group]);
+        }
+        instance.groupsDoubleArray.push(ar);
+
+        console.log(instance.groupsDoubleArray);
     }
 }
 

@@ -1,6 +1,19 @@
 <div>
     <div [hidden]="!active" class="form-background" style="overflow-y:auto; position:relative; float:right; ">
-        <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
+
+
+        <form [ng-form-model]="form">
+
+        </form>
+
+        <form [hidden]="!editmode" [ng-form-model]="form" (ng-submit)="onSubmit()" #of="form">
+
+<!--
+                <ul ng-control-group="groups">
+                    <li ng-for="#ctrl of groupsArray; #i = index"><input ng-control="{{i}}">
+                    </li>
+                </ul>
+-->
             <h2>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h2>
 
             <div class="form-group">
@@ -58,6 +71,17 @@
                 </div>
             </fieldset>
 
+            <fieldset ng-control-group="organisationUnitGroups">
+                <legend>Groups</legend>
+                <div class="form-group" *ng-for="#groupSet of groupSets; #i = index">
+
+                    <label>{{groupSet.name}}</label>
+                    <select ng-control="{{i}}" class="form-control" disabled>
+                        <option>-------- not applicable --------</option>
+                        <option *ng-for="#group of groupsDoubleArray[i]">{{group.name}}</option>
+                    </select>
+                </div>
+            </fieldset>
 
             <fieldset class="form-group">
                 <legend>Contact information</legend>
@@ -76,7 +100,14 @@
 
         </form>
 
+        <!--
 
+        <form [ng-form-model]="form">
+            <ul ng-control-group="groups">
+                <li *ng-for="#group of ctrlGroups; #i = index"><input ng-control="{{i}}"></li>
+            </ul>
+        </form>
+-->
         <section *ng-if="!editmode">
             <h2>Organisation Unit</h2>
             <label for="actOrgUnitName">Name</label>
