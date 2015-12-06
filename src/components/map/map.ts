@@ -54,11 +54,6 @@ export class Map {
         this.currentMarker = null;
         this.isSearched = false;
         // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
-/*
-        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-  */
     }
 
     setActiveId(id) {
@@ -212,7 +207,7 @@ export class Map {
                     strokeColor: 'black',
                     scale: 3
                 };
-                instance.map.panTo({lat:unit.geometry.coordinates[0],lng:unit.geometry.coordinates[1]});
+                //instance.map.panTo({lat:unit.geometry.coordinates[0],lng:unit.geometry.coordinates[1]});
             }
 
             this.map.data.addGeoJson(unit);
@@ -235,7 +230,6 @@ export class Map {
             }
             this.map.data.addListener('click', function (event) {
                 $('#myModal').modal('show');
-                console.log("blaluaoleua");
                 instance.setActiveId(event.feature.O.id);
                 instance.setcurrentPos(event.latLng);
 
@@ -243,45 +237,21 @@ export class Map {
                     this.hideModal = document.getElementById("topLevel").style.display = "block";
                     this.hideModal = document.getElementById("middleLevel").style.display = "none";
                     this.hideModal = document.getElementById("bottomLevel").style.display = "none";
-                    instance.showModal();
-
                 }
                 else if (instance.runned == false && instance.LEVEL < instance.allLevels) {
                     this.hideModal = document.getElementById("topLevel").style.display = "none";
                     this.hideModal = document.getElementById("middleLevel").style.display = "block";
                     this.hideModal = document.getElementById("bottomLevel").style.display = "none";
-                    instance.showModal();
                 } else if (instance.runned == false && instance.LEVEL <= instance.allLevels) {
-
                     this.hideModal = document.getElementById("topLevel").style.display = "none";
                     this.hideModal = document.getElementById("middleLevel").style.display = "none";
                     this.hideModal = document.getElementById("bottomLevel").style.display = "block";
 
                     instance.setcurrentPos(event.latLng);
-                    instance.showModal();
                 }
-
             });
         }
     }
-
-   /* getpolygonCenter(coordinates,instance){
-        let bounds = new google.maps.LatLngBounds();
-        let polygonCoords = Array;
-        for(let i = 0; i < coordinates.length; i++){
-            for(let j = 0; j<coordinates[i].length; j++) {
-                for (let k = 0; k<coordinates[i][j].length; k++) {
-                    polygonCoords[i] = new google.maps.LatLng(coordinates[i][j][k][0],coordinates[i][j][k][1]);
-                }
-            }
-        }
-
-        for (let i = 0; i < polygonCoords.length; i++) {
-            bounds.extend(polygonCoords[i]);
-        }
-
-        instance.map.panTo(bounds.getCenter());
-    }*/
 
     drillDown() {
         this.closeModal();
@@ -407,27 +377,14 @@ export class Map {
             }
         });
         this.currentMarker.setMap(map);
-        map.panTo(this.currentMarker.getPosition());
-        //console.log(this.currentMarker.getPosition());
+        //map.panTo(this.currentMarker.getPosition());
+
     }
 
-    showModal() {
-        //TODO fix me
-        console.log("trenger vi denne?");
-    }
 
     closeModal() {
-        /*
-        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        */
         $("#myModal").modal("hide");
-
-
         this.setRunned(false);
-
-        console.log("trenger vi denne?");
     }
 
 }
