@@ -111,7 +111,6 @@ export class Map {
 
         let map = this.map;
         let pos = {lat: 9.1, lng: -11.6};
-
         map.setCenter(pos, 0);
         map.setZoom(7);
 
@@ -189,7 +188,7 @@ export class Map {
                 break;
             default:
         }
-        // TODO: test på feature og behandle type: NONE
+
         if (feature !== undefined) {
             let unit = {
                 "type": "Feature",
@@ -211,6 +210,7 @@ export class Map {
                     strokeColor: 'black',
                     scale: 3
                 };
+                instance.map.panTo({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
             }
 
             this.map.data.addGeoJson(unit);
@@ -260,12 +260,29 @@ export class Map {
         }
     }
 
+   /* getpolygonCenter(coordinates,instance){
+        let bounds = new google.maps.LatLngBounds();
+        let polygonCoords = Array;
+        for(let i = 0; i < coordinates.length; i++){
+            for(let j = 0; j<coordinates[i].length; j++) {
+                for (let k = 0; k<coordinates[i][j].length; k++) {
+                    polygonCoords[i] = new google.maps.LatLng(coordinates[i][j][k][0],coordinates[i][j][k][1]);
+                }
+            }
+        }
+
+        for (let i = 0; i < polygonCoords.length; i++) {
+            bounds.extend(polygonCoords[i]);
+        }
+
+        instance.map.panTo(bounds.getCenter());
+    }*/
+
     drillDown() {
         this.closeModal();
         let map = this.getMap();
         let id = this.activeId;
         let level = this.LEVEL;
-        console.log(id);
         this.setRunned(true);
         this.setParent(id);
 
@@ -385,6 +402,8 @@ export class Map {
             }
         });
         this.currentMarker.setMap(map);
+        map.panTo(this.currentMarker.getPosition());
+        //console.log(this.currentMarker.getPosition());
     }
 
     showModal() {
