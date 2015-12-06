@@ -5,7 +5,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="closeModal()">&times;</button>
-            <h4 class="modal-title">What do you want ? </h4>
+            <h4 class="modal-title">What do you want to do? </h4>
         </div>
         <div id="topLevel">
             <div class="modal-footer">
@@ -14,20 +14,18 @@
             </div>
         </div>
         <div id="middleLevel">
-            <button type="button" class="btn btn-default" (click)="seeDetails()">See details</button>
-            <button type="button" class="btn btn-default" (click)="drillDown()">Drill down</button>
-            <button type="button" class="btn btn-default" (click)="drillUp()">drill up</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="drillUp()">Drill up</button>
+                <button type="button" class="btn btn-default" (click)="seeDetails()">See details</button>
+                <button type="button" class="btn btn-default" (click)="drillDown()">Drill down</button>
+            </div>
         </div>
         <div id="bottomLevel">
-            <div class="modal-body">
-                <p>Do you want to add new a facility or see details?</p>
-            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="addUnit()">Yes</button>
-                <button type="button" class="btn btn-default" (click)="seeDetails()">See details</button>
                 <button type="button" class="btn btn-default" (click)="drillUp()">Drill up</button>
+                <button type="button" class="btn btn-default" (click)="seeDetails()">See details</button>
+                <button type="button" class="btn btn-default" (click)="addUnit()">Add new</button>
             </div>
         </div>
-
     </div>
 </div>
