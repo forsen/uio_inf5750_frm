@@ -24,7 +24,8 @@ export class Map {
     currentMarker:Object;
     isSearched:boolean;
 
-    // COLORS:Object;
+    COLORS:Object;
+    colornum: number;
 
     constructor(http:Http) {
 
@@ -52,7 +53,8 @@ export class Map {
         this.uprunned = false;
         this.currentMarker = null;
         this.isSearched = false;
-        // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
+        this.colornum = 0;
+        this.COLORS = ['#0a0f0f','#141f1f','#1f2e2e','#293d3d','#334c4c','#3d5c5c','#476b6b','#527a7a','#5c8a8a','#669999','#75a3a3','#85adad'];
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
@@ -200,10 +202,14 @@ export class Map {
                     "title": item.name,
                     "name": item.name,
                     "id": item.id,
-                    "color": "gray",
+                    "color":instance.COLORS[instance.colornum],
                     "icon": null
                 }
             };
+            if(instance.COLORS.length == instance.colornum){
+                instance.colornum = 0;
+            }else{ instance.colornum++;}
+
             if (unit.geometry.type == 'Point') {
                 unit.properties.icon = {
                     path: google.maps.SymbolPath.CIRCLE,
