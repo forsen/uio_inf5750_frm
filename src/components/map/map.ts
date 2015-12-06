@@ -212,7 +212,6 @@ export class Map {
                 };
                 instance.map.panTo({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
             }
-           // this.getpolygonCenter(unit.geometry.coordinates,instance);
 
             this.map.data.addGeoJson(unit);
             this.map.data.setStyle(function (feature) {
