@@ -26,6 +26,7 @@ export class Search {
     searchBar: any;
     filterset: boolean = false;
     emptySearch: any;
+    dropdown: any;
     slide: any;
 
 
@@ -40,6 +41,7 @@ export class Search {
         this.searchBar = document.getElementById("livesearch");
         this.orglist = document.getElementById("orglist");
         this.a = document.getElementById("testunit");
+        this.dropdown = document.getElementById("dropdown-menu");
     }
 
     getMoreInfo(orgunit) {
@@ -51,7 +53,7 @@ export class Search {
 
     toggle() {
         this.visible = !this.visible;
-        if(this.visible){
+        if(!this.visible){
             this.ownershipSelector.selectedIndex = 0;
             this.typeSelector.selectedIndex = 0;
             this.locationSelector.selectedIndex = 0;
@@ -65,9 +67,15 @@ export class Search {
 
     }
 
-
     emptyByClick(){
         return this.emptySearch = document.getElementById("divresult").style.visibility = "hidden";
+    }
+
+    searchKeydown(){
+        if(this.filterset){
+            this.filterset = false;
+            this.setFilter();
+        }
     }
 
 
@@ -136,7 +144,6 @@ export class Search {
             if(this.filterset) {
                 this.filterset = false;
             }
-
         }
         return !this.orgunits.length;
     }
