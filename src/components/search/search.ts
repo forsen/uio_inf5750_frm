@@ -25,14 +25,11 @@ export class Search {
     option: any;
     searchBar: any;
     filterset: boolean = false;
-    emptySearch: any;
-    slide: any;
 
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
-        this.emptySearch = document.getElementById("divresult");
         this.getUnitGroupSets();
         this.ownershipSelector = document.getElementById("ownershipSelector");
         this.typeSelector = document.getElementById("typeSelector");
@@ -45,6 +42,8 @@ export class Search {
     getMoreInfo(orgunit) {
         this.orgunits = [];
         this.newsearch.next(orgunit.id);
+        return document.getElementById("myForm").reset();
+
     }
 
     //pil opp og ned
@@ -57,14 +56,13 @@ export class Search {
     hideDiv(){
         if(livesearch.value == "")
             return true;
-
     }
 
 
     emptyByClick(){
-        return this.emptySearch = document.getElementById("divresult").style.visibility = "hidden";
+        this.orgunits = [];
+        return document.getElementById("myForm").reset();
     }
-
 
     getUnitGroupSets(){
         this.http.get(dhisAPI + "/api/organisationUnitGroupSets")
@@ -104,7 +102,7 @@ export class Search {
 
     setOptionHeader(selector, value){
         this.option = document.createElement("option");
-        this.option.text = "-- " + value + " --";
+        this.option.text = "All";
         this.option.value = "";
         selector.appendChild(this.option);
     }

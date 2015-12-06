@@ -15,14 +15,143 @@ html, body {
     z-index: 0;
 }
 
-/*
-.search div{
+/* search div */
+
+#search {
     position: relative;
-}*/
+    z-index: 1;
+    margin-top: 20px;
+    margin-left: 20px;
+    background: transparent;
+    display: inline-block;
+    width: 400px;
+    max-width: 100%;
+}
+
+/* search input*/
+
+#livesearch{
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    font-family: Montserrat, sans-serif;
+    border: 1px solid white;
+    height: 52px;
+    margin-right: 0;
+    color: black;
+    outline: none;
+    background: white;
+    float: left;
+    box-sizing: border-box;
+    transition: all 0.15s;
+    border-radius: 2px 0px 0px 2px; /* top left, top right, bottom right, bottom left */
+
+}
+
+::-webkit-input-placeholder {
+    color: grey;
+}
+:-moz-placeholder {
+    color: grey;
+}
+::-moz-placeholder {
+    color: grey;
+}
+:-ms-input-placeholder {
+    color: grey;
+}
+
+#livesearch:focus {
+    background: white;
+}
+
+.knapp
+{
+    border-radius: 0px 2px 2px 0px; /* top left, top right, bottom right, bottom left */
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3);
+    border-right: 1px solid white;
+    border-top:1px solid white;
+    border-bottom: 1px solid white;
+    border-left: 2px solid darkgrey;
+    background: white;
+    width: 60px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    height: 52px;
+    cursor: pointer;
+    float: left;
+}
+
+.knapp:focus {
+    outline:0;
+}
+
+/* search results */
+
+
+.divresult{
+    padding:0;
+    margin: 0;
+    background-color: white;
+    border-radius: 0;
+    border-top: 2px solid darkgrey;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3);
+
+}
+
+.test{
+    padding:0;
+    margin: 0;
+    height: 40vh;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    width: 80%;
+    margin-top: 0;
+    left: 0;
+    float: left;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+}
+
+.result{
+    height: 25vh;
+    overflow: scroll;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    width: 100%;
+    margin-top: 0;
+    left: 0;
+    float: left;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid whitesmoke;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 0px 0px 2px 2px; /* top left, top right, bottom right, bottom left */
+}
+
+.result li{
+    padding: 0.5em 0.5em 0.5em 0;
+    margin: auto;
+    float: none;
+    border-bottom: 1px solid grey;
+
+}
+
+.result > li:first-child {
+    padding: 5px;
+    border: none;
+}
 
 .results > li > a{
     position: relative;
-
     margin-top: 10px;
     display: block;
     padding: 3px 5px;
@@ -35,135 +164,43 @@ html, body {
 
 .results > li > a:focus, .results > li > a:hover {
     position: relative;
-
     margin-top: 20px;
     color: #262626;
     text-decoration: none;
     background-color: #f5f5f5
 }
 
-.dropdown-menu{
-    margin-top: -17px;
-    margin-left: 649px;
-    background-color: white;
-    border-radius: 0px;
+.emptyresult{
+    float: right;
+    border: 0;
 }
 
-.dropdown-menu li{
+.emptyresult:hover{
+    outline:0;
+    background: white;
+}
+
+/* filter options */
+
+.dropdowndiv{
+    padding:0;
+    margin: 0;
+}
+.meny{
+    top: 0px;
+    margin-top: 0;
+    z-index: 1;
+    position: absolute;
+    float: left;
+    background-color: white;
+    border-radius: 0px;
+    margin-left: 6px;
+}
+
+.meny li{
     background-color: white;
     padding-left: 20px;
     padding-right: 20px;
-}
-
-#search {
-    position: relative;
-    z-index: 1;
-    margin-top: 20px;
-    padding-left: 20px;
-    background: transparent;
-    display: inline-block;
-    width: 400px;
-    max-width: 100%;
-}
-
-#livesearch{
-    box-shadow: 0 0 1px darkgrey;
-    padding: 5px 0 5px 20px;
-    font-size: 16px;
-    font-family: Montserrat, sans-serif;
-    border-left: 1px solid darkgrey;
-    border-top:1px solid darkgrey;
-    border-bottom: 1px solid darkgrey;
-    border-right: 0 none;
-    height: 52px;
-    margin-right: 0;
-    color: white;
-    outline: none;
-    background: #e2e2e2;
-    float: left;
-    box-sizing: border-box;
-    transition: all 0.15s;
-}
-
-::-webkit-input-placeholder {
-    color: white;
-}
-:-moz-placeholder {
-    color: white;
-}
-::-moz-placeholder {
-    color: white;
-}
-:-ms-input-placeholder {
-    color: white;
-}
-
-#livesearch:focus {
-    background: darkgrey;
-}
-
-.dropdown-div{
-    border: 0 none;
-    background: #BAB8B8;
-    width: 60px;
-    float: left;
-    padding: 0;
-    margin: 0;
-    text-align: center;
-    height: 52px;
-    cursor: pointer;
-    border-radius: 0px;
-}
-
-.knapp
-{
-    box-shadow: 0 0 1px darkgrey;
-    border-right: 1px solid darkgrey;
-    border-top:1px solid darkgrey;
-    border-bottom: 1px solid darkgrey;
-    border-left: 0 none;
-    background: #BAB8B8;
-    width: 60px;
-    padding: 0;
-    margin: 0;
-    text-align: center;
-    height: 52px;
-    cursor: pointer;
-    float: left;
-}
-
-.glyphicon-menu-down{
-    color: white;
-}
-
-.result{
-    width: 500px;
-    margin-left: 150px;
-    display: block;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    float: left;
-    min-width: 160px;
-    padding: 1px 0;
-    font-size: 14px;
-    text-align: left;
-    list-style: none;
-    background-color: #fff;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-}
-
-.result li{
-    margin-top: 20px;
-    margin-left: 20px;
-    padding: 0.5em 0.5em 0.5em 0;
-    float: none;
 }
 
 .filtervalg{
@@ -177,7 +214,7 @@ html, body {
     border: 1px solid darkgrey;
     color: black;
     outline: none;
-    background: #BAB8B8;
+    background: whitesmoke;
     box-sizing: border-box;
     transition: all 0.15s;
 }
@@ -186,29 +223,11 @@ html, body {
     display:none;
 }
 
-.exitsearch {
-    border-radius: 60px;
-    background-color: lightgrey;
-    border: black;
-    position: relative;
+.glyphicon-menu-down{
+    color: white;
 }
 
-.exitsearch:hover{
-    background-color: white;
-    position: relative;
-
-}
-
-.exitsearch:after {
-    display: block;
-    margin: auto;
-    padding: 2px;
-    cursor: pointer;
-}
-.livesearch:not(:valid) ~ .close-icon {
-     display: none;
- }
-
+/* modal */
 
 #divModal{
     position: relative;
@@ -216,6 +235,11 @@ html, body {
 
 }
 
+/* other */
+
 .no-padding{
     padding: 0;
+    padding: 0 !important;
+    margin: 0 !important;
 }
+

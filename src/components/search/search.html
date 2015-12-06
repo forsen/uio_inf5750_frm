@@ -2,7 +2,7 @@
 
     <label class="sr-only" for="livesearch">Search</label>
 
-    <form>
+    <form id="myForm">
         <div class="row">
             <input
                     mou-live-search
@@ -17,8 +17,10 @@
                     value=""/>
 
 
-            <!--<button class="exitsearch" id="exitsearch" (click)="emptyByClick()">
-          &cross; </button>-->
+            <!--   onblur= "this.placeholder = 'Search'"
+                    onfocus="this.placeholder = ''"-->
+
+
             <button type="button" class="knapp col-md-2" (click)="toggle()"
                     onclick="$('#ownershipSelector, #typeSelector, #locationSelector').prop('selectedIndex',0);"
                     data-toggle="collapse" data-target="#dropdown-menu">
@@ -27,36 +29,50 @@
         </div>
     </form>
 
+    <div class="row">
 <span [hidden]="hideDiv()">
-
-
-    <div class="divresult" id="divresult" [hidden]="checkOrgunits()">
-        <ul id="d" class="dropdown-menu result">
-            <li id="c" *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)">
-                <a id="left-menu" href="#">{{orgunit.name}}<br/><span>{{orgunit.lastUpdated}}</span></a>
+    <div class="divresult col-md-10" id="divresult" [hidden]="checkOrgunits()">
+        <ul class="dropdown-menu result">
+            <li><button type="button" class="btn btn-default emptyresult" (click)="emptyByClick()">
+                <span class="glyphicon glyphicon-remove"></span></button></li>
+            <li *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)">
+                <a id="left-menu" href="#">{{orgunit.name}}</a>
             </li>
         </ul>
     </div>
-
 </span>
+        <div class="row">
+            <div class="test col-md-8"></div>
 
 
-    <ul id="dropdown-menu" class="dropdown-menu">
-        <li><select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()">
+<div id="dropdowndiv" class="btn-group collapse col-md-2">
 
-        </select></li>
-        <li><select class="form-control filtervalg" id="typeSelector" (click)="setFilter()">
+    <ul id="dropdown-menu" role="menu" class="dropdown-menu meny">
+        <li>Facility</li>
+        <li class="dropdown-header">Ownership</li>
+        <li>
+            <select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()"></select>
+        </li>
+        <li class="dropdown-header">Type</li>
+        <li>
+            <select class="form-control filtervalg" id="typeSelector" (click)="setFilter()"></select>
+        </li>
+        <li class="divider"></li>
+        <li>Location</li>
+        <li class="dropdown-header">Rural/Urban</li>
 
-        </select></li>
-        <li><select class="form-control filtervalg" id="locationSelector" (click)="setFilter()">
-
-        </select></li>
+        <li>
+            <select class="form-control filtervalg" id="locationSelector" (click)="setFilter()"></select>
+        </li>
     </ul>
 
+</div>
+
+        </div>
 
 </div>
 
 
 
-
+</div>
 
