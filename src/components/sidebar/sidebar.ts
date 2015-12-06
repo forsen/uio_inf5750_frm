@@ -78,7 +78,7 @@ export class Sidebar {
     exitButton: any;
     featureType: Control = new Control("");
     coordinates: Control = new Control("");
-    ctrlGroups: Control[]= [new Control('')];
+    ctrlGroups: Array<Control> = [new Control('')];
     groupsArray: ControlArray = new ControlArray(this.ctrlGroups);
 
 
@@ -281,7 +281,7 @@ export class Sidebar {
     }
 
     addOrgUnitSets(instance, res){
-        instance.ctrlArray.removeAt(0);
+        //delete instance.ctrlGroups[0];
         for( group in res){
             console.log(instance.form.controls);
             instance.groupsArray.push(new Control(''));

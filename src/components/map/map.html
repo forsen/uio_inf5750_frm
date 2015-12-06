@@ -1,37 +1,28 @@
 <div id="map"></div>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
 
-<div id="divModal" >
-    <!--- class="modal-dialog modal-sm">-->
-  <!--  <div class="modal-content">-->
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
-  <!--      <div class="modal-header">-->
-            <button type="button" class="close" (click)="closeModal()">&times;</button>
-            <h4 class="modal-title">What do you want ? </h4>
-   <!--     </div>-->
-
-    <!--    <div class="modal-body">-->
-        <div id="topLevel">
-                <button type="button" class="btn btn-default" (click)="seeDetails()">See details</button>
-                <button type="button" class="btn btn-default" (click)="drillDown()">Drill down</button>
+                <div id="topLevel">
+                    <button type="button" class="btn btn-default btn-sm" (click)="seeDetails()">See details</button>
+                    <button type="button" class="btn btn-default btn-sm" (click)="drillDown()">Drill down</button>
+                </div>
+                <div id="middleLevel">
+                    <button type="button" class="btn btn-default btn-sm" (click)="seeDetails()">See details</button>
+                    <button type="button" class="btn btn-default btn-sm" (click)="drillDown()">Drill down</button>
+                    <button type="button" class="btn btn-default btn-sm" (click)="drillUp()">drill up</button>
+                </div>
+                <div id="bottomLevel">
+                    <button type="button" class="btn btn-default btn-sm" (click)="addUnit()">Yes</button>
+                    <button type="button" class="btn btn-default btn-sm" (click)="seeDetails()">See details</button>
+                    <button type="button" class="btn btn-default btn-sm" (click)="drillUp()">Drill up</button>
+                </div>
+            </div>
         </div>
-        <div id="middleLevel">
-            <button type="button" class="btn btn-default" (click)="seeDetails()">See details</button>
-            <button type="button" class="btn btn-default" (click)="drillDown()">Drill down</button>
-            <button type="button" class="btn btn-default" (click)="drillUp()">drill up</button>
-        </div>
-        <div id="bottomLevel">
-                <button type="button" class="btn btn-default" (click)="addUnit()">Yes</button>
-                <button type="button" class="btn btn-default" (click)="seeDetails()">See details</button>
-                <button type="button" class="btn btn-default" (click)="drillUp()">Drill up</button>
-        </div>
-    <!--    </div>
-
-        <div class="modal-footer">
-         hei
-        </div>
--->
-
-
-    <!--</div>-->
+    </div>
 </div>
+

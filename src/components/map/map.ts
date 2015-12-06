@@ -1,4 +1,4 @@
-import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
+import {Component, EventEmitter,CORE_DIRECTIVES, NgIf} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
 
 @Component({
@@ -18,6 +18,7 @@ export class Map {
     allLevels:Object;
     runned:boolean;
     uprunned:boolean;
+    toplevel: boolean = false;
     parent:Object;
     activeId:string;
     currentPos:Object;
@@ -53,10 +54,11 @@ export class Map {
         this.currentMarker = null;
         this.isSearched = false;
         // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
+/*
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("divModal").style.display = "none";
+  */
     }
 
     setActiveId(id) {
@@ -210,7 +212,7 @@ export class Map {
                     strokeColor: 'black',
                     scale: 3
                 };
-                instance.map.panTo({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
+                instance.map.panTo({lat:unit.geometry.coordinates[0],lng:unit.geometry.coordinates[1]});
             }
 
             this.map.data.addGeoJson(unit);
@@ -232,30 +234,33 @@ export class Map {
                 instance.seeDetails();
             }
             this.map.data.addListener('click', function (event) {
+                $('#myModal').modal('show');
+                console.log("blaluaoleua");
                 instance.setActiveId(event.feature.O.id);
                 instance.setcurrentPos(event.latLng);
 
                 if (instance.uprunned == false && instance.LEVEL == 2) {
-                    this.hideModal = document.getElementById("topLevel").style.visibility = "visible";
-                    this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
+                    this.hideModal = document.getElementById("topLevel").style.display = "block";
+                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
+                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
                     instance.showModal();
 
                 }
                 else if (instance.runned == false && instance.LEVEL < instance.allLevels) {
-                    this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("middleLevel").style.visibility = "visible";
-                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
+                    this.hideModal = document.getElementById("topLevel").style.display = "none";
+                    this.hideModal = document.getElementById("middleLevel").style.display = "block";
+                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
                     instance.showModal();
                 } else if (instance.runned == false && instance.LEVEL <= instance.allLevels) {
 
-                    this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "visible";
+                    this.hideModal = document.getElementById("topLevel").style.display = "none";
+                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
+                    this.hideModal = document.getElementById("bottomLevel").style.display = "block";
 
                     instance.setcurrentPos(event.latLng);
                     instance.showModal();
                 }
+
             });
         }
     }
@@ -407,16 +412,22 @@ export class Map {
     }
 
     showModal() {
-        return this.hideModal = document.getElementById("divModal").style.display = "block";
+        //TODO fix me
+        console.log("trenger vi denne?");
     }
 
     closeModal() {
+        /*
         this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
         this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("divModal").style.display = "none";
+        */
+        $("#myModal").modal("hide");
+
 
         this.setRunned(false);
+
+        console.log("trenger vi denne?");
     }
 
 }
