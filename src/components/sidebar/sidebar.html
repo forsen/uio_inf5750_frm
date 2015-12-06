@@ -1,7 +1,7 @@
 <div>
     <div [hidden]="!active" class="form-background" style="overflow-y:auto; position:relative; float:right; ">
         <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
-            <h3>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h3>
+            <h2>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h2>
 
             <div class="form-group">
                 <label>Name</label>
@@ -45,13 +45,16 @@
 
                 <p [hidden]="url.valid" class="alert alert-danger">The specified URL is not valid</p>
             </div>
-            <fieldset class="form-group" *ng-if="coordinatePoint">
+            <fieldset class="form-group">
                 <Legend>Coordinates</Legend>
-                <div class="form-group">
+                <div *ng-if="featureType.value == 'POINT'" class="form-group">
                     <label>lat</label>
                     <input class="form-control" type="number" ng-control="lat" #lat="form" step="any" max="90" min="-90"/>
                     <label>long</label>
                     <input class="form-control" type="number" ng-control="lng" #lng="form" step="any" max="180" min="-180"/>
+                </div>
+                <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
+                    <p>This organisation unit has no associated coordinates</p>
                 </div>
             </fieldset>
 
@@ -75,6 +78,7 @@
 
 
         <section *ng-if="!editmode">
+            <h2>Organisation Unit</h2>
             <label for="actOrgUnitName">Name</label>
 
             <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p>
@@ -103,6 +107,36 @@
 
             <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p>
 
+            <fieldset>
+                <legend>Coordinates</legend>
+                <div *ng-if="featureType.value == 'POINT'" class="form-group">
+                    <label>lat</label>
+                    <p>{{form.controls.lat.value}}</p>
+                    <label>long</label>
+                    <p>{{form.controls.lng.value}}</p>
+                </div>
+                <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
+                    <p>This organisation unit has no associated coordinates</p>
+                </div>
+                <!--
+                <div *ng-if="featureType.value == 'POLYGON' || 'featureType.value == 'MULTI_POLYGON'">
+                    <label>polygon</label>
+                    <p>{{form.controls.coordinates.value}}</p>
+                </div>
+                -->
+            </fieldset>
+
+            <fieldset>
+                <legend>Contact Information</legend>
+                <label>Contact person</label>
+                <p>{{form.controls.contactPerson.value || ["None"]}}</p>
+                <label>Address</label>
+                <p>{{form.controls.address.value || ["None"]}}</p>
+                <label>E-mail</label>
+                <p>{{form.controls.email.value || ["None"]}}</p>
+                <label>Phone number</label>
+                <p>{{form.controls.phoneNumber.vaule || ["None"]}}</p>
+            </fieldset>
             <button class="btn btn-default" (click)="editmode = !editmode">Edit</button>
         </section>
 
