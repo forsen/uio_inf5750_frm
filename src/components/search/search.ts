@@ -4,7 +4,7 @@ import {LiveSearch} from "./livesearch";
 import {Sidebar} from "../sidebar/sidebar";
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
-declare var zone:Zone;
+declare var zone: Zone;
 
 @Component({
     selector: 'mou-search',
@@ -14,18 +14,19 @@ declare var zone:Zone;
     styleUrls: ['./components/search/search.css']
 })
 export class Search {
-    orgunits:Array<any> = [];
-    filteredOrgunits:Array<any> = [];
-    loading:boolean = false;
-    groups:Array<any> = [];
-    groupSet:Array<any> = [];
-    ownershipSelector:any;
-    typeSelector:any;
-    locationSelector:any;
-    option:any;
-    searchBar:any;
-    filterset:boolean = false;
-    emptySearch:any;
+    orgunits: Array<any> = [];
+    filteredOrgunits: Array<any> = [];
+    loading: boolean = false;
+    groups: Array<any> = [];
+    groupSet: Array<any> = [];
+    ownershipSelector: any;
+    typeSelector: any;
+    locationSelector: any;
+    option: any;
+    searchBar: any;
+    filterset: boolean = false;
+    emptySearch: any;
+
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
@@ -36,11 +37,15 @@ export class Search {
         this.typeSelector = document.getElementById("typeSelector");
         this.locationSelector = document.getElementById("locationSelector");
         this.searchBar = document.getElementById("livesearch");
+        this.orglist = document.getElementById("orglist");
+        this.a = document.getElementById("testunit");
     }
 
     getMoreInfo(orgunit) {
         this.orgunits = [];
         this.newsearch.next(orgunit.id);
+        return document.getElementById("myForm").reset();
+
     }
 
     //pil opp og ned
@@ -62,10 +67,13 @@ export class Search {
     hideDiv() {
         if (this.searchBar.value == "")
             return true;
+
     }
 
-    emptyByClick() {
-        return this.emptySearch = document.getElementById("divresult").style.visibility = "hidden";
+
+    emptyByClick(){
+        this.orgunits = [];
+        return document.getElementById("myForm").reset();
     }
 
     getUnitGroupSets() {
@@ -106,7 +114,7 @@ export class Search {
 
     setOptionHeader(selector, value) {
         this.option = document.createElement("option");
-        this.option.text = "-- " + value + " --";
+        this.option.text = "All";
         this.option.value = "";
         selector.appendChild(this.option);
     }
@@ -189,6 +197,7 @@ export class Search {
                                     os = false;
                                     ts = false;
                                     ls = false;
+
                                 }
                             }
                         }
