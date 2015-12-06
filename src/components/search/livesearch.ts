@@ -26,7 +26,7 @@ export class LiveSearch {
         console.log("starting");
         (<any>Rx).Observable.fromEvent(this.el.nativeElement, 'keyup')
             .map(e => e.target.value)
-            .filter(text => text.length > 2)
+            .filter(text => text.length > 0)
             .debounceTime(250)
             .distinctUntilChanged()
             .do(zone.bind(() => this.loading.next(true)))

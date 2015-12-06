@@ -4,7 +4,7 @@ import {LiveSearch} from "./livesearch";
 import {Sidebar} from "../sidebar/sidebar";
 import * as Rx from '@reactivex/rxjs/dist/cjs/Rx';
 
-declare var zone: Zone;
+declare var zone:Zone;
 
 @Component({
     selector: 'mou-search',
@@ -14,20 +14,21 @@ declare var zone: Zone;
     styleUrls: ['./components/search/search.css']
 })
 export class Search {
-    orgunits: Array<any> = [];
-    filteredOrgunits: Array<any> = [];
-    loading: boolean = false;
-    groups: Array<any> = [];
-    groupSet: Array<any> = [];
-    ownershipSelector: any;
-    typeSelector: any;
-    locationSelector: any;
-    option: any;
-    searchBar: any;
-    filterset: boolean = false;
-    emptySearch: any;
-    dropdown: any;
-    slide: any;
+    orgunits:Array<any> = [];
+    filteredOrgunits:Array<any> = [];
+    loading:boolean = false;
+    groups:Array<any> = [];
+    groupSet:Array<any> = [];
+    ownershipSelector:any;
+    typeSelector:any;
+    locationSelector:any;
+    option:any;
+    searchBar:any;
+    filterset:boolean = false;
+    emptySearch:any;
+    dropdown:any;
+    slide:any;
+    noresult:Object;
 
 
     constructor(public http:Http) {
@@ -42,6 +43,7 @@ export class Search {
         this.orglist = document.getElementById("orglist");
         this.a = document.getElementById("testunit");
         this.dropdown = document.getElementById("dropdown-menu");
+        this.noresult = {name: "No matching result", lastUpdated: ""};
     }
 
     getMoreInfo(orgunit) {
@@ -53,103 +55,110 @@ export class Search {
 
     toggle() {
         this.visible = !this.visible;
-        if(!this.visible){
-            this.ownershipSelector.selectedIndex = 0;
-            this.typeSelector.selectedIndex = 0;
-            this.locationSelector.selectedIndex = 0;
-            this.checkOrgunits();
+        if (this.visible) {
+            this.resetSelector();
         }
     }
 
-    hideDiv(){
-        if(livesearch.value == "")
+    resetSelector(){
+        this.ownershipSelector.selectedIndex = 0;
+        this.typeSelector.selectedIndex = 0;
+        this.locationSelector.selectedIndex = 0;
+        this.checkOrgunits();
+    }
+
+    hideDiv() {
+        if (livesearch.value == "")
             return true;
 
     }
 
-    emptyByClick(){
+    emptyByClick() {
         return this.emptySearch = document.getElementById("divresult").style.visibility = "hidden";
     }
 
-    searchKeydown(){
-        if(this.filterset){
+    searchKeydown() {
+        if (this.filterset) {
             this.filterset = false;
             this.setFilter();
         }
     }
 
-
-    getUnitGroupSets(){
+    getUnitGroupSets() {
         this.http.get(dhisAPI + "/api/organisationUnitGroupSets")
-        .map(res => res.json())
-        .map(res => res.organisationUnitGroupSets)
-        .subscribe(
-            zone.bind( res =>{
-                this.setOptionHeader(this.ownershipSelector, res[0].name);
-                this.setOptionHeader(this.typeSelector, res[1].name);
-                this.setOptionHeader(this.locationSelector, res[2].name);
+            .map(res => res.json())
+            .map(res => res.organisationUnitGroupSets)
+            .subscribe(
+                zone.bind(res => {
+                    this.setOptionHeader(this.ownershipSelector, res[0].name);
+                    this.setOptionHeader(this.typeSelector, res[1].name);
+                    this.setOptionHeader(this.locationSelector, res[2].name);
 
-                for(var i = 0; i < res.length; i++) {
-                    this.http.get(res[i].href)
-                    .map(result => result.json())
-                    .subscribe(
-                        zone.bind(result => {
-                            if(result.displayName == "Facility Ownership"){
-                                for(var j = 0; j < result.organisationUnitGroups.length; j++) {
-                                    this.setOption(this.ownershipSelector, result.organisationUnitGroups[j].name);
-                                }
-                            }
-                            else if(result.displayName == "Facility Type"){
-                                for(var j = 0; j < result.organisationUnitGroups.length; j++) {
-                                    this.setOption(this.typeSelector, result.organisationUnitGroups[j].name);
-                                }
-                            }
-                            else if(result.displayName == "Location Rural/Urban"){
-                                for(var j = 0; j < result.organisationUnitGroups.length; j++) {
-                                    this.setOption(this.locationSelector, result.organisationUnitGroups[j].name);
-                                }
-                            }
-                    }));
-                }
-            })
-        )
+                    for (var i = 0; i < res.length; i++) {
+                        this.http.get(res[i].href)
+                            .map(result => result.json())
+                            .subscribe(
+                                zone.bind(result => {
+                                    if (result.displayName == "Facility Ownership") {
+                                        for (var j = 0; j < result.organisationUnitGroups.length; j++) {
+                                            this.setOption(this.ownershipSelector, result.organisationUnitGroups[j].name);
+                                        }
+                                    }
+                                    else if (result.displayName == "Facility Type") {
+                                        for (var j = 0; j < result.organisationUnitGroups.length; j++) {
+                                            this.setOption(this.typeSelector, result.organisationUnitGroups[j].name);
+                                        }
+                                    }
+                                    else if (result.displayName == "Location Rural/Urban") {
+                                        for (var j = 0; j < result.organisationUnitGroups.length; j++) {
+                                            this.setOption(this.locationSelector, result.organisationUnitGroups[j].name);
+                                        }
+                                    }
+                                }));
+                    }
+                })
+            )
     }
 
-    setOptionHeader(selector, value){
+    setOptionHeader(selector, value) {
         this.option = document.createElement("option");
         this.option.text = "-- " + value + " --";
         this.option.value = "";
         selector.appendChild(this.option);
     }
 
-    setOption(selector, value){
+    setOption(selector, value) {
         this.option = document.createElement("option");
         this.option.text = value;
         this.option.value = value;
         selector.appendChild(this.option);
     }
 
-    checkOrgunits(){
+    checkOrgunits() {
         if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
             this.filteredOrgunits = [];
-            for(var i = 0; i < this.orgunits.length; i++) {
+            for (var i = 0; i < this.orgunits.length; i++) {
                 this.filteredOrgunits.push(this.orgunits[i]);
             }
         }
-        else if(!this.orgunits.length == false && !this.filterset){
+        else if (!this.orgunits.length == false && !this.filterset) {
             this.setFilter();
         }
-        else if(!this.orgunits.length){
+        else if (!this.orgunits.length) {
             this.filteredOrgunits = [];
-            if(this.filterset) {
+            if (this.filterset) {
                 this.filterset = false;
             }
         }
-        return !this.orgunits.length;
+        if(livesearch.value > 2)
+            return false;
+
+        else
+            !this.orgunits.length;
     }
 
 
-    setFilter(){
+    setFilter() {
         this.filteredOrgunits = [];
         this.filterset = true;
         for (var i = 0; i < this.orgunits.length; i++) {
@@ -161,7 +170,9 @@ export class Search {
                             this.filteredOrgunits.push(orgunits);
                         }
                         else {
-                            var os = false; var ls = false;var ts = false;
+                            var os = false;
+                            var ls = false;
+                            var ts = false;
                             for (var j = 0; j < orgunits.organisationUnitGroups.length; j++) {
                                 if (this.ownershipSelector.value != "") {
                                     if (orgunits.organisationUnitGroups[j].name == this.ownershipSelector.value) {
