@@ -116,6 +116,14 @@ export class Sidebar {
                 this.form.controls[control].updateValue("");
         }
 
+        // Date fix:
+        if(res["openingDate"]){
+            this.form.controls["openingDate"].updateValue((new Date(res["openingDate"].substring(0,10))).toISOString().substring(0,10));
+        }
+        if(res["closedDate"]){
+            this.form.controls["closedDate"].updateValue((new Date(res["closedDate"].substring(0,10))).toISOString().substring(0,10));
+        }
+
         if(res.featureType === "POINT"){
             this.coordinatePoint = true;
             let coord = new Object();
@@ -146,6 +154,11 @@ export class Sidebar {
             }
         });
 
+        jsonObject.openingDate = (new Date(this.form.value.openingDate)).toISOString();
+
+        if(this.form.value.closedDate){
+            jsonObject.closedDate = (new Date(this.form.value.closedDate)).toISOString();
+        }
 
 
         console.log(this.form.value);
