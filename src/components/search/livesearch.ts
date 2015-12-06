@@ -46,58 +46,5 @@ export class LiveSearch {
                 }
             )
     }
-
-    filterUnits(orgunits) {
-        var filteredOrgunits: Array<any> = [];
-        for (var i = 0; i < orgunits.length; i++) {
-            this.http.get(orgunits[i].href)
-                .map(res => res.json())
-                .subscribe(
-                    zone.bind(orgunits => {
-                        if (ownershipSelector.value == "" && typeSelector.value == "" && locationSelector.value == "") {
-                            filteredOrgunits.push(orgunits);
-                        }
-                        else {
-                            var os = false;
-                            var ls = false;
-                            var ts = false;
-                            for (var group in orgunits.organisationUnitGroups) {
-                                if (ownershipSelector.value != "") {
-                                    if (orgunits.organisationUnitGroups[group].name == ownershipSelector.value) {
-                                        os = true;
-                                    }
-                                }
-                                if (ownershipSelector.value == "") {
-                                    os = true;
-                                }
-                                if (typeSelector.value != "") {
-                                    if (orgunits.organisationUnitGroups[group].name == typeSelector.value) {
-                                        ts = true;
-                                    }
-                                }
-                                if (typeSelector.value == "") {
-                                    ts = true;
-                                }
-                                if (locationSelector.value != "") {
-                                    if (orgunits.organisationUnitGroups[group].name == locationSelector.value) {
-                                        ls = true;
-                                    }
-                                }
-                                if (locationSelector.value == "") {
-                                    ls = true;
-                                }
-                                if (os == true && ts == true && ls == true) {
-                                    filteredOrgunits.push(orgunits);
-                                    os = false;
-                                    ts = false;
-                                    ls = false;
-                                }
-                            }
-                        }
-                    })
-                )
-        }
-        return filteredOrgunits;
-    }
 }
 

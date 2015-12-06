@@ -14,13 +14,13 @@
                     name="livesearch"
                     id="livesearch"
                     placeholder="Search"
-                    value=""/>
+                    value=""
+                    (change)="checkOrgunits()"/>
 
 
             <!--<button class="exitsearch" id="exitsearch" (click)="emptyByClick()">
           &cross; </button>-->
             <button type="button" class="knapp col-md-2" (click)="toggle()"
-                    onclick="$('#ownershipSelector, #typeSelector, #locationSelector').prop('selectedIndex',0);"
                     data-toggle="collapse" data-target="#dropdown-menu">
                 {{ visible ? '&xdtri;' : '&cross;' }}
             </button>

@@ -51,7 +51,12 @@ export class Search {
 
     toggle() {
         this.visible = !this.visible;
-        //this.getUnitGroupSets();
+        if(this.visible){
+            this.ownershipSelector.selectedIndex = 0;
+            this.typeSelector.selectedIndex = 0;
+            this.locationSelector.selectedIndex = 0;
+            this.checkOrgunits();
+        }
     }
 
     hideDiv(){
@@ -117,9 +122,14 @@ export class Search {
     }
 
     checkOrgunits(){
-        if(!this.orgunits.length == false && !this.filterset){
+        if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
+            this.filteredOrgunits = [];
+            for(var i = 0; i < this.orgunits.length; i++) {
+                this.filteredOrgunits.push(this.orgunits[i]);
+            }
+        }
+        else if(!this.orgunits.length == false && !this.filterset){
             this.setFilter();
-            this.filterset = true;
         }
         else if(!this.orgunits.length){
             this.filteredOrgunits = [];
@@ -134,7 +144,7 @@ export class Search {
 
     setFilter(){
         this.filteredOrgunits = [];
-
+        this.filterset = true;
         for (var i = 0; i < this.orgunits.length; i++) {
             this.http.get(this.orgunits[i].href)
                 .map(res => res.json())
@@ -145,9 +155,9 @@ export class Search {
                         }
                         else {
                             var os = false; var ls = false;var ts = false;
-                            for (var group in orgunits.organisationUnitGroups) {
+                            for (var j = 0; j < orgunits.organisationUnitGroups.length; j++) {
                                 if (this.ownershipSelector.value != "") {
-                                    if (orgunits.organisationUnitGroups[group].name == this.ownershipSelector.value) {
+                                    if (orgunits.organisationUnitGroups[j].name == this.ownershipSelector.value) {
                                         os = true;
                                     }
                                 }
@@ -155,7 +165,7 @@ export class Search {
                                     os = true;
                                 }
                                 if (this.typeSelector.value != "") {
-                                    if (orgunits.organisationUnitGroups[group].name == this.typeSelector.value) {
+                                    if (orgunits.organisationUnitGroups[j].name == this.typeSelector.value) {
                                         ts = true;
                                     }
                                 }
@@ -163,7 +173,7 @@ export class Search {
                                     ts = true;
                                 }
                                 if (this.locationSelector.value != "") {
-                                    if (orgunits.organisationUnitGroups[group].name == this.locationSelector.value) {
+                                    if (orgunits.organisationUnitGroups[j].name == this.locationSelector.value) {
                                         ls = true;
                                     }
                                 }
@@ -175,7 +185,6 @@ export class Search {
                                     os = false;
                                     ts = false;
                                     ls = false;
-
                                 }
                             }
                         }
