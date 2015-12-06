@@ -239,6 +239,9 @@ html, body {
     color: white;
 }
 
+.nomatch{
+    margin-left: 20px;
+}
 
 /* other */
 
