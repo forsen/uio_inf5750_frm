@@ -98,7 +98,8 @@ export class Search {
                                             this.setOption(this.locationSelector, result.organisationUnitGroups[j].name);
                                         }
                                     }
-                                }));
+                                })
+                            );
                     }
                 })
             )
@@ -146,6 +147,7 @@ export class Search {
 
     setFilter() {
         this.filteredOrgunits = [];
+        console.log("orgunits.length: " + this.orgunits.length);
         this.filterset = true;
         for (var i = 0; i < this.orgunits.length; i++) {
             this.http.get(this.orgunits[i].href)
