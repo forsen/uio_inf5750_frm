@@ -18,10 +18,6 @@
                     onfocus="this.placeholder = ''"
                     value=""/>
 
-
-
-
-
             <button type="button" class="knapp col-md-2" (click)="toggle()"
                     data-toggle="collapse" data-target="#dropdown-menu">
                 {{ visible ? '&xdtri;' : '&cross;' }}
@@ -30,50 +26,40 @@
     </form>
 
     <div class="row">
-<span [hidden]="hideDiv()">
-    <div class="divresult col-md-10" id="divresult" [hidden]="checkOrgunits()">
-        <ul class="dropdown-menu result">
-            <li><button type="button" class="btn btn-default emptyresult" (click)="emptyByClick()">
-                <span class="glyphicon glyphicon-remove"></span></button></li>
-            <li *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)">
-                <a id="left-menu" href="#">{{orgunit.name}}</a>
-            </li>
-            <li *ng-if="filteredOrgunits.length == 0">
-              <p class="nomatch">  No matching results </p>
-            </li>
-        </ul>
-    </div>
-</span>
+        <span [hidden]="hideDiv()">
+            <div class="divresult col-md-10" id="divresult" [hidden]="checkOrgunits()">
+                <ul class="dropdown-menu result">
+                    <li><button type="button" class="btn btn-default emptyresult" (click)="emptyByClick()">
+                        <span class="glyphicon glyphicon-remove"></span></button></li>
+                    <li *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)">
+                        <a id="left-menu" href="#">{{orgunit.name}}</a>
+                    </li>
+                    <li *ng-if="filteredOrgunits.length == 0">
+                        <p class="nomatch">  No matching results </p>
+                    </li>
+                </ul>
+            </div>
+        </span>
 
-
-<div id="dropdowndiv" class="btn-group collapse col-md-2">
-
-    <ul id="dropdown-menu" role="menu" class="dropdown-menu meny">
-        <li>Facility</li>
-        <li class="dropdown-header">Ownership</li>
-        <li>
-            <select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()"></select>
-        </li>
-        <li class="dropdown-header">Type</li>
-        <li>
-            <select class="form-control filtervalg" id="typeSelector" (click)="setFilter()"></select>
-        </li>
-        <li class="divider"></li>
-        <li>Location</li>
-        <li class="dropdown-header">Rural/Urban</li>
-
-        <li>
-            <select class="form-control filtervalg" id="locationSelector" (click)="setFilter()"></select>
-        </li>
-    </ul>
-
-</div>
-
+        <div id="dropdowndiv" class="btn-group collapse col-md-2">
+            <ul id="dropdown-menu" role="menu" class="dropdown-menu meny">
+                <li>Facility</li>
+                <li class="dropdown-header">Ownership</li>
+                <li>
+                    <select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()"></select>
+                </li>
+                <li class="dropdown-header">Type</li>
+                <li>
+                    <select class="form-control filtervalg" id="typeSelector" (click)="setFilter()"></select>
+                </li>
+                <li class="divider"></li>
+                <li>Location</li>
+                <li class="dropdown-header">Rural/Urban</li>
+                <li>
+                    <select class="form-control filtervalg" id="locationSelector" (click)="setFilter()"></select>
+                </li>
+            </ul>
         </div>
-
-</div>
-
-
-
+    </div>
 </div>
 

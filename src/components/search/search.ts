@@ -25,20 +25,17 @@ export class Search {
     option: any;
     searchBar: any;
     filterset: boolean = false;
-    emptySearch: any;
+
 
 
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
-        this.emptySearch = document.getElementById("divresult");
         this.getUnitGroupSets();
         this.ownershipSelector = document.getElementById("ownershipSelector");
         this.typeSelector = document.getElementById("typeSelector");
         this.locationSelector = document.getElementById("locationSelector");
         this.searchBar = document.getElementById("livesearch");
-        this.orglist = document.getElementById("orglist");
-        this.a = document.getElementById("testunit");
     }
 
     getMoreInfo(orgunit) {
@@ -49,7 +46,6 @@ export class Search {
     }
 
     //pil opp og ned
-
     toggle() {
         this.visible = !this.visible;
         if (this.visible) {
@@ -146,7 +142,6 @@ export class Search {
         if(this.filteredOrgunits.length == 0){
             return false;
         }
-
         else{
             return !this.orgunits.length;
         }
@@ -155,7 +150,6 @@ export class Search {
 
     setFilter() {
         this.filteredOrgunits = [];
-        console.log("orgunits.length: " + this.orgunits.length);
         this.filterset = true;
         for (var i = 0; i < this.orgunits.length; i++) {
             this.http.get(this.orgunits[i].href)
@@ -199,7 +193,6 @@ export class Search {
                                     os = false;
                                     ts = false;
                                     ls = false;
-
                                 }
                             }
                         }
