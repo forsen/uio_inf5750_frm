@@ -44,7 +44,6 @@ html, body {
     box-sizing: border-box;
     transition: all 0.15s;
     border-radius: 2px 0px 0px 2px; /* top left, top right, bottom right, bottom left */
-
 }
 
 ::-webkit-input-placeholder {
@@ -99,27 +98,7 @@ html, body {
 
 }
 
-.divhelp{
-    padding:0;
-    margin-left: 5px;
-    height: 40vh;
-    position: relative;
-    z-index: 1;
-    display: inline-block;
-    width: 80%;
-    margin-top: 0;
-    left: 0;
-    float: left;
-    font-size: 14px;
-    text-align: left;
-    list-style: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-}
-
 .result{
-    opacity: 0.8;
     max-height: 70vh;
     min-height: 8vh;
     overflow: scroll;
@@ -133,6 +112,7 @@ html, body {
     font-size: 14px;
     text-align: left;
     list-style: none;
+    font-family: Montserrat, sans-serif;
     background-color: #fff;
     border: 1px solid whitesmoke;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
@@ -241,6 +221,107 @@ html, body {
 
 .nomatch{
     margin-left: 20px;
+}
+
+/* sidebar */
+
+.ng-valid.ng-dirty {
+    border-left: 5px solid #42A948;
+}
+
+.ng-invalid {
+    border-left: 5px solid #a94442;
+}
+
+.form-background{
+    padding: 10px;
+    background: white;
+    width: 100%;
+    float: right;
+    height: 100vh;
+    z-index: 5;
+}
+
+hr{
+    border: 0;
+    height: 2px;
+    width: 100%;
+    background: whitesmoke;
+
+}
+
+p{
+    font-size: 16px;
+    text-align: left;
+    margin-left: 10%;
+    color: #313131;
+    padding: 5px;
+    font-family: Montserrat, sans-serif;
+}
+
+.form-control{
+    margin-left: 7%;
+    width: 80%;
+}
+
+
+legend{
+    margin-bottom: 5px;
+    color: black;
+    margin-left: 5%;
+    border-bottom: 0;
+}
+
+.label-text{
+    font-size: 16px;
+    font-family: Montserrat, sans-serif;
+    margin-left: 7%;
+    text-align: left;
+}
+
+label{
+    padding: 5px;
+    color: grey;
+}
+
+#nonedit{
+    margin: auto;
+}
+
+.sidebar{
+    box-shadow: -1px 0px 20px #888888;
+}
+
+.slide{
+    padding: 0;
+    margin: 0;
+    -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+    -moz-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+    -o-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+    transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
+    line-height: 20px;
+}
+
+#slideout{
+    border: none;
+    margin-top: 16px;
+    margin-left: 10px;
+    font-family: Montserrat, sans-serif;
+    color: darkgrey;
+}
+
+
+.alert-danger{
+    width: 90%;
+    margin-left: 20px;
+    text-align: center;
+
+}
+
+.buttonsidebar{
+    margin-left: 7%;
+    margin-bottom: 7%;
+    width: 30%;
 }
 
 /* other */

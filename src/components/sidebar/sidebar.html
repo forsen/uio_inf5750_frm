@@ -1,11 +1,16 @@
 <div>
     <div [hidden]="!active" class="form-background sidebar slide" style="overflow-y:auto; position:relative; float:right; ">
-        <button id="slideout" (click)="exit()"><span class="glyphicon glyphicon-chevron-right"></span> </button>
-        <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
-            <h3>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h3>
+
+        <button id="slideout" class="btn btn-default" (click)="exit()"><span class="glyphicon glyphicon-chevron-right"></span> </button>
+
+        <form class="formsidebar" *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
+            <hr>
+
+            <legend>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</legend>
+            <hr>
 
             <div class="form-group">
-                <label>Name</label>
+                <label class="label-text">Name</label>
                 <input class="form-control" type="text" ng-control="name">
                 <p [hidden]="name.valid || name.untouched" class="alert alert-danger">
                     Name is required
@@ -13,7 +18,7 @@
 
             </div>
             <div class="form-group">
-                <label>Short Name</label>
+                <label class="label-text">Short Name</label>
                 <input class="form-control" type="text" ng-control="shortName" #shortname="form">
 
                 <p [hidden]="shortname.valid || shortname.untouched" class="alert alert-danger">
@@ -22,108 +27,120 @@
             </div>
 
             <div class="form-group">
-                <label>Description</label>
+                <label class="label-text">Description</label>
                 <textarea class="form-control" ng-control="description" rows="3"></textarea>
             </div>
             <div class="form-group">
-                <label>Code</label>
+                <label class="label-text">Code</label>
                 <input class="form-control" type="text" ng-control="code">
             </div>
 
             <div class="form-group">
-                <label>Opening Date</label>
+                <label class="label-text">Opening Date</label>
                 <input class="form-control" type="date" ng-control="openingDate" #openingDate="form">
 
                 <p [hidden]="openingdate.valid || openingdate.untouched" class="alert alert-danger">Opening date is required</p>
             </div>
             <div class="form-group">
-                <label>Closed Date</label>
+                <label class="label-text">Closed Date</label>
                 <input class="form-control" type="date" ng-control="closedDate">
             </div>
             <div class="form-group">
-                <label>URL</label>
+                <label class="label-text">URL</label>
                 <input class="form-control" type="url" ng-control="url" #url="form">
 
                 <p [hidden]="url.valid" class="alert alert-danger">The specified URL is not valid</p>
             </div>
+            <hr>
             <fieldset class="form-group">
                 <Legend>Coordinates</Legend>
+                <hr>
+
                 <div *ng-if="featureType.value == 'POINT'" class="form-group">
-                    <label>Latitude</label>
+                    <label class="label-text">Latitude</label>
                     <input class="form-control" type="number" ng-control="lat" #lat="form" step="any" max="90" min="-90"/>
-                    <label>Longitude</label>
+                    <label class="label-text">Longitude</label>
                     <input class="form-control" type="number" ng-control="lng" #lng="form" step="any" max="180" min="-180"/>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
                     <p>This organisation unit has no associated coordinates</p>
                 </div>
             </fieldset>
-
+            <hr>
             <fieldset ng-control-group="organisationUnitGroups">
+
                 <legend>Groups</legend>
+                <hr>
+
                 <div class="form-group" *ng-for="#groupSet of groupSets; #i = index">
 
-                    <label>{{groupSet.name}}</label>
+                    <label class="label-text">{{groupSet.name}}</label>
                     <select ng-control="{{i}}" class="form-control" disabled>
                         <option>-------- not applicable --------</option>
                         <option *ng-for="#group of groupsDoubleArray[i]">{{group.name}}</option>
                     </select>
                 </div>
             </fieldset>
-
+            <hr>
             <fieldset class="form-group">
+
                 <legend>Contact information</legend>
-                <label>Contact person</label>
+                <hr>
+                <label class="label-text">Contact person</label>
                 <input class="form-control" type="text" ng-control="contactPerson"/>
-                <label>Address</label>
+                <label class="label-text">Address</label>
                 <input class="form-control" type="text" ng-control="address"/>
-                <label>E-mail</label>
+                <label class="label-text">E-mail</label>
                 <input class="form-control" type="email" ng-control="email"/>
-                <label>Phone number</label>
+                <label class="label-text">Phone number</label>
                 <input class="form-control" type="text" ng-control="phoneNumber"/>
             </fieldset>
-            <button type="button" (click)="cancel()" class="btn btn-default">Cancel</button>
-            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default">{{newObject? "Add":"Update"}}
+            <hr>
+            <button type="button" (click)="cancel()" class="btn btn-default buttonsidebar">Cancel</button>
+            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default buttonsidebar">{{newObject? "Add":"Update"}}
             </button>
 
         </form>
 
 
         <section id="nonedit" *ng-if="!editmode">
-            <label class="label-text" for="actOrgUnitName">Name</label>
 
-            <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p><hr>
+
+            <hr>
+            <legend>Facility</legend>
+            <hr>
+
+            <label class="label-text" for="actOrgUnitName">Name</label>
+            <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p>
 
             <label class="label-text" for="actOrgUnitShortName">Short Name</label>
-
-            <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p><hr>
+            <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitDescription">Description</label>
-
-            <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p><hr>
+            <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p>
 
             <label class="label-text" for="actOrgUnitCode">Code</label>
-
-            <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p><hr>
+            <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitOpeningDate">Opening Date</label>
-
-            <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p><hr>
+            <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitClosingDate">Closed Date</label>
-
-            <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p><hr>
+            <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitURL">Url</label>
+            <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p>
+            <hr>
 
-            <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p><hr>
 
             <fieldset>
                 <legend>Coordinates</legend>
+                <hr>
+
                 <div *ng-if="featureType.value == 'POINT'" class="form-group">
-                    <label>Latitude</label>
+                    <label class="label-text">Latitude</label>
                     <p>{{form.controls.lat.value}}</p>
-                    <label>Longitude</label>
+                    <label class="label-text">Longitude</label>
                     <p>{{form.controls.lng.value}}</p>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
@@ -132,21 +149,25 @@
                 <div *ng-if="featureType.value == 'POLYGON' || featureType.value == 'MULTI_POLYGON'">
                     <p>polygon</p>
                 </div>
-
             </fieldset>
+            <hr>
 
             <fieldset>
                 <legend>Contact Information</legend>
-                <label>Contact person</label>
+                <hr>
+
+                <label class="label-text">Contact person</label>
                 <p>{{form.controls.contactPerson.value || ["None"]}}</p>
-                <label>Address</label>
+                <label class="label-text">Address</label>
                 <p>{{form.controls.address.value || ["None"]}}</p>
-                <label>E-mail</label>
+                <label class="label-text">E-mail</label>
                 <p>{{form.controls.email.value || ["None"]}}</p>
-                <label>Phone number</label>
+                <label class="label-text">Phone number</label>
                 <p>{{form.controls.phoneNumber.vaule || ["None"]}}</p>
             </fieldset>
-            <button class="btn btn-default" (click)="editmode = !editmode">Edit</button>
+            <hr>
+
+            <button class="btn btn-default buttonsidebar" (click)="editmode = !editmode">Edit</button>
         </section>
 
     </div>
