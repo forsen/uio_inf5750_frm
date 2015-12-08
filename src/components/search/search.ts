@@ -26,8 +26,6 @@ export class Search {
     searchBar: any;
     filterset: boolean = false;
 
-
-
     constructor(public http:Http) {
         this.newsearch = new EventEmitter();
         this.visible = true;
@@ -66,13 +64,14 @@ export class Search {
 
     }
 
-
     emptyByClick(){
         this.orgunits = [];
         return document.getElementById("myForm").reset();
     }
 
+    //Gets all unit group sets (category groups) and the unit groups
     getUnitGroupSets() {
+        //gets unit group sets and display in selector
         this.http.get(dhisAPI + "/api/organisationUnitGroupSets")
             .map(res => res.json())
             .map(res => res.organisationUnitGroupSets)
@@ -83,6 +82,7 @@ export class Search {
                     this.setOptionHeader(this.locationSelector, res[2].name);
 
                     for (var i = 0; i < res.length; i++) {
+                        //gets unit groups for each group set and display in selector
                         this.http.get(res[i].href)
                             .map(result => result.json())
                             .subscribe(
@@ -109,13 +109,15 @@ export class Search {
             )
     }
 
+    //Add group set "header" to selector
     setOptionHeader(selector, value) {
         this.option = document.createElement("option");
-        this.option.text = "All";
+        this.option.text = "Select " + value;
         this.option.value = "";
         selector.appendChild(this.option);
     }
 
+    //Add group to selector
     setOption(selector, value) {
         this.option = document.createElement("option");
         this.option.text = value;
@@ -123,6 +125,7 @@ export class Search {
         selector.appendChild(this.option);
     }
 
+    //Checks the status of orgunits-array and if filter is set
     checkOrgunits() {
         if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
             this.filteredOrgunits = [];
@@ -147,7 +150,7 @@ export class Search {
         }
     }
 
-
+    //Filtering the orgunits-array by checking what filter is active
     setFilter() {
         this.filteredOrgunits = [];
         this.filterset = true;
