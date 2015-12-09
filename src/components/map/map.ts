@@ -55,7 +55,7 @@ export class Map {
         this.currentMarker = null;
         this.isSearched = false;
         this.colornum = 0;
-        this.COLORS = ['#ede1bb', '#1d407e', '#ff512e', '#662d47','#3b3a35', '#419175', '#983e41', '#f3002d', '#b0a875', '#00bfb5', '#926851', '#47a0a4','#333f50','#6f007b'*/];
+        this.COLORS = ['#ede1bb', '#1d407e', '#ff512e', '#662d47','#3b3a35', '#419175', '#983e41', '#f3002d', '#b0a875', '#00bfb5', '#926851', '#47a0a4','#333f50','#6f007b'];
         this.popupON = false;
         this.popup = null;
     }
