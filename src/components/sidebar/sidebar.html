@@ -1,5 +1,6 @@
 <div>
-    <div [hidden]="!active" class="form-background" style="overflow-y:auto; position:relative; float:right; ">
+    <div [hidden]="!active" class="form-background sidebar slide" style="overflow-y:auto; position:relative; float:right; ">
+        <button id="slideout" (click)="exit()"><span class="glyphicon glyphicon-chevron-right"></span> </button>
         <form *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
             <h3>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</h3>
 
@@ -45,16 +46,30 @@
 
                 <p [hidden]="url.valid" class="alert alert-danger">The specified URL is not valid</p>
             </div>
-            <fieldset class="form-group" *ng-if="coordinatePoint">
+            <fieldset class="form-group">
                 <Legend>Coordinates</Legend>
-                <div class="form-group">
-                    <label>lat</label>
+                <div *ng-if="featureType.value == 'POINT'" class="form-group">
+                    <label>Latitude</label>
                     <input class="form-control" type="number" ng-control="lat" #lat="form" step="any" max="90" min="-90"/>
-                    <label>long</label>
+                    <label>Longitude</label>
                     <input class="form-control" type="number" ng-control="lng" #lng="form" step="any" max="180" min="-180"/>
+                </div>
+                <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
+                    <p>This organisation unit has no associated coordinates</p>
                 </div>
             </fieldset>
 
+            <fieldset ng-control-group="organisationUnitGroups">
+                <legend>Groups</legend>
+                <div class="form-group" *ng-for="#groupSet of groupSets; #i = index">
+
+                    <label>{{groupSet.name}}</label>
+                    <select ng-control="{{i}}" class="form-control" disabled>
+                        <option>-------- not applicable --------</option>
+                        <option *ng-for="#group of groupsDoubleArray[i]">{{group.name}}</option>
+                    </select>
+                </div>
+            </fieldset>
 
             <fieldset class="form-group">
                 <legend>Contact information</legend>
@@ -74,35 +89,63 @@
         </form>
 
 
-        <section *ng-if="!editmode">
-            <label for="actOrgUnitName">Name</label>
+        <section id="nonedit" *ng-if="!editmode">
+            <label class="label-text" for="actOrgUnitName">Name</label>
 
-            <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p>
+            <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p><hr>
 
-            <label for="actOrgUnitShortName">Short Name</label>
+            <label class="label-text" for="actOrgUnitShortName">Short Name</label>
 
-            <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p>
+            <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p><hr>
 
-            <label for="actOrgUnitDescription">Description</label>
+            <label class="label-text" for="actOrgUnitDescription">Description</label>
 
-            <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p>
+            <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p><hr>
 
-            <label for="actOrgUnitCode">Code</label>
+            <label class="label-text" for="actOrgUnitCode">Code</label>
 
-            <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p>
+            <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p><hr>
 
-            <label for="actOrgUnitOpeningDate">Opening Date</label>
+            <label class="label-text" for="actOrgUnitOpeningDate">Opening Date</label>
 
-            <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p>
+            <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p><hr>
 
-            <label for="actOrgUnitClosingDate">Closed Date</label>
+            <label class="label-text" for="actOrgUnitClosingDate">Closed Date</label>
 
-            <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p>
+            <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p><hr>
 
-            <label for="actOrgUnitURL">Url</label>
+            <label class="label-text" for="actOrgUnitURL">Url</label>
 
-            <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p>
+            <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p><hr>
 
+            <fieldset>
+                <legend>Coordinates</legend>
+                <div *ng-if="featureType.value == 'POINT'" class="form-group">
+                    <label>Latitude</label>
+                    <p>{{form.controls.lat.value}}</p>
+                    <label>Longitude</label>
+                    <p>{{form.controls.lng.value}}</p>
+                </div>
+                <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
+                    <p>This organisation unit has no associated coordinates</p>
+                </div>
+                <div *ng-if="featureType.value == 'POLYGON' || featureType.value == 'MULTI_POLYGON'">
+                    <p>polygon</p>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>Contact Information</legend>
+                <label>Contact person</label>
+                <p>{{form.controls.contactPerson.value || ["None"]}}</p>
+                <label>Address</label>
+                <p>{{form.controls.address.value || ["None"]}}</p>
+                <label>E-mail</label>
+                <p>{{form.controls.email.value || ["None"]}}</p>
+                <label>Phone number</label>
+                <p>{{form.controls.phoneNumber.vaule || ["None"]}}</p>
+            </fieldset>
             <button class="btn btn-default" (click)="editmode = !editmode">Edit</button>
         </section>
 

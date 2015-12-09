@@ -55,13 +55,9 @@ export class Map {
         this.currentMarker = null;
         this.isSearched = false;
         this.colornum = 0;
-        this.COLORS = ['#0a0f0f','#141f1f','#1f2e2e','#293d3d','#334c4c','#3d5c5c','#476b6b','#527a7a','#5c8a8a','#669999','#75a3a3','#85adad'];
+        this.COLORS = ['#0a0f0f', '#141f1f', '#1f2e2e', '#293d3d', '#334c4c', '#3d5c5c', '#476b6b', '#527a7a', '#5c8a8a', '#669999', '#75a3a3', '#85adad'];
         this.popupON = false;
-        this.popup=null;
-        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("divModal").style.display = "none";
+        this.popup = null;
     }
 
     setActiveId(id) {
@@ -219,7 +215,7 @@ export class Map {
                     strokeColor: 'black',
                     scale: 3
                 };
-                instance.map.panTo({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
+                instance.map.setCenter({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
             }
 
             this.map.data.addGeoJson(unit);
@@ -241,29 +237,25 @@ export class Map {
                 instance.seeDetails();
             }
             this.map.data.addListener('click', function (event) {
+                $('#myModal').modal('show');
                 instance.setActiveId(event.feature.O.id);
                 instance.setcurrentPos(event.latLng);
 
                 if (instance.uprunned == false && instance.LEVEL == 2) {
-                    this.hideModal = document.getElementById("topLevel").style.visibility = "visible";
-                    this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-                    instance.showModal();
-
+                    this.hideModal = document.getElementById("topLevel").style.display = "block";
+                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
+                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
                 }
                 else if (instance.runned == false && instance.LEVEL < instance.allLevels) {
-                    this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("middleLevel").style.visibility = "visible";
-                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-                    instance.showModal();
+                    this.hideModal = document.getElementById("topLevel").style.display = "none";
+                    this.hideModal = document.getElementById("middleLevel").style.display = "block";
+                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
                 } else if (instance.runned == false && instance.LEVEL <= instance.allLevels) {
-
-                    this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-                    this.hideModal = document.getElementById("bottomLevel").style.visibility = "visible";
+                    this.hideModal = document.getElementById("topLevel").style.display = "none";
+                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
+                    this.hideModal = document.getElementById("bottomLevel").style.display = "block";
 
                     instance.setcurrentPos(event.latLng);
-                    instance.showModal();
                 }
             });
 
@@ -433,16 +425,11 @@ export class Map {
         map.panTo(this.currentMarker.getPosition());
     }
 
-    showModal() {
-        return this.hideModal = document.getElementById("divModal").style.display = "block";
-    }
+
+
 
     closeModal() {
-        this.hideModal = document.getElementById("topLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("middleLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("bottomLevel").style.visibility = "hidden";
-        this.hideModal = document.getElementById("divModal").style.display = "none";
-
+        $("#myModal").modal("hide");
         this.setRunned(false);
     }
 
