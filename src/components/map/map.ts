@@ -207,7 +207,7 @@ export class Map {
                     strokeColor: 'black',
                     scale: 3
                 };
-                //instance.map.panTo({lat:unit.geometry.coordinates[0],lng:unit.geometry.coordinates[1]});
+                instance.map.setCenter({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
             }
 
             this.map.data.addGeoJson(unit);
@@ -377,7 +377,7 @@ export class Map {
             }
         });
         this.currentMarker.setMap(map);
-        //map.panTo(this.currentMarker.getPosition());
+        map.panTo(this.currentMarker.getPosition());
 
     }
 
