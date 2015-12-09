@@ -55,10 +55,11 @@ export class Map {
         this.currentMarker = null;
         this.isSearched = false;
         this.colornum = 0;
-        this.COLORS = ['#0a0f0f', '#141f1f', '#1f2e2e', '#293d3d', '#334c4c', '#3d5c5c', '#476b6b', '#527a7a', '#5c8a8a', '#669999', '#75a3a3', '#85adad'];
+        this.COLORS = ['#ede1bb', '#1d407e', '#ff512e', '#662d47','#3b3a35', '#419175', '#983e41', '#f3002d', '#b0a875', '#00bfb5', '#926851', '#47a0a4','#333f50','#6f007b'*/];
         this.popupON = false;
         this.popup = null;
     }
+
 
     setActiveId(id) {
         this.activeId = id;
@@ -213,7 +214,7 @@ export class Map {
                 unit.properties.icon = {
                     path: google.maps.SymbolPath.CIRCLE,
                     strokeColor: 'black',
-                    scale: 3
+                    scale: 4
                 };
                 instance.map.setCenter({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
             }
@@ -228,8 +229,9 @@ export class Map {
                 color = feature.getProperty('color');
                 return /** @type {google.maps.Data.StyleOptions} */({
                     fillColor: color,
-                    strokeColor: color,
-                    strokeWeight: 3,
+                    fillOpacity: 0.91,
+                    strokeColor: 'white',
+                    strokeWeight: 2,
                     icon: icon
                 });
             });
@@ -279,24 +281,6 @@ export class Map {
 
         }
     }
-
-   /* getpolygonCenter(coordinates,instance){
-        let bounds = new google.maps.LatLngBounds();
-        let polygonCoords = Array;
-        for(let i = 0; i < coordinates.length; i++){
-            for(let j = 0; j<coordinates[i].length; j++) {
-                for (let k = 0; k<coordinates[i][j].length; k++) {
-                    polygonCoords[i] = new google.maps.LatLng(coordinates[i][j][k][0],coordinates[i][j][k][1]);
-                }
-            }
-        }
-
-        for (let i = 0; i < polygonCoords.length; i++) {
-            bounds.extend(polygonCoords[i]);
-        }
-
-        instance.map.panTo(bounds.getCenter());
-    }*/
 
     drillDown() {
         this.closeModal();
@@ -418,7 +402,7 @@ export class Map {
             title: 'neworg',
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                scale: 3
+                scale: 4
             }
         });
         this.currentMarker.setMap(map);
