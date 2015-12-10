@@ -501,21 +501,35 @@ export class Map {
      * @param pos - position for the temp marker
      */
     tempMarker(pos) {
-        let map = this.map;
-        if (this.currentMarker)
-            this.currentMarker.setMap(null);
 
-        this.currentMarker = new google.maps.Marker({
-            position: pos,
-            map: map,
-            title: 'neworg',
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 4
-            }
-        });
-        this.currentMarker.setMap(map);
-        map.panTo(this.currentMarker.getPosition());
+        let current = {};
+        current.lat = Math.round(this.getcurrentPos().lat() * 10000)/10000;
+        current.lng = Math.round(this.getcurrentPos().lng() * 10000)/10000;
+
+        let position = {};
+        position.lat= Math.round(pos.lat * 10000) / 10000;
+        position.lng= Math.round(pos.lng * 10000)/10000;
+
+        if((current.lat != position.lat) || (current.lng != position.lng)){
+
+            let map = this.map;
+            if (this.currentMarker)
+                this.currentMarker.setMap(null);
+
+            this.currentMarker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: 'neworg',
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    strokeColor: "#871F78",
+                    scale: 4
+                }
+            });
+            this.currentMarker.setMap(map);
+            map.panTo(this.currentMarker.getPosition());
+        }
+
     }
 
 
