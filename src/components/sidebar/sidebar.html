@@ -8,7 +8,7 @@
         <form class="formsidebar" *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
             <hr>
 
-            <legend>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</legend>
+            <legend><span class="glyphicon glyphicon-edit"></span> {{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</legend>
             <hr>
 
             <div class="form-group">
@@ -69,13 +69,13 @@
                            min="-180"/>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
-                    <p>This organisation unit has no associated coordinates</p>
+                    <span class="glyphicon glyphicon-info-sign glyinfo"></span> <p>This organisation unit has no associated coordinates</p>
                 </div>
             </fieldset>
             <hr>
             <fieldset ng-control-group="organisationUnitGroups">
 
-                <legend>Groups</legend>
+                <legend><span class="glyphicon glyphicon-list-alt"></span> Groups</legend>
                 <hr>
 
                 <div class="form-group" *ng-for="#groupSet of groupSets; #i = index">
@@ -90,7 +90,7 @@
             <hr>
             <fieldset class="form-group">
 
-                <legend> <span class="glyphicon glyphicon-phone-alt"></span>Contact information</legend>
+                <legend> <span class="glyphicon glyphicon-phone-alt"></span> Contact information</legend>
                 <hr>
                 <label class="label-text">Contact person</label>
                 <input class="form-control" type="text" ng-control="contactPerson"/>
@@ -103,8 +103,7 @@
             </fieldset>
             <hr>
             <button type="button" (click)="cancel()" class="btn btn-default buttonsidebar">Cancel</button>
-            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default buttonsidebar">{{newObject?
-                "Add":"Update"}}
+            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default buttonsidebar">{{newObject?"Add":"Update"}}
             </button>
 
         </form>
@@ -114,7 +113,7 @@
 
 
             <hr>
-            <legend><span class="glyphicon glyphicon-map-marker"></span> Facility</legend>
+            <legend><span class="glyphicon glyphicon-home"></span> Facility</legend>
             <hr>
 
             <label class="label-text" for="actOrgUnitName">Name</label>
@@ -148,7 +147,7 @@
 
 
             <fieldset>
-                <legend><span class="glyphicon glyphicon-globe"></span> Coordinates</legend>
+                <legend><span class="glyphicon glyphicon-map-marker"></span> Coordinates</legend>
                 <hr>
 
                 <div *ng-if="featureType.value == 'POINT'" class="form-group">
@@ -160,7 +159,7 @@
                     <p>{{form.controls.lng.value}}</p>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
-                    <p>This organisation unit has no associated coordinates</p>
+                    <span class="glyphicon glyphicon-info-sign glyinfo"></span> <p>This organisation unit has no associated coordinates</p>
                 </div>
                 <div *ng-if="featureType.value == 'POLYGON' || featureType.value == 'MULTI_POLYGON'">
                     <p>polygon</p>
