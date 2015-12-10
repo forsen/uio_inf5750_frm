@@ -39,11 +39,11 @@ export class Search {
     getMoreInfo(orgunit) {
         this.orgunits = [];
         this.newsearch.next(orgunit.id);
-        return document.getElementById("myForm").reset();
+        return document.getElementById("searchform").reset();
 
     }
 
-    //pil opp og ned
+    //When filtermenu is open show x else show arraowdown
     toggle() {
         this.visible = !this.visible;
         if (this.visible) {
@@ -58,6 +58,7 @@ export class Search {
         this.checkOrgunits();
     }
 
+    //Hide results when search bar input is erased
     hideDiv() {
         if (this.searchBar.value == ""){
             //this.toggle();
@@ -65,9 +66,10 @@ export class Search {
         }
     }
 
+    //Click out results and empty the search bar
     emptyByClick(){
         this.orgunits = [];
-        return document.getElementById("myForm").reset();
+        return document.getElementById("searchform").reset();
     }
 
     //Gets all unit group sets (category groups) and the unit groups
