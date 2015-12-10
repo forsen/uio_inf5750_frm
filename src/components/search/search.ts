@@ -39,6 +39,11 @@ export class Search {
     getMoreInfo(orgunit) {
         this.orgunits = [];
         this.newsearch.next(orgunit.id);
+        if(!this.visible){
+            this.visible = !this.visible;
+            this.resetSelector();
+            document.getElementById("dropdown-menu").style.display = "none";
+        }
         return document.getElementById("searchform").reset();
 
     }
@@ -66,7 +71,6 @@ export class Search {
     //Hide results when search bar input is erased
     hideDiv() {
         if (this.searchBar.value == ""){
-            //this.toggle();
             return true;
         }
     }
