@@ -279,7 +279,7 @@ export class Map {
             });
 
 //slette ?? §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
-         /*   this.map.data.addListener('mouseover', function (e) {  
+           /* this.map.data.addListener('mouseover', function (e) {  
                 if(!instance.popupON) {
                     instance.popupON = true;
 
@@ -294,12 +294,12 @@ export class Map {
             this.map.data.addListener('mouseout', function (event) {  
                 instance.popupON = false;
                 instance.popup.open(null); 
-            });
+            });*/
 
         }
-    }*/
+    }
 
-    drillDown() {
+    drillDown(){
         this.closeModal();
         let map = this.getMap();
         let id = this.activeId;
@@ -319,7 +319,7 @@ export class Map {
 
     }
 
-    drillUp() {
+    drillUp(){
 
 
         this.setupRunned(true);
