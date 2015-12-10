@@ -1,8 +1,9 @@
 <div id="search">
 
+    <!-- Search bar -->
     <label class="sr-only" for="livesearch">Search</label>
 
-    <form id="myForm">
+    <form id="searchform">
         <div class="row">
             <input
                     mou-live-search
@@ -14,29 +15,33 @@
                     name="livesearch"
                     id="livesearch"
                     placeholder="Search"
-                    onblur= "this.placeholder = 'Search'"
+                    onblur="this.placeholder = 'Search'"
                     onfocus="this.placeholder = ''"
                     value=""/>
 
-            <button type="button" class="knapp col-md-2" (click)="toggle()"
+            <!--Show and empty filtermenu-->
+            <button type="button" class="filterbutton col-md-2" (click)="toggle()"
                     data-toggle="collapse" data-target="#dropdown-menu">
-                {{ visible ? '&xdtri;' : '&cross;' }}
+                {{ visible ? '&xdtri;' : '&khcy;' }}
             </button>
         </div>
     </form>
 
-    <!-- Searchresult div -->
+    <!-- Searchresult -->
     <div class="row">
         <span [hidden]="hideDiv()">
             <div class="divresult col-md-10" id="divresult" [hidden]="checkOrgunits()">
                 <ul class="dropdown-menu result">
-                    <li><button type="button" class="btn btn-default emptyresult" (click)="emptyByClick()">
-                        <span class="glyphicon glyphicon-remove"></span></button></li>
+                    <li>
+                        <!--exit results-->
+                        <button type="button" class="btn btn-default emptyresult" (click)="emptyByClick()">
+                            <span class="glyphicon glyphicon-remove"></span></button>
+                    </li>
                     <li *ng-for="#orgunit of filteredOrgunits" id="orglist" (click)="getMoreInfo(orgunit)">
-                        <a id="left-menu" href="#">{{orgunit.name}}</a>
+                        <a id="left-menu" href="#"><span class="glyphicon glyphicon-map-marker glyresult"></span>  {{orgunit.name}}</a>
                     </li>
                     <li *ng-if="filteredOrgunits.length == 0">
-                        <p class="nomatch">  No matching results </p>
+                        <p class="nomatch"><span class="glyphicon glyphicon-info-sign glyinfo"></span>  No matching results </p>
                     </li>
                 </ul>
             </div>
@@ -44,21 +49,21 @@
 
         <!-- Filter selectors to be filled inn by getUnitGroupSets() -->
         <div id="dropdowndiv" class="btn-group collapse col-md-2">
-            <ul id="dropdown-menu" role="menu" class="dropdown-menu meny">
+            <ul id="dropdown-menu" role="menu" class="dropdown-menu filtermenu">
                 <li>Facility</li>
                 <li class="dropdown-header">Ownership</li>
                 <li>
-                    <select class="form-control filtervalg" id="ownershipSelector" (click)="setFilter()"></select>
+                    <select class="form-control filteroption" id="ownershipSelector" (click)="setFilter()"></select>
                 </li>
                 <li class="dropdown-header">Type</li>
                 <li>
-                    <select class="form-control filtervalg" id="typeSelector" (click)="setFilter()"></select>
+                    <select class="form-control filteroption" id="typeSelector" (click)="setFilter()"></select>
                 </li>
                 <li class="divider"></li>
                 <li>Location</li>
                 <li class="dropdown-header">Rural/Urban</li>
                 <li>
-                    <select class="form-control filtervalg" id="locationSelector" (click)="setFilter()"></select>
+                    <select class="form-control filteroption" id="locationSelector" (click)="setFilter()"></select>
                 </li>
             </ul>
         </div>

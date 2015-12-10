@@ -6,7 +6,7 @@ declare var zone: Zone;
 @Component({
     selector: 'mou-sidebar',
     directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, NgFor, NgModel, NgIf],
-    events: ['tempmarker'],
+    events: ['tempmarker','updateorg'],
     templateUrl: './components/sidebar/sidebar.html'
 })
 
@@ -71,6 +71,7 @@ export class Sidebar {
         this.active = false;
         this.coordinatePoint = false;
         this.tempmarker = new EventEmitter();
+        this.updateorg = new EventEmitter();
         this.exitButton = document.getElementById("slideout")
 
         let instance = this;
@@ -130,8 +131,8 @@ export class Sidebar {
             this.coordinatePoint = true;
             let coord = new Object();
             coord = JSON.parse(res["coordinates"]);
-            this.form.controls.lat.updateValue(coord[0]);
-            this.form.controls.lng.updateValue(coord[1]);
+            this.form.controls.lat.updateValue(coord[1]);
+            this.form.controls.lng.updateValue(coord[0]);
         }
         else{
             this.coordinatePoint = false;
@@ -169,11 +170,11 @@ export class Sidebar {
         });
 
         $.each(jsonObject.organisationUnitGroups, function(key, value){
-            if( value === "" || value === null){
+//            if( value === "" || value === null){
                 delete jsonObject.organisationUnitGroups[key];
-            } else {
-                jsonObject.organisationUnitGroups[key].id = value;
-            }
+  //          } else {
+  //              jsonObject.organisationUnitGroups[key].id = value;
+   //         }
         });
 
 
@@ -190,14 +191,14 @@ export class Sidebar {
             jsonObject.parent = {};
             jsonObject.parent.id = this.form.controls.parent.value;
             jsonObject.featureType="POINT";
-            jsonObject.coordinates="[" + this.form.controls.lat.value + ","+this.form.controls.lng.value+"]";
+            jsonObject.coordinates="[" + this.form.controls.lng.value + ","+this.form.controls.lat.value+"]";
             delete jsonObject["lat"];
             delete jsonObject["lng"];
             this.http.post(dhisAPI + "/api/organisationUnits/", JSON.stringify(jsonObject), {
                     headers: headers
                 })
                 .map(res => res.json())
-                .subscribe(res => console.log(res));
+                .subscribe(res => this.emitNewUpdatedObject(res));
         }else {
             this.http.put(dhisAPI + "/api/organisationUnits/" + this.form.controls.id.value, JSON.stringify(jsonObject), {
                     headers: headers
@@ -206,10 +207,19 @@ export class Sidebar {
                 .subscribe(res => console.log(res));
         }
 
+
+
+
+    }
+
+    emitNewUpdatedObject(obj){
+        console.log(obj);
+        this.updateorg.next(obj.response.lastImported);
     }
 
     cancel(){
         this.editmode = false;
+        this.tempmarker.next(null);
     }
 
 

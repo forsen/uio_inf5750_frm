@@ -1,17 +1,20 @@
 <div>
-    <div [hidden]="!active" class="form-background sidebar slide" style="overflow-y:auto; position:relative; float:right; ">
+    <div [hidden]="!active" class="form-background sidebar slide"
+         style="overflow-y:auto; position:relative; float:right; ">
 
-        <button id="slideout" class="btn btn-default" (click)="exit()"><span class="glyphicon glyphicon-chevron-right"></span> </button>
+        <button id="slideout" class="btn btn-default" (click)="exit()"><span
+                class="glyphicon glyphicon-chevron-right"></span></button>
 
         <form class="formsidebar" *ng-if="editmode" [(ng-form-model)]="form" (ng-submit)="onSubmit()" #of="form">
             <hr>
 
-            <legend>{{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</legend>
+            <legend><span class="glyphicon glyphicon-edit"></span> {{newObject?"Add new Organizational Unit":"Update Organizational Unit"}}</legend>
             <hr>
 
             <div class="form-group">
                 <label class="label-text">Name</label>
                 <input class="form-control" type="text" ng-control="name">
+
                 <p [hidden]="name.valid || name.untouched" class="alert alert-danger">
                     Name is required
                 </p>
@@ -39,7 +42,8 @@
                 <label class="label-text">Opening Date</label>
                 <input class="form-control" type="date" ng-control="openingDate" #openingDate="form">
 
-                <p [hidden]="openingdate.valid || openingdate.untouched" class="alert alert-danger">Opening date is required</p>
+                <p [hidden]="openingdate.valid || openingdate.untouched" class="alert alert-danger">Opening date is
+                    required</p>
             </div>
             <div class="form-group">
                 <label class="label-text">Closed Date</label>
@@ -53,23 +57,25 @@
             </div>
             <hr>
             <fieldset class="form-group">
-                <Legend>Coordinates</Legend>
+                <Legend><span class="glyphicon glyphicon-map-marker"></span> Coordinates</Legend>
                 <hr>
 
                 <div *ng-if="featureType.value == 'POINT'" class="form-group">
                     <label class="label-text">Latitude</label>
-                    <input class="form-control" type="number" ng-control="lat" #lat="form" step="any" max="90" min="-90"/>
+                    <input class="form-control" type="number" ng-control="lat" #lat="form" step="any" max="90"
+                           min="-90"/>
                     <label class="label-text">Longitude</label>
-                    <input class="form-control" type="number" ng-control="lng" #lng="form" step="any" max="180" min="-180"/>
+                    <input class="form-control" type="number" ng-control="lng" #lng="form" step="any" max="180"
+                           min="-180"/>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
-                    <p>This organisation unit has no associated coordinates</p>
+                    <span class="glyphicon glyphicon-info-sign glyinfo"></span> <p>This organisation unit has no associated coordinates</p>
                 </div>
             </fieldset>
             <hr>
             <fieldset ng-control-group="organisationUnitGroups">
 
-                <legend>Groups</legend>
+                <legend><span class="glyphicon glyphicon-list-alt"></span> Groups</legend>
                 <hr>
 
                 <div class="form-group" *ng-for="#groupSet of groupSets; #i = index">
@@ -84,7 +90,7 @@
             <hr>
             <fieldset class="form-group">
 
-                <legend>Contact information</legend>
+                <legend> <span class="glyphicon glyphicon-phone-alt"></span> Contact information</legend>
                 <hr>
                 <label class="label-text">Contact person</label>
                 <input class="form-control" type="text" ng-control="contactPerson"/>
@@ -97,7 +103,7 @@
             </fieldset>
             <hr>
             <button type="button" (click)="cancel()" class="btn btn-default buttonsidebar">Cancel</button>
-            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default buttonsidebar">{{newObject? "Add":"Update"}}
+            <button type="submit" [disabled]="!of.form.valid" class="btn btn-default buttonsidebar">{{newObject?"Add":"Update"}}
             </button>
 
         </form>
@@ -107,44 +113,53 @@
 
 
             <hr>
-            <legend>Facility</legend>
+            <legend><span class="glyphicon glyphicon-home"></span> Facility</legend>
             <hr>
 
             <label class="label-text" for="actOrgUnitName">Name</label>
+
             <p id="actOrgUnitName">{{(form.controls.name.value) || "[None]"}}</p>
 
             <label class="label-text" for="actOrgUnitShortName">Short Name</label>
+
             <p id="actOrgUnitShortName">{{(form.controls.shortName.value)||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitDescription">Description</label>
+
             <p id="actOrgUnitDescription">{{(form.controls.description.value)||"None"}}</p>
 
             <label class="label-text" for="actOrgUnitCode">Code</label>
+
             <p id="actOrgUnitCode">{{(form.controls.code.value)||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitOpeningDate">Opening Date</label>
+
             <p id="actOrgUnitOpeningDate">{{form.controls.openingDate.value||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitClosingDate">Closed Date</label>
+
             <p id="actOrgUnitClosingDate">{{form.controls.closedDate.value||["None"]}}</p>
 
             <label class="label-text" for="actOrgUnitURL">Url</label>
+
             <p id="actOrgUnitURL">{{(form.controls.url.value) ||["None"]}}</p>
             <hr>
 
 
             <fieldset>
-                <legend>Coordinates</legend>
+                <legend><span class="glyphicon glyphicon-map-marker"></span> Coordinates</legend>
                 <hr>
 
                 <div *ng-if="featureType.value == 'POINT'" class="form-group">
                     <label class="label-text">Latitude</label>
+
                     <p>{{form.controls.lat.value}}</p>
                     <label class="label-text">Longitude</label>
+
                     <p>{{form.controls.lng.value}}</p>
                 </div>
                 <div *ng-if="featureType.value == 'NONE'" class="alert alert-danger">
-                    <p>This organisation unit has no associated coordinates</p>
+                    <span class="glyphicon glyphicon-info-sign glyinfo"></span> <p>This organisation unit has no associated coordinates</p>
                 </div>
                 <div *ng-if="featureType.value == 'POLYGON' || featureType.value == 'MULTI_POLYGON'">
                     <p>polygon</p>
@@ -153,16 +168,20 @@
             <hr>
 
             <fieldset>
-                <legend>Contact Information</legend>
+                <legend><span class="glyphicon glyphicon-phone-alt"></span> Contact Information</legend>
                 <hr>
 
                 <label class="label-text">Contact person</label>
+
                 <p>{{form.controls.contactPerson.value || ["None"]}}</p>
                 <label class="label-text">Address</label>
+
                 <p>{{form.controls.address.value || ["None"]}}</p>
                 <label class="label-text">E-mail</label>
+
                 <p>{{form.controls.email.value || ["None"]}}</p>
                 <label class="label-text">Phone number</label>
+
                 <p>{{form.controls.phoneNumber.vaule || ["None"]}}</p>
             </fieldset>
             <hr>
