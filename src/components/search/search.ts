@@ -174,14 +174,17 @@ export class Search {
     setFilter() {
         this.filteredOrgunits = [];
         this.filterset = true;
+        //loop orgunits to get orgunit object
         for (var i = 0; i < this.orgunits.length; i++) {
             this.http.get(this.orgunits[i].href)
                 .map(res => res.json())
                 .subscribe(
                     zone.bind(orgunits => {
+                        //if no filter is selected, push all orgunit objects to filteredOrgunits
                         if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
                             this.filteredOrgunits.push(orgunits);
                         }
+                        //if filter is set, sort
                         else {
                             var os = false;
                             var ls = false;
@@ -211,6 +214,7 @@ export class Search {
                                 if (this.locationSelector.value == "") {
                                     ls = true;
                                 }
+                                //if all boolean values are true, add orgunit object to filteredOrgunits
                                 if (os == true && ts == true && ls == true) {
                                     this.filteredOrgunits.push(orgunits);
                                     os = false;
