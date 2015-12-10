@@ -18,14 +18,13 @@
                     onfocus="this.placeholder = ''"
                     value=""/>
 
-            <button type="button" class="knapp col-md-2" (click)="toggle()"
-                    data-toggle="collapse" data-target="#dropdown-menu">
+            <button type="button" class="knapp col-md-2" (click)="toggle()" data-toggle="collapse" data-target="#dropdown-menu">
                 {{ visible ? '&xdtri;' : '&cross;' }}
             </button>
         </div>
     </form>
 
-    <!-- Searchresult div -->
+    <!-- Searchresult -->
     <div class="row">
         <span [hidden]="hideDiv()">
             <div class="divresult col-md-10" id="divresult" [hidden]="checkOrgunits()">

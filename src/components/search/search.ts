@@ -59,9 +59,10 @@ export class Search {
     }
 
     hideDiv() {
-        if (this.searchBar.value == "")
+        if (this.searchBar.value == ""){
+            //this.toggle();
             return true;
-
+        }
     }
 
     emptyByClick(){
