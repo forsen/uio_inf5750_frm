@@ -296,11 +296,11 @@ export class Map {
 
             if (unit.geometry.type == 'Point') {
                 unit.properties.icon = {
-                    path: google.maps.SymbolPath.CIRCLE,//'d=M648 1169q117 0 216 -60t156.5 -161t57.5 -218q0 -115 -70 -258q-69 -109 -158 -225.5t-143 -179.5l-54 -62q-9 8 -25.5 24.5t-63.5 67.5t-91 103t-98.5 128t-95.5 148q-60 132 -60 249q0 88 34 169.5t91.5 142t137 96.5t166.5 36zM652.5 974q-91.5 0 -156.5 -65 t-65 -157t65 -156.5t156.5 -64.5t156.5 64.5t65 156.5t-65 157t-156.5 65z',
+                    path: google.maps.SymbolPath.CIRCLE,
                     strokeColor: 'black',
                     scale: 4
                 };
-                //instance.map.setCenter({lat: unit.geometry.coordinates[1], lng: unit.geometry.coordinates[0]});
+                instance.map.setCenter({lat: unit.geometry.coordinates[1], lng: unit.geometry.coordinates[0]});
             }
 
             this.map.data.addGeoJson(unit);
@@ -495,27 +495,41 @@ export class Map {
         }
 
     }
+
     /**
      * adds a temperary marker so the user can see an update of the latitude and longitude of a marker
      * @param pos - position for the temp marker
      */
     tempMarker(pos) {
 
-        let map = this.map;
-        if (this.currentMarker)
-            this.currentMarker.setMap(null);
+        let current = {};
+        current.lat = Math.round(this.getcurrentPos().lat() * 10000)/10000;
+        current.lng = Math.round(this.getcurrentPos().lng() * 10000)/10000;
 
-        this.currentMarker = new google.maps.Marker({
-            position: pos,
-            map: map,
-            title: 'neworg',
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 4
-            }
-        });
-        this.currentMarker.setMap(map);
-        map.setCenter(this.currentMarker.getPosition());
+        let position = {};
+        position.lat= Math.round(pos.lat * 10000) / 10000;
+        position.lng= Math.round(pos.lng * 10000)/10000;
+
+        if((current.lat != position.lat) || (current.lng != position.lng)){
+
+            let map = this.map;
+            if (this.currentMarker)
+                this.currentMarker.setMap(null);
+
+            this.currentMarker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: 'neworg',
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    strokeColor: "#871F78",
+                    scale: 4
+                }
+            });
+            this.currentMarker.setMap(map);
+            map.panTo(this.currentMarker.getPosition());
+        }
+
     }
 
 
