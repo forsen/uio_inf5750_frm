@@ -51,6 +51,7 @@ export class Search {
         }
     }
 
+    //Resets the filter values in selectors
     resetSelector(){
         this.ownershipSelector.selectedIndex = 0;
         this.typeSelector.selectedIndex = 0;
