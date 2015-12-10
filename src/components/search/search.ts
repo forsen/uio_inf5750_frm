@@ -139,24 +139,32 @@ export class Search {
 
     //Checks the status of orgunits-array and if filter is set
     checkOrgunits() {
+        //If all selectors are empty
         if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
+            //empty filteredOrgunits
             this.filteredOrgunits = [];
             for (var i = 0; i < this.orgunits.length; i++) {
+                //push orgunits to filteredOrgunits
                 this.filteredOrgunits.push(this.orgunits[i]);
             }
         }
+        //If orgunits.length is more than zero and filterset is false, call setFilter()
         else if (!this.orgunits.length == false && !this.filterset) {
             this.setFilter();
         }
+        //If orgunits has no elements, empty filteredOrgunits
         else if (!this.orgunits.length) {
             this.filteredOrgunits = [];
+            //if filterset is true, set to false
             if (this.filterset) {
                 this.filterset = false;
             }
         }
+        //If filteredOrgunits has no elements, return false
         if(this.filteredOrgunits.length == 0){
             return false;
         }
+        //If filteredOrgunits has elements return true if orgunits has elements or false if orgunits has no elements
         else{
             return !this.orgunits.length;
         }
