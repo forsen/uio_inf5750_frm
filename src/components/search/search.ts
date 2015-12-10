@@ -45,7 +45,6 @@ export class Search {
             document.getElementById("dropdown-menu").style.display = "none";
         }
         return document.getElementById("searchform").reset();
-
     }
 
     //When filtermenu is open show x else show arraowdown
