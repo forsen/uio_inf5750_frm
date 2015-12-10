@@ -73,8 +73,9 @@ export class Sidebar {
         this.tempmarker = new EventEmitter();
         this.updateorg = new EventEmitter();
         this.exitButton = document.getElementById("slideout")
-
         let instance = this;
+
+        // listener for value change in coordinate input field
         this.lat.valueChanges.observer({
             next: (value) => {
                 if(instance.lng.value && value) {
@@ -92,12 +93,12 @@ export class Sidebar {
             }
         });
 
+        // find all orgUnitSets
         this.findOrgUnitSets();
-
     }
 
+    // this method is called when the sidebar should update its content with new org unit
     update(orgunitId) {
-        console.log("Skjer det noe her? ");
         this.active = true;
         this.newObject = false;
         this.http.get(dhisAPI + "/api/organisationUnits/" + orgunitId)
@@ -105,8 +106,10 @@ export class Sidebar {
             .subscribe(res => this.updateValues(res))
     }
 
+    // update form values with new information from http get result
     updateValues(res){
 
+        // update the form controls with data from incoming json object
         for(control in this.form.controls){
             if(this.form.controls[control] instanceof ControlArray){
                 console.log("nothing to do here");
@@ -127,6 +130,8 @@ export class Sidebar {
             this.form.controls["closedDate"].updateValue((new Date(res["closedDate"].substring(0,10))).toISOString().substring(0,10));
         }
 
+        // we're only interested in coordinates if it's a featureType point. Since we want to use two different input fields for lat and lang (and the api uses a single object for both)
+        // we need to have a separate data structure for coordinates, and update them manually
         if(res.featureType === "POINT"){
             this.coordinatePoint = true;
             let coord = new Object();
@@ -138,6 +143,7 @@ export class Sidebar {
             this.coordinatePoint = false;
         }
 
+        // Update organisationUnitGroups with correct values from api
         for(var i = 0; i < this.groupsDoubleArray.length; i++){
             for(var j = 0; j < this.groupsDoubleArray[i].length; j++){
                 for( group in res.organisationUnitGroups){
@@ -147,12 +153,10 @@ export class Sidebar {
                 }
             }
         }
-
-        console.log("faenskap");
     }
 
 
-
+    // called on form submit
     onSubmit() {
         this.editmode = false;
 
@@ -161,14 +165,17 @@ export class Sidebar {
 
         headers.append('Content-Type', 'application/json');
 
+
         let jsonObject = this.form.value;
 
+        // remove empty fields from the form object, no need to send empty values to the api
         $.each(jsonObject, function(key, value){
             if (value === "" || value === null){
                 delete jsonObject[key];
             }
         });
 
+        // we were unable to find a way to associate a new (or existing) organisation unit with one or more organisationUnitGroups, so we're removing the data before posting to API
         $.each(jsonObject.organisationUnitGroups, function(key, value){
 //            if( value === "" || value === null){
                 delete jsonObject.organisationUnitGroups[key];
@@ -184,14 +191,16 @@ export class Sidebar {
             jsonObject.closedDate = (new Date(this.form.value.closedDate)).toISOString();
         }
 
+        if(this.coordinatePoint){
+            jsonObject.featureType="POINT";
+            jsonObject.coordinates="[" + this.form.controls.lng.value + ","+this.form.controls.lat.value+"]";
+        }
 
-        console.log(this.form.value);
-
+        // POST if the object is new, PUT if it's an update to an existing orgUnit
         if (this.newObject) {
             jsonObject.parent = {};
             jsonObject.parent.id = this.form.controls.parent.value;
-            jsonObject.featureType="POINT";
-            jsonObject.coordinates="[" + this.form.controls.lng.value + ","+this.form.controls.lat.value+"]";
+
             delete jsonObject["lat"];
             delete jsonObject["lng"];
             this.http.post(dhisAPI + "/api/organisationUnits/", JSON.stringify(jsonObject), {
