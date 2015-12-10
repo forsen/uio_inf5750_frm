@@ -89,7 +89,7 @@ html, body {
 
 .nomatch{
     margin-left: 20px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .divresult{
@@ -153,6 +153,10 @@ html, body {
     color: #262626;
     text-decoration: none;
     background-color: #f5f5f5
+}
+
+.result > li:last-child {
+    border: none;
 }
 
 .emptyresult{
@@ -345,10 +349,5 @@ label{
     font-size: 14px;
 }
 
-.arrowresult{
-    text-align: right;
-    float: right;
-    font-size: 14px;
-    padding: 0;
-}
+
 
