@@ -1,4 +1,4 @@
-import {Component, EventEmitter,CORE_DIRECTIVES, NgIf} from 'angular2/angular2';
+import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
 
 @Component({
@@ -18,14 +18,16 @@ export class Map {
     allLevels:Object;
     runned:boolean;
     uprunned:boolean;
-    toplevel: boolean = false;
     parent:Object;
     activeId:string;
     currentPos:Object;
     currentMarker:Object;
     isSearched:boolean;
+    popupON:boolean;
+    popup:Object;
+    COLORS:Object;
+    colornum: number;
 
-    // COLORS:Object;
 
     constructor(http:Http) {
 
@@ -53,8 +55,12 @@ export class Map {
         this.uprunned = false;
         this.currentMarker = null;
         this.isSearched = false;
-        // this.COLORS = {'red','brown',',yellow','green',',pink','purple','gray','black'};
+        this.colornum = 0;
+        this.COLORS = ['#ede1bb', '#1d407e', '#ff512e', '#662d47','#3b3a35', '#419175', '#983e41', '#f3002d', '#b0a875', '#00bfb5', '#926851', '#47a0a4','#333f50','#6f007b'];
+        this.popupON = false;
+        this.popup = null;
     }
+
 
     setActiveId(id) {
         this.activeId = id;
@@ -104,6 +110,9 @@ export class Map {
         this.LEVEL--;
     }
 
+    /**
+     * initiates the map with position and zoom
+     */
     init() {
 
         let map = this.map;
@@ -113,11 +122,21 @@ export class Map {
 
     }
 
+    /**
+     * prints out error messages in the console
+     * @param error
+     */
     logError(error) {
         console.error(error);
 
     }
 
+    /**
+     * gets data from DHIS API
+     * @param query - for what kind of data to retrieve
+     * @param instance - this instance to use
+     * @param isParent - little hack to see if it is a parent you wish the children to
+     */
     getData(query, instance, isParent) {
         instance.http.get(dhisAPI + '/api/organisationUnits' + query)
             .map(res => res.json())
@@ -127,6 +146,9 @@ export class Map {
             );
     }
 
+    /**
+     * Gets the number of levels the haiercy
+     */
     getLevels() {
         this.http.get(dhisAPI + '/api/organisationUnitLevels')
             .map(res => res.json())
@@ -197,15 +219,19 @@ export class Map {
                     "title": item.name,
                     "name": item.name,
                     "id": item.id,
-                    "color": "gray",
+                    "color":instance.COLORS[instance.colornum],
                     "icon": null
                 }
             };
+            if(instance.COLORS.length == instance.colornum){
+                instance.colornum = 0;
+            }else{ instance.colornum++;}
+
             if (unit.geometry.type == 'Point') {
                 unit.properties.icon = {
                     path: google.maps.SymbolPath.CIRCLE,
                     strokeColor: 'black',
-                    scale: 3
+                    scale: 4
                 };
                 instance.map.setCenter({lat:unit.geometry.coordinates[1],lng:unit.geometry.coordinates[0]});
             }
@@ -220,8 +246,9 @@ export class Map {
                 color = feature.getProperty('color');
                 return /** @type {google.maps.Data.StyleOptions} */({
                     fillColor: color,
-                    strokeColor: color,
-                    strokeWeight: 3,
+                    fillOpacity: 0.91,
+                    strokeColor: 'white',
+                    strokeWeight: 2,
                     icon: icon
                 });
             });
@@ -250,8 +277,27 @@ export class Map {
                     instance.setcurrentPos(event.latLng);
                 }
             });
+
+//slette ?? §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+         /*   this.map.data.addListener('mouseover', function (e) {  
+                if(!instance.popupON) {
+                    instance.popupON = true;
+
+                    instance.popup = new google.maps.InfoWindow({
+                        content: e.feature.getProperty('name'),
+                        position: e.latLng
+                    });
+                    instance.popup.open(instance.map);
+
+                }
+            }); 
+            this.map.data.addListener('mouseout', function (event) {  
+                instance.popupON = false;
+                instance.popup.open(null); 
+            });
+
         }
-    }
+    }*/
 
     drillDown() {
         this.closeModal();
@@ -340,7 +386,7 @@ export class Map {
         http.get(dhisAPI + '/api/organisationUnits/' + event)
             .map(res => res.json())
             .subscribe(
-                res=> this.mapUpdate(res, this)
+                res => this.mapUpdate(res, this)
             );
 
     }
@@ -373,13 +419,14 @@ export class Map {
             title: 'neworg',
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                scale: 3
+                scale: 4
             }
         });
         this.currentMarker.setMap(map);
         map.panTo(this.currentMarker.getPosition());
-
     }
+
+
 
 
     closeModal() {
