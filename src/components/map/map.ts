@@ -28,6 +28,7 @@ export class Map {
     COLORS:Object;
     colornum: number;
 
+
     constructor(http:Http) {
 
         this.activeId = null;
@@ -109,6 +110,9 @@ export class Map {
         this.LEVEL--;
     }
 
+    /**
+     * initiates the map with position and zoom
+     */
     init() {
 
         let map = this.map;
@@ -118,11 +122,21 @@ export class Map {
 
     }
 
+    /**
+     * prints out error messages in the console
+     * @param error
+     */
     logError(error) {
         console.error(error);
 
     }
 
+    /**
+     * gets data from DHIS API
+     * @param query - for what kind of data to retrieve
+     * @param instance - this instance to use
+     * @param isParent - little hack to see if it is a parent you wish the children to
+     */
     getData(query, instance, isParent) {
         instance.http.get(dhisAPI + '/api/organisationUnits' + query)
             .map(res => res.json())
@@ -132,6 +146,9 @@ export class Map {
             );
     }
 
+    /**
+     * Gets the number of levels the haiercy
+     */
     getLevels() {
         this.http.get(dhisAPI + '/api/organisationUnitLevels')
             .map(res => res.json())
@@ -261,11 +278,11 @@ export class Map {
                 }
             });
 
-
-            this.map.data.addListener('mouseover', function (e) {  
+//slette ?? §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+         /*   this.map.data.addListener('mouseover', function (e) {  
                 if(!instance.popupON) {
                     instance.popupON = true;
-                    console.log("hei");
+
                     instance.popup = new google.maps.InfoWindow({
                         content: e.feature.getProperty('name'),
                         position: e.latLng
@@ -280,7 +297,7 @@ export class Map {
             });
 
         }
-    }
+    }*/
 
     drillDown() {
         this.closeModal();
