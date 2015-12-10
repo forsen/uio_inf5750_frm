@@ -332,3 +332,8 @@ label{
     margin: 0 !important;
 }
 
+.glyphicon{
+    font-size: 16px;
+    color: darkgrey;
+}
+
