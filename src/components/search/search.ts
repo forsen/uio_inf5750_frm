@@ -112,7 +112,7 @@ export class Search {
     //Add group set "header" to selector
     setOptionHeader(selector, value) {
         this.option = document.createElement("option");
-        this.option.text = "Select " + value;
+        this.option.text = "All";
         this.option.value = "";
         selector.appendChild(this.option);
     }

@@ -7,45 +7,7 @@ declare var zone: Zone;
     selector: 'mou-sidebar',
     directives: [CORE_DIRECTIVES, FORM_DIRECTIVES, NgFor, NgModel, NgIf],
     events: ['tempmarker'],
-    templateUrl: './components/sidebar/sidebar.html',
-    styles: [`
-        .ng-valid.ng-dirty {
-            border-left: 5px solid #42A948; /* green */
-        }
-        .ng-invalid {
-            border-left: 5px solid #a94442; /* red */
-        }
-        .form-background {
-            padding: 10px;
-            background: white;
-            width: 100%;
-            float: right;
-            height: 100vh;
-            z-index: 5;
-        }
-        p {
-           font-size: 14pt;
-        }
-        .label-text {
-            font-size: 16pt;
-        }
-        #nonedit{
-            margin: auto;
-            padding: 10px;
-        }
-        .sidebar{
-            box-shadow: -1px 0px 20px #888888;
-
-        }
-        .slide{
-            -webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
-            -moz-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
-            -o-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
-            transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s;
-            line-height: 20px;
-        }
-
-    `]
+    templateUrl: './components/sidebar/sidebar.html'
 })
 
 export class Sidebar {
