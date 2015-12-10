@@ -48,6 +48,10 @@ export class Search {
         this.visible = !this.visible;
         if (this.visible) {
             this.resetSelector();
+            document.getElementById("dropdown-menu").style.display = "none";
+        }
+        else{
+            document.getElementById("dropdown-menu").style.display = "block";
         }
     }
 
