@@ -28,7 +28,7 @@ html, body {
     max-width: 100%;
 }
 
-/* search input*/
+/* search bar and filter button */
 
 #livesearch{
     box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3);
@@ -63,7 +63,7 @@ html, body {
     background: white;
 }
 
-.knapp
+.filterbutton
 {
     border-radius: 0px 2px 2px 0px; /* top left, top right, bottom right, bottom left */
     box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.3);
@@ -81,12 +81,16 @@ html, body {
     float: left;
 }
 
-.knapp:focus {
+.filterbutton:focus {
     outline:0;
 }
 
 /* search results */
 
+.nomatch{
+    margin-left: 20px;
+    font-size: 14px;
+}
 
 .divresult{
     padding:0;
@@ -168,7 +172,7 @@ html, body {
     margin: 0;
 
 }
-.meny{
+.filtermenu{
     border: none;
     border-top: 2px solid darkgrey;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
@@ -182,13 +186,13 @@ html, body {
     margin-left: 2px;
 }
 
-.meny li{
+.filtermenu li{
     background-color: white;
     padding-left: 20px;
     padding-right: 20px;
 }
 
-.filtervalg{
+.filteroption{
     box-shadow: 0 0 1px darkgrey;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -204,7 +208,7 @@ html, body {
     transition: all 0.15s;
 }
 
-.filtervalg:focus{
+.filteroption:focus{
     outline: 0;
 }
 .bootstrap-select .btn:focus {
@@ -217,10 +221,6 @@ html, body {
 
 .glyphicon-menu-down{
     color: white;
-}
-
-.nomatch{
-    margin-left: 20px;
 }
 
 /* sidebar */
