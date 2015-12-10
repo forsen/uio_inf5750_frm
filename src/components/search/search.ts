@@ -39,7 +39,7 @@ export class Search {
     getMoreInfo(orgunit) {
         this.orgunits = [];
         this.newsearch.next(orgunit.id);
-        return document.getElementById("myForm").reset();
+        return document.getElementById("searchform").reset();
 
     }
 

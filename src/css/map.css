@@ -341,3 +341,14 @@ label{
     color: #DFC2C8;
 }
 
+.glyresult{
+    font-size: 14px;
+}
+
+.arrowresult{
+    text-align: right;
+    float: right;
+    font-size: 14px;
+    padding: 0;
+}
+
