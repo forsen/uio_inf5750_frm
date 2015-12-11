@@ -414,8 +414,11 @@ export class Map {
      * focuses map and colors to the clicked marker/polygon and fires an event to sidebar with the id of the marker
      */
     seeDetails() {
+
+        console.log("inne i seeDetails");
         let map = this.getMap();
         let id = this.activeId;
+        let instance = this;
         this.closeModal();
         map.data.forEach(function (feature) {
             if (feature.getProperty('id') == id) {
@@ -424,6 +427,7 @@ export class Map {
                     feature.O.icon.strokeColor = 'red';
                 }
                 this.isSearched = false;
+                console.log(this.isSearched);
             }
             else {
                 feature.setProperty('color', 'gray');
@@ -458,19 +462,24 @@ export class Map {
      * @param event - event from an emitter
      */
     update(event) {
-        this.newactive.next(event);
-        let map = this.getMap();
-        let http = this.getHttp();
+        if(event !== null) {
+            if (this.currentMarker) {
+                this.currentMarker.setMap(null);
+            }
 
-        map.data.forEach(function (feature) {
-            map.data.remove(feature);
-        });
-        http.get(dhisAPI + '/api/organisationUnits/' + event)
-            .map(res => res.json())
-            .subscribe(
-                res => this.mapUpdate(res, this)
-            );
+            this.newactive.next(event);
+            let map = this.getMap();
+            let http = this.getHttp();
 
+            map.data.forEach(function (feature) {
+                map.data.remove(feature);
+            });
+            http.get(dhisAPI + '/api/organisationUnits/' + event)
+                .map(res => res.json())
+                .subscribe(
+                    res => this.mapUpdate(res, this)
+                );
+        }
     }
 
     /**
@@ -484,6 +493,7 @@ export class Map {
         this.setActiveId(res.id);
         this.isSearched = true;
         this.setParent(res.parent.id);
+       // this.setcurrentPos({lat: JSON.parse(res.coordinates)[1],lng: JSON.parse(res.coordinates)[0]});
 
         instance.getData('/' + res.parent.id + '/children', instance);
         if (res.coordinates == null || instance.LEVEL == instance.allLevels) {
@@ -501,33 +511,35 @@ export class Map {
      * @param pos - position for the temp marker
      */
     tempMarker(pos) {
+        if (this.currentMarker)
+            this.currentMarker.setMap(null);
+        if(pos != null) {
+            let current = {};
+            current.lat = Math.round(this.getcurrentPos().lat() * 10000) / 10000;
+            current.lng = Math.round(this.getcurrentPos().lng() * 10000) / 10000;
 
-        let current = {};
-        current.lat = Math.round(this.getcurrentPos().lat() * 10000)/10000;
-        current.lng = Math.round(this.getcurrentPos().lng() * 10000)/10000;
+            let position = {};
+            position.lat = Math.round(pos.lat * 10000) / 10000;
+            position.lng = Math.round(pos.lng * 10000) / 10000;
 
-        let position = {};
-        position.lat= Math.round(pos.lat * 10000) / 10000;
-        position.lng= Math.round(pos.lng * 10000)/10000;
+            if ((current.lat != position.lat) || (current.lng != position.lng)) {
 
-        if((current.lat != position.lat) || (current.lng != position.lng)){
+                let map = this.map;
 
-            let map = this.map;
-            if (this.currentMarker)
-                this.currentMarker.setMap(null);
 
-            this.currentMarker = new google.maps.Marker({
-                position: pos,
-                map: map,
-                title: 'neworg',
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    strokeColor: "#871F78",
-                    scale: 4
-                }
-            });
-            this.currentMarker.setMap(map);
-            map.panTo(this.currentMarker.getPosition());
+                this.currentMarker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: 'neworg',
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        strokeColor: "#871F78",
+                        scale: 4
+                    }
+                });
+                this.currentMarker.setMap(map);
+                map.panTo(this.currentMarker.getPosition());
+            }
         }
 
     }

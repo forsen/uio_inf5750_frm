@@ -209,7 +209,7 @@ export class Sidebar {
                     headers: headers
                 })
                 .map(res => res.json())
-                .subscribe(res => console.log(res));
+                .subscribe(res => this.emitNewUpdatedObject(res));
         }
     }
 
@@ -238,6 +238,7 @@ export class Sidebar {
 
         this.form.controls.lat.updateValue(data.location.lat);
         this.form.controls.lng.updateValue(data.location.lng);
+        this.form.controls.featureType.updateValue("POINT");
         this.form.controls.parent.updateValue(data.parent);
 
     }
