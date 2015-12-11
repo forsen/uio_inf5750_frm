@@ -2,7 +2,7 @@
 
 
     <div class="col-lg-9 col-md-8 col-xs-7"><mou-search (newsearch)="map.update($event)"></mou-search></div>
-    <div class="col-lg-3 col-md-4 col-xs-5 no-padding"><mou-sidebar (tempmarker)="map.tempMarker($event)" (updateorg)="map.update($event)"#sidebar></mou-sidebar></div>
+    <div class="col-lg-3 col-md-4 col-xs-5 no-padding"><mou-sidebar (tempmarker)="map.tempMarker($event)" (updateorg)="map.updateAfterAddorEdit($event)"#sidebar></mou-sidebar></div>
 
     <mou-map (newactive)="sidebar.update($event)" (neworg)="sidebar.add($event)"#map (toplevel)="showtoplevel()"></mou-map>
 </div>

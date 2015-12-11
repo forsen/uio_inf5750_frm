@@ -246,6 +246,8 @@ export class Sidebar {
     // dismiss sidebar
     exit() {
         this.active = false;
+        this.tempmarker.next(null);
+
     }
 
     // dynamically find all orgUnitSets for populating input selects

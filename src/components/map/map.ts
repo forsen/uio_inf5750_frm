@@ -1,4 +1,4 @@
-import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
+import {Component, EventEmitter,CORE_DIRECTIVES} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
 
 @Component({
@@ -11,7 +11,6 @@ import {Headers, Http} from 'angular2/http';
 
 export class Map {
 
-    hideModal:any;
     map:Object;
     http:Http;
     LEVEL:number;
@@ -23,10 +22,11 @@ export class Map {
     currentPos:Object;
     currentMarker:Object;
     isSearched:boolean;
-    popupON:boolean;
-    popup:Object;
     COLORS:Object;
     colornum:number;
+    //popupON:boolean;
+    //popup:Object;
+
 
     /**
      * initializes all the global variabels
@@ -50,7 +50,7 @@ export class Map {
         });
         this.init();
         this.http = http;
-        this.LEVEL = 2;//
+        this.LEVEL = 2;
         this.runned = false;
         this.getLevels(this);
         this.parent = null;
@@ -60,10 +60,9 @@ export class Map {
         this.isSearched = false;
         this.colornum = 0;
         this.COLORS = ['#ede1bb', '#1d407e', '#ff512e', '#662d47', '#3b3a35', '#419175', '#983e41', '#f3002d', '#b0a875', '#00bfb5', '#926851', '#47a0a4', '#333f50', '#6f007b'];
-        this.popupON = false;
-        this.popup = null;
+        //this.popupON = false;
+        //this.popup = null;
     }
-
 
     /**
      * Sets the global variabel
@@ -112,6 +111,7 @@ export class Map {
     setParent(id) {
         this.parent = id;
     }
+
 
     /**
      * returns the actice markers parent
@@ -319,6 +319,7 @@ export class Map {
                     icon: icon
                 });
             });
+
             if (instance.isSearched) {
                 instance.seeDetails();
             }
@@ -328,25 +329,25 @@ export class Map {
                 instance.setcurrentPos(event.latLng);
 
                 if (instance.uprunned == false && instance.LEVEL == 2) {
-                    this.hideModal = document.getElementById("topLevel").style.display = "block";
-                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
-                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
+                    document.getElementById("topLevel").style.display = "block";
+                    document.getElementById("middleLevel").style.display = "none";
+                    document.getElementById("bottomLevel").style.display = "none";
                 }
                 else if (instance.runned == false && instance.LEVEL < instance.allLevels) {
-                    this.hideModal = document.getElementById("topLevel").style.display = "none";
-                    this.hideModal = document.getElementById("middleLevel").style.display = "block";
-                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
+                    document.getElementById("topLevel").style.display = "none";
+                    document.getElementById("middleLevel").style.display = "block";
+                    document.getElementById("bottomLevel").style.display = "none";
                 } else if (instance.runned == false && instance.LEVEL <= instance.allLevels) {
-                    this.hideModal = document.getElementById("topLevel").style.display = "none";
-                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
-                    this.hideModal = document.getElementById("bottomLevel").style.display = "block";
+                    document.getElementById("topLevel").style.display = "none";
+                    document.getElementById("middleLevel").style.display = "none";
+                    document.getElementById("bottomLevel").style.display = "block";
 
                     instance.setcurrentPos(event.latLng);
                 }
             });
 
 //slette ?? §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
-            /* this.map.data.addListener('mouseover', function (e) {  
+            /*   this.map.data.addListener('mouseover', function (e) {  
              if(!instance.popupON) {
              instance.popupON = true;
 
@@ -361,11 +362,53 @@ export class Map {
              this.map.data.addListener('mouseout', function (event) {  
              instance.popupON = false;
              instance.popup.open(null); 
-             });*/
-
+             });
+             */
         }
     }
 
+
+///////////////////////////////////////////////////////////////////////////////////
+
+    updateAfterAddorEdit(event) {
+        console.log(" nå har jeg updates eller adda" + this.currentMarker);
+        if (this.currentMarker) {
+            this.currentMarker.setMap(null);
+        }
+
+        let map = this.getMap();
+        let http = this.getHttp();
+
+
+        map.data.forEach(function (feature) {
+            map.data.remove(feature);
+        });
+        http.get(dhisAPI + '/api/organisationUnits/' + event)
+            .map(res => res.json())
+            .subscribe(
+                res => this.updateMap(res, this)
+            );
+    }
+
+    updateMap(res, instance) {
+        this.isSearched = false;
+        this.setLevel(res.level);
+        this.setActiveId(res.id);
+        this.setParent(res.parent.id);
+        this.setcurrentPos({lat: JSON.parse(res.coordinates)[1], lng: JSON.parse(res.coordinates)[0]});
+
+        instance.getData('/' + res.parent.id + '/children', instance);
+        if (res.coordinates == null || instance.LEVEL == instance.allLevels) {
+            instance.http.get(dhisAPI + '/api/organisationUnits/' + res.parent.id)
+                .map(res => res.json())
+                .subscribe(
+                    res => instance.drawPolygon(res, instance)
+                );
+        }
+
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////
     /**
      * removes the polygon on current level and calles getData on one level down in the org.unit hierarchy
      */
@@ -374,11 +417,12 @@ export class Map {
         let map = this.getMap();
         let id = this.activeId;
         let level = this.LEVEL;
+        let lev = (this.allLevels) - 1;
         this.setRunned(true);
         this.setParent(id);
 
         map.data.forEach(function (feature) {
-            if (!(feature.O.id == id && level == 3)) {
+            if (!(feature.O.id == id && level == lev)) {
                 map.data.remove(feature);
 
             }
@@ -414,11 +458,9 @@ export class Map {
      * focuses map and colors to the clicked marker/polygon and fires an event to sidebar with the id of the marker
      */
     seeDetails() {
-
-        console.log("inne i seeDetails");
+        console.log("KOM INN HER");
         let map = this.getMap();
         let id = this.activeId;
-        let instance = this;
         this.closeModal();
         map.data.forEach(function (feature) {
             if (feature.getProperty('id') == id) {
@@ -427,7 +469,6 @@ export class Map {
                     feature.O.icon.strokeColor = 'red';
                 }
                 this.isSearched = false;
-                console.log(this.isSearched);
             }
             else {
                 feature.setProperty('color', 'gray');
@@ -462,25 +503,21 @@ export class Map {
      * @param event - event from an emitter
      */
     update(event) {
-        if(event !== null) {
-            if (this.currentMarker) {
-                this.currentMarker.setMap(null);
-            }
+        this.newactive.next(event);
+        let map = this.getMap();
+        let http = this.getHttp();
 
-            this.newactive.next(event);
-            let map = this.getMap();
-            let http = this.getHttp();
+        map.data.forEach(function (feature) {
+            map.data.remove(feature);
+        });
+        http.get(dhisAPI + '/api/organisationUnits/' + event)
+            .map(res => res.json())
+            .subscribe(
+                res => this.mapUpdate(res, this)
+            );
 
-            map.data.forEach(function (feature) {
-                map.data.remove(feature);
-            });
-            http.get(dhisAPI + '/api/organisationUnits/' + event)
-                .map(res => res.json())
-                .subscribe(
-                    res => this.mapUpdate(res, this)
-                );
-        }
     }
+
 
     /**
      * updates varabels activeId, level and parent to matche the incomming object and gets all the children on the same level.
@@ -493,7 +530,6 @@ export class Map {
         this.setActiveId(res.id);
         this.isSearched = true;
         this.setParent(res.parent.id);
-       // this.setcurrentPos({lat: JSON.parse(res.coordinates)[1],lng: JSON.parse(res.coordinates)[0]});
 
         instance.getData('/' + res.parent.id + '/children', instance);
         if (res.coordinates == null || instance.LEVEL == instance.allLevels) {
@@ -511,21 +547,24 @@ export class Map {
      * @param pos - position for the temp marker
      */
     tempMarker(pos) {
-        if (this.currentMarker)
+        if (this.currentMarker) {
             this.currentMarker.setMap(null);
-        if(pos != null) {
-            let current = {};
+        }
+        if (pos != null) {
+            let current = {lat: null, lng: null};
             current.lat = Math.round(this.getcurrentPos().lat() * 10000) / 10000;
             current.lng = Math.round(this.getcurrentPos().lng() * 10000) / 10000;
 
-            let position = {};
+            let position = {lat: null, lng: null};
             position.lat = Math.round(pos.lat * 10000) / 10000;
             position.lng = Math.round(pos.lng * 10000) / 10000;
-
+            let color = 'red';
             if ((current.lat != position.lat) || (current.lng != position.lng)) {
-
+                 color = '#871F78';
+            }
                 let map = this.map;
-
+                if (this.currentMarker)
+                    this.currentMarker.setMap(null);
 
                 this.currentMarker = new google.maps.Marker({
                     position: pos,
@@ -533,15 +572,14 @@ export class Map {
                     title: 'neworg',
                     icon: {
                         path: google.maps.SymbolPath.CIRCLE,
-                        strokeColor: "#871F78",
+                        strokeColor: color,
                         scale: 4
                     }
                 });
                 this.currentMarker.setMap(map);
                 map.panTo(this.currentMarker.getPosition());
-            }
-        }
 
+        }
     }
 
 
