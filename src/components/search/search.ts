@@ -10,9 +10,9 @@ declare var zone: Zone;
     selector: 'mou-search',
     directives: [CORE_DIRECTIVES, LiveSearch],
     events: ['newsearch'],
-    templateUrl: './components/search/search.html',
-    styleUrls: ['./components/search/search.css']
+    templateUrl: './components/search/search.html'
 })
+
 export class Search {
     orgunits: Array<any> = [];
     filteredOrgunits: Array<any> = [];
