@@ -110,7 +110,7 @@ export class Sidebar {
         // update the form controls with data from incoming json object
         for (control in this.form.controls) {
             if (this.form.controls[control] instanceof ControlArray) {
-                console.log("nothing to do here");
+                console.log(" ");
             }
             else if (res[control] !== undefined) {
                 this.form.controls[control].updateValue(res[control]);
