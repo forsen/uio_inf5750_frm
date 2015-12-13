@@ -39,8 +39,12 @@ export class Search {
     getMoreInfo(orgunit) {
         this.orgunits = [];
         this.newsearch.next(orgunit.id);
+        if(!this.visible){
+            this.visible = !this.visible;
+            this.resetSelector();
+            document.getElementById("dropdown-menu").style.display = "none";
+        }
         return document.getElementById("searchform").reset();
-
     }
 
     //When filtermenu is open show x else show arraowdown
@@ -48,9 +52,14 @@ export class Search {
         this.visible = !this.visible;
         if (this.visible) {
             this.resetSelector();
+            document.getElementById("dropdown-menu").style.display = "none";
+        }
+        else{
+            document.getElementById("dropdown-menu").style.display = "block";
         }
     }
 
+    //Resets the filter values in selectors
     resetSelector(){
         this.ownershipSelector.selectedIndex = 0;
         this.typeSelector.selectedIndex = 0;
@@ -60,9 +69,9 @@ export class Search {
 
     //Hide results when search bar input is erased
     hideDiv() {
-        if (this.searchBar.value == "")
+        if (this.searchBar.value == ""){
             return true;
-
+        }
     }
 
     //Click out results and empty the search bar
@@ -129,24 +138,32 @@ export class Search {
 
     //Checks the status of orgunits-array and if filter is set
     checkOrgunits() {
+        //If all selectors are empty
         if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
+            //empty filteredOrgunits
             this.filteredOrgunits = [];
             for (var i = 0; i < this.orgunits.length; i++) {
+                //push orgunits to filteredOrgunits
                 this.filteredOrgunits.push(this.orgunits[i]);
             }
         }
+        //If orgunits.length is more than zero and filterset is false, call setFilter()
         else if (!this.orgunits.length == false && !this.filterset) {
             this.setFilter();
         }
+        //If orgunits has no elements, empty filteredOrgunits
         else if (!this.orgunits.length) {
             this.filteredOrgunits = [];
+            //if filterset is true, set to false
             if (this.filterset) {
                 this.filterset = false;
             }
         }
+        //If filteredOrgunits has no elements, return false
         if(this.filteredOrgunits.length == 0){
             return false;
         }
+        //If filteredOrgunits has elements return true if orgunits has elements or false if orgunits has no elements
         else{
             return !this.orgunits.length;
         }
@@ -156,14 +173,17 @@ export class Search {
     setFilter() {
         this.filteredOrgunits = [];
         this.filterset = true;
+        //loop orgunits to get orgunit object
         for (var i = 0; i < this.orgunits.length; i++) {
             this.http.get(this.orgunits[i].href)
                 .map(res => res.json())
                 .subscribe(
                     zone.bind(orgunits => {
+                        //if no filter is selected, push all orgunit objects to filteredOrgunits
                         if (this.ownershipSelector.value == "" && this.typeSelector.value == "" && this.locationSelector.value == "") {
                             this.filteredOrgunits.push(orgunits);
                         }
+                        //if filter is set, sort
                         else {
                             var os = false;
                             var ls = false;
@@ -193,6 +213,7 @@ export class Search {
                                 if (this.locationSelector.value == "") {
                                     ls = true;
                                 }
+                                //if all boolean values are true, add orgunit object to filteredOrgunits
                                 if (os == true && ts == true && ls == true) {
                                     this.filteredOrgunits.push(orgunits);
                                     os = false;

@@ -1,4 +1,4 @@
-import {Component, EventEmitter,CORE_DIRECTIVES,} from 'angular2/angular2';
+import {Component, EventEmitter,CORE_DIRECTIVES} from 'angular2/angular2';
 import {Headers, Http} from 'angular2/http';
 
 @Component({
@@ -11,7 +11,6 @@ import {Headers, Http} from 'angular2/http';
 
 export class Map {
 
-    hideModal:any;
     map:Object;
     http:Http;
     LEVEL:number;
@@ -23,10 +22,12 @@ export class Map {
     currentPos:Object;
     currentMarker:Object;
     isSearched:boolean;
-    popupON:boolean;
-    popup:Object;
     COLORS:Object;
     colornum:number;
+    isNew:boolean;
+    //popupON:boolean;
+    //popup:Object;
+
 
     /**
      * initializes all the global variabels
@@ -50,7 +51,7 @@ export class Map {
         });
         this.init();
         this.http = http;
-        this.LEVEL = 2;//
+        this.LEVEL = 2;
         this.runned = false;
         this.getLevels(this);
         this.parent = null;
@@ -58,16 +59,16 @@ export class Map {
         this.uprunned = false;
         this.currentMarker = null;
         this.isSearched = false;
+        this.isNew = false;
         this.colornum = 0;
         this.COLORS = ['#ede1bb', '#1d407e', '#ff512e', '#662d47', '#3b3a35', '#419175', '#983e41', '#f3002d', '#b0a875', '#00bfb5', '#926851', '#47a0a4', '#333f50', '#6f007b'];
-        this.popupON = false;
-        this.popup = null;
+        //this.popupON = false;
+        //this.popup = null;
     }
-
 
     /**
      * Sets the global variabel
-     * @param id - id of the active marker 
+     * @param id - id of the active marker
      */
     setActiveId(id) {
         this.activeId = id;
@@ -112,6 +113,7 @@ export class Map {
     setParent(id) {
         this.parent = id;
     }
+
 
     /**
      * returns the actice markers parent
@@ -319,8 +321,9 @@ export class Map {
                     icon: icon
                 });
             });
-            if (instance.isSearched) {
-                instance.seeDetails();
+
+            if (this.isSearched) {
+                this.seeDetails();
             }
             this.map.data.addListener('click', function (event) {
                 $('#myModal').modal('show');
@@ -328,25 +331,27 @@ export class Map {
                 instance.setcurrentPos(event.latLng);
 
                 if (instance.uprunned == false && instance.LEVEL == 2) {
-                    this.hideModal = document.getElementById("topLevel").style.display = "block";
-                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
-                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
+                    document.getElementById("topLevel").style.display = "block";
+                    document.getElementById("middleLevel").style.display = "none";
+                    document.getElementById("bottomLevel").style.display = "none";
                 }
                 else if (instance.runned == false && instance.LEVEL < instance.allLevels) {
-                    this.hideModal = document.getElementById("topLevel").style.display = "none";
-                    this.hideModal = document.getElementById("middleLevel").style.display = "block";
-                    this.hideModal = document.getElementById("bottomLevel").style.display = "none";
+                    document.getElementById("topLevel").style.display = "none";
+                    document.getElementById("middleLevel").style.display = "block";
+                    document.getElementById("bottomLevel").style.display = "none";
                 } else if (instance.runned == false && instance.LEVEL <= instance.allLevels) {
-                    this.hideModal = document.getElementById("topLevel").style.display = "none";
-                    this.hideModal = document.getElementById("middleLevel").style.display = "none";
-                    this.hideModal = document.getElementById("bottomLevel").style.display = "block";
+                    document.getElementById("topLevel").style.display = "none";
+                    document.getElementById("middleLevel").style.display = "none";
+                    document.getElementById("bottomLevel").style.display = "block";
 
                     instance.setcurrentPos(event.latLng);
                 }
             });
 
-//slette ?? §§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
-            /* this.map.data.addListener('mouseover', function (e) {  
+            // a method for giving a popup with the org.units name when the mouse is over the plygon
+            //commented out because somethimes it made it harder to click on the polygon to get options
+            // to see more or drillup/down
+            /*   this.map.data.addListener('mouseover', function (e) {  
              if(!instance.popupON) {
              instance.popupON = true;
 
@@ -361,24 +366,73 @@ export class Map {
              this.map.data.addListener('mouseout', function (event) {  
              instance.popupON = false;
              instance.popup.open(null); 
-             });*/
-
+             });
+             */
         }
+    }
+
+    /**
+     * utpdates the map after an org.unit has been updated or a new one has been added
+     * @param event - id of the new or updated org.unit
+     */
+    updateAfterAddorEdit(event) {
+        if (this.currentMarker) {
+            this.currentMarker.setMap(null);
+        }
+
+        let map = this.getMap();
+        let http = this.getHttp();
+        this.isNew = false;
+
+
+        map.data.forEach(function (feature) {
+            map.data.remove(feature);
+        });
+        http.get(dhisAPI + '/api/organisationUnits/' + event)
+            .map(res => res.json())
+            .subscribe(
+                res => this.updateMap(res, this)
+            );
+    }
+
+    /**
+     * shows the right level with the right org.units after one has been added or updated.
+     * @param res
+     * @param instance
+     */
+    updateMap(res, instance) {
+        this.isSearched = false;
+        this.setLevel(res.level);
+        this.setActiveId(res.id);
+        this.setParent(res.parent.id);
+        this.setcurrentPos(new google.maps.LatLng(JSON.parse(res.coordinates)[1],JSON.parse(res.coordinates)[0]));
+
+        instance.getData('/' + res.parent.id + '/children', instance);
+        if (res.coordinates == null || instance.LEVEL == instance.allLevels) {
+            instance.http.get(dhisAPI + '/api/organisationUnits/' + res.parent.id)
+                .map(res => res.json())
+                .subscribe(
+                    res => instance.drawPolygon(res, instance)
+                );
+        }
+
     }
 
     /**
      * removes the polygon on current level and calles getData on one level down in the org.unit hierarchy
      */
     drillDown() {
+        this.isSearched = false;
         this.closeModal();
         let map = this.getMap();
         let id = this.activeId;
         let level = this.LEVEL;
+        let lev = (this.allLevels) - 1;
         this.setRunned(true);
         this.setParent(id);
 
         map.data.forEach(function (feature) {
-            if (!(feature.O.id == id && level == 3)) {
+            if (!(feature.O.id == id && level == lev)) {
                 map.data.remove(feature);
 
             }
@@ -393,6 +447,7 @@ export class Map {
      *removes the plogons on the current level and calles the get data with tha parents id and set parent true. this to say that we want this parent's parent
      */
     drillUp() {
+        this.isSearched = false;
         this.setupRunned(true);
         this.upLevel();
         let instance = this;
@@ -423,7 +478,7 @@ export class Map {
                 if (feature.getProperty('icon') !== null) {
                     feature.O.icon.strokeColor = 'red';
                 }
-                this.isSearched = false;
+
             }
             else {
                 feature.setProperty('color', 'gray');
@@ -440,6 +495,7 @@ export class Map {
      */
     addUnit() {
         this.closeModal();
+        this.isNew = true;
         let pos = this.getcurrentPos();
         let lat = pos.lat();
         let lng = pos.lng();
@@ -473,6 +529,7 @@ export class Map {
 
     }
 
+
     /**
      * updates varabels activeId, level and parent to matche the incomming object and gets all the children on the same level.
      * Then it calles drawPolygon()
@@ -501,21 +558,39 @@ export class Map {
      * @param pos - position for the temp marker
      */
     tempMarker(pos) {
-        let map = this.map;
-        if (this.currentMarker)
+        if (this.currentMarker) {
             this.currentMarker.setMap(null);
+        }
+        if (pos != null) {
+            let current = {lat: null, lng: null};
+            current.lat = Math.round(this.getcurrentPos().lat() * 10000) / 10000;
+            current.lng = Math.round(this.getcurrentPos().lng() * 10000) / 10000;
 
-        this.currentMarker = new google.maps.Marker({
-            position: pos,
-            map: map,
-            title: 'neworg',
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 4
+            let position = {lat: null, lng: null};
+            position.lat = Math.round(pos.lat * 10000) / 10000;
+            position.lng = Math.round(pos.lng * 10000) / 10000;
+
+
+            if ((current.lat != position.lat) || (current.lng != position.lng) || this.isNew) {
+
+                let map = this.map;
+                if (this.currentMarker)
+                    this.currentMarker.setMap(null);
+
+                this.currentMarker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: 'neworg',
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        strokeColor: '#871F78',
+                        scale: 4
+                    }
+                });
+                this.currentMarker.setMap(map);
+                map.panTo(this.currentMarker.getPosition());
             }
-        });
-        this.currentMarker.setMap(map);
-        map.panTo(this.currentMarker.getPosition());
+        }
     }
 
 

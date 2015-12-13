@@ -19,15 +19,14 @@
                     onfocus="this.placeholder = ''"
                     value=""/>
 
-            <!--Show and empty filtermenu-->
-            <button type="button" class="filterbutton col-md-2" (click)="toggle()"
-                    data-toggle="collapse" data-target="#dropdown-menu">
+            <!--Show or hide, and empty filtermenu-->
+            <button type="button" class="filterbutton col-md-2" (click)="toggle()">
                 {{ visible ? '&xdtri;' : '&khcy;' }}
             </button>
         </div>
     </form>
 
-    <!-- Searchresult div -->
+    <!-- Searchresult -->
     <div class="row">
         <span [hidden]="hideDiv()">
             <div class="divresult col-md-10" id="divresult" [hidden]="checkOrgunits()">
